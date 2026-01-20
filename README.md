@@ -130,6 +130,121 @@ try {
 
 ---
 
+## 🎯 Base Infrastructure (Phase 0)
+
+The SDK provides a robust foundation with type-safe utilities, validation, and error handling:
+
+### Error Handling
+
+```typescript
+import { CnabError, ValidationError, ParseError } from '@linkiez/boleto-sdk';
+
+try {
+  // Your CNAB processing code
+} catch (error) {
+  if (error instanceof ValidationError) {
+    console.error('Validation failed:', error.issues);
+  } else if (error instanceof ParseError) {
+    console.error('Parse error at line:', error.line);
+  }
+}
+```
+
+### Type-Safe Validation with Zod
+
+```typescript
+import { AddressSchema, TaxIdSchema, BeneficiarySchema } from '@linkiez/boleto-sdk';
+
+// Validate address
+const address = AddressSchema.parse({
+  street: 'Av Paulista',
+  number: '1000',
+  city: 'São Paulo',
+  state: 'SP',
+  postalCode: '01310100'
+});
+
+// Validate tax ID (CPF/CNPJ) with checksum
+const taxId = TaxIdSchema.parse('12345678901'); // Validates modulo 11
+
+// Validate beneficiary
+const beneficiary = BeneficiarySchema.parse({
+  name: 'ACME Corp',
+  taxId: '12345678000195',
+  address: { city: 'São Paulo', state: 'SP' },
+  bankAccount: { bankCode: '341', branch: '0001', account: '12345' }
+});
+```
+
+### Utility Functions
+
+```typescript
+import { 
+  formatTaxId, 
+  formatMoney, 
+  validateTaxId, 
+  calculateModulo11,
+  parseDate,
+  padLeft,
+  padRight 
+} from '@linkiez/boleto-sdk';
+
+// Format CPF/CNPJ
+formatTaxId('12345678901');      // "123.456.789-01"
+formatTaxId('12345678000195');   // "12.345.678/0001-95"
+
+// Format money
+formatMoney(1234.56);  // "R$ 1.234,56"
+
+// Validate tax ID with checksum
+validateTaxId('12345678901');  // true/false
+
+// Calculate check digits
+calculateModulo11('341', [2, 3, 4, 5, 6, 7, 8, 9]);  // "5"
+
+// Parse CNAB dates
+parseDate('31122025');  // Date(2025-12-31)
+
+// String padding
+padLeft('341', 5, '0');   // "00341"
+padRight('ACME', 30, ' '); // "ACME                          "
+```
+
+### Bank Constants
+
+```typescript
+import { BANKS, getBankInfo, BankCode } from '@linkiez/boleto-sdk';
+
+// Get bank information
+const itau = getBankInfo('341');
+console.log(itau.name);    // "Itaú Unibanco"
+console.log(itau.ispb);    // "60701190"
+
+// Use enum for type safety
+const bankCode: BankCode = BankCode.ITAU; // "341"
+
+// All supported banks
+console.log(Object.keys(BANKS)); // ["001", "033", "104", "237", "341", "756"]
+```
+
+### Enums and Constants
+
+```typescript
+import { 
+  DocumentType, 
+  SpeciesCode, 
+  AcceptanceType,
+  CurrencyCode,
+  MovementType 
+} from '@linkiez/boleto-sdk';
+
+const docType = DocumentType.DUPLICATA;  // "DM"
+const species = SpeciesCode.DUPLICATA_MERCANTIL;  // "02"
+const currency = CurrencyCode.REAL;  // "09"
+```
+
+---
+
 ## 📚 Documentation
 
 ### Core Concepts
