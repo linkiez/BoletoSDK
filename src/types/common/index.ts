@@ -126,4 +126,3 @@ export interface Interest {
   /** Date from which interest applies */
   startDate?: Date;
 }
-
