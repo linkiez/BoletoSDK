@@ -1032,7 +1032,7 @@
 - [ ] No critical/major bugs
 - [ ] Performance benchmarks acceptable
 - [ ] Security audit passed
-- [ ] License file present (MIT)
+- [ ] License file present
 - [ ] CHANGELOG.md updated
 
 ### 4.2 Package Configuration
