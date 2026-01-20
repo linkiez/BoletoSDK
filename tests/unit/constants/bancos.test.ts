@@ -1,9 +1,9 @@
 import {
-  BANKS,
-  getBankInfo,
-  getBankName,
-  isValidBankCode,
-  BankInfo,
+    BankInfo,
+    BANKS,
+    getBankInfo,
+    getBankName,
+    isValidBankCode,
 } from '@constants/bancos';
 import { BankCode } from '@enums/common';
 

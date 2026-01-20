@@ -1,4 +1,4 @@
-import { CnabError, ParseError, ValidationError, GenerationError } from '@errors';
+import { CnabError, GenerationError, ParseError, ValidationError } from '@errors';
 
 describe('CnabError', () => {
   it('should create error with message only', () => {

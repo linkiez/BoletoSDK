@@ -1,4 +1,4 @@
-import { parseNumber, parseDecimal } from '@utils/parsers';
+import { parseDecimal, parseNumber } from '@utils/parsers';
 
 describe('parseNumber', () => {
   describe('basic parsing', () => {
