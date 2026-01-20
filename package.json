@@ -1,0 +1,70 @@
+{
+  "name": "@linkiez/boleto-sdk",
+  "version": "0.0.0-development",
+  "description": "SDK for Brazilian banking boletos and CNAB files processing",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "prepare": "yarn build",
+    "prepublishOnly": "yarn test && yarn lint",
+    "semantic-release": "semantic-release"
+  },
+  "keywords": [
+    "boleto",
+    "cnab",
+    "cnab240",
+    "cnab400",
+    "banking",
+    "brazil",
+    "payment"
+  ],
+  "author": "Linkiez",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/linkiez/BoletoSDK.git"
+  },
+  "bugs": {
+    "url": "https://github.com/linkiez/BoletoSDK/issues"
+  },
+  "homepage": "https://github.com/linkiez/BoletoSDK#readme",
+  "dependencies": {
+    "zod": "^4.3.5"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.11.0",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "jest": "^29.7.0",
+    "prettier": "^3.2.4",
+    "semantic-release": "^23.0.0",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "packageManager": "yarn@4.12.0"
+}
