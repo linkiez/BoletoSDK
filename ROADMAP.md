@@ -16,6 +16,7 @@
 
 - ✅ **Phase 0**: Base Infrastructure (152 tests, 95.79% coverage)
 - ✅ **Phase 1**: CNAB400 Complete (96 tests, 1800+ lines documentation)
+- ✅ **Phase 1.5**: CNAB400 Constants (68 tests)
 - ✅ **Phase 2.1**: CNAB240 Types (11 tests)
 - ✅ **Phase 2.2**: CNAB240 Enums (15 tests)
 - ✅ **Phase 2.3**: CNAB240 Parsers (51 tests)
@@ -24,7 +25,7 @@
 
 **Overall Statistics**:
 
-- **Total Tests**: 551 (549 passing, 2 skipped)
+- **Total Tests**: 619 (617 passing, 2 skipped)
 - **Code Coverage**: >80%
 - **Documentation**: ~1800 lines (README + USAGE-GUIDE + API-REFERENCE)
 - **Production Ready**: CNAB400 fully operational with real files
@@ -32,14 +33,19 @@
 
 **Recent Accomplishments (2026-01-21)**:
 
-- ✅ Implemented all CNAB240 constants (78 tests)
-- ✅ Created LAYOUT_VERSION constants (FEBRABAN spec v087)
-- ✅ Created FIELD_SIZES constants (100+ field definitions)
-- ✅ Created SEGMENT_POSITIONS constants (position maps for all segments)
-- ✅ Position validation helper (validates no gaps/overlaps in 240-char lines)
-- ✅ All field sizes and positions match FEBRABAN specification
+- ✅ Implemented CNAB400 constants for consistency (68 tests)
+- ✅ Created LAYOUT_VERSION constants (400-char format, file types, service codes)
+- ✅ Created FIELD_SIZES constants (30+ field definitions organized by record type)
+- ✅ Created RECORD_POSITIONS constants (separate maps for REMESSA vs RETORNO layouts)
+- ✅ Position validation helper (validates 400-char coverage, no gaps/overlaps)
+- ✅ Fixed export conflicts using namespace exports (CNAB240 vs CNAB400)
+- ✅ All constants match CNAB400 specification
 - ✅ Type-safe constants using `as const` literal types
 - ✅ Comprehensive documentation with JSDoc on all exports
+- ✅ Implemented all CNAB240 constants (78 tests)
+- ✅ Created CNAB240 LAYOUT_VERSION constants (FEBRABAN spec v087)
+- ✅ Created CNAB240 FIELD_SIZES constants (100+ field definitions)
+- ✅ Created CNAB240 SEGMENT_POSITIONS constants (position maps for all segments)
 
 **Next Steps**: Phase 2.6 - CNAB240 Validators
 
@@ -210,6 +216,192 @@
   - TypeScript signatures for all public APIs
 
 **Total Documentation**: ~1800 lines of comprehensive CNAB400 documentation
+
+---
+
+## Phase 1.5: CNAB400 Constants ✅ **COMPLETED**
+
+**Objective**: Create centralized constants for CNAB400 format specifications to improve code maintainability and validator accuracy.
+
+**Duration**: ~1 day
+
+**Status**: ✅ **COMPLETED** (2026-01-21)
+
+**Motivation**: Bring CNAB400 to parity with CNAB240 implementation for consistency and better code organization.
+
+### 1.5.1 Layout Version Constants ✅
+
+**Location**: `src/constants/cnab400/LAYOUT_VERSION.ts`
+
+**Status**: ✅ Complete (10 constants)
+
+- ✅ `LINE_LENGTH` = 400 (line length in characters)
+- ✅ `FILE_TYPE_REMESSA` = '1' (send to bank)
+- ✅ `FILE_TYPE_RETORNO` = '2' (return from bank)
+- ✅ `SERVICE_CODE_COBRANCA` = '01' (collection service)
+- ✅ `OPERATION_LITERAL_REMESSA` = 'REMESSA'
+- ✅ `OPERATION_LITERAL_RETORNO` = 'RETORNO'
+- ✅ `SERVICE_LITERAL_COBRANCA` = 'COBRANCA'
+- ✅ `CURRENCY_CODE` = '009' (BRL)
+- ✅ `FILLER_CHARACTER` = ' ' (space for padding)
+- ✅ `ZERO_PAD_CHARACTER` = '0' (zero for numeric padding)
+
+**Key Features**:
+
+- Type-safe using `as const` literal types
+- All constants documented with JSDoc
+- Centralized format specifications
+
+### 1.5.2 Field Sizes Constants ✅
+
+**Location**: `src/constants/cnab400/FIELD_SIZES.ts`
+
+**Status**: ✅ Complete (5 constant objects, 30+ field definitions)
+
+**Constant Objects**:
+
+- ✅ `COMMON_FIELD_SIZES` - Shared fields (30+ fields)
+  - Record type (1), bank code (3), agency (4)
+  - Account (5), registration number (14)
+  - Our number (8), amounts (13 with 2 decimals)
+  - Dates (6 DDMMYY), names (30), addresses (40)
+- ✅ `FILE_HEADER_SIZES` - Header-specific fields
+  - Operation literal (7), service literal (15)
+  - Company name (30), bank name (15)
+  - Generation date (6), sequence number (5)
+- ✅ `DETAIL_RECORD_SIZES` - Detail-specific fields
+  - Company control (25), payer info (name 30, address 40)
+  - Guarantor fields (name 30, registration 14)
+- ✅ `PENALTY_RECORD_SIZES` - Penalty-specific fields
+  - Message line (80 characters, 4 lines per record)
+- ✅ `FILE_TRAILER_SIZES` - Trailer-specific fields
+  - Total records (6), total amount (13)
+- ✅ `TOTAL_LINE_LENGTH` = 400 (validation constant)
+
+**Benefits**:
+
+- Centralized field size validation
+- Self-documenting code
+- Easier parser/generator maintenance
+
+### 1.5.3 Record Positions Constants ✅
+
+**Location**: `src/constants/cnab400/RECORD_POSITIONS.ts`
+
+**Status**: ✅ Complete (6 position maps + validation helper)
+
+**Position Maps** (all 1-indexed, covering 1-400):
+
+- ✅ `FILE_HEADER_POSITIONS` (18 fields)
+  - Standard header fields for both REMESSA/RETORNO
+  - Record type (1-1), operation type (2-2)
+  - Bank code (77-79), generation date (95-100)
+  - Sequential number (395-400)
+- ✅ `FILE_HEADER_RETORNO_POSITIONS` (19 fields)
+  - Extends standard header with CREATION_DATE (114-119)
+- ✅ `DETAIL_RECORD_REMESSA_POSITIONS` (36 fields)
+  - REMESSA-specific layout
+  - Due date (121-126), amount (127-139)
+  - Payer info, instructions, dates
+- ✅ `DETAIL_RECORD_RETORNO_POSITIONS` (36 fields)
+  - RETORNO-specific layout (different from REMESSA!)
+  - Occurrence code (109-110)
+  - Due date (147-152), amount (153-165)
+  - Received amount, fees, dates
+- ✅ `PENALTY_RECORD_POSITIONS` (7 fields)
+  - 4 message lines (80 chars each: 2-81, 82-161, 162-241, 242-321)
+  - Record type, sequential number, reserved
+- ✅ `FILE_TRAILER_POSITIONS` (6 fields)
+  - Total records (8-13), total amount (14-26)
+  - Record type, sequential number
+
+**Helper Function**:
+
+- ✅ `validatePositions()` - Validates position maps
+  - Checks 1-400 coverage
+  - Detects gaps between fields
+  - Validates no overlaps
+
+**Key Implementation Details**:
+
+- REMESSA and RETORNO use DIFFERENT field positions
+- Example: Due date in REMESSA at 121-126, in RETORNO at 147-152
+- All position maps validated for completeness (no gaps)
+- Type-safe with `{ start: number; end: number }` objects
+
+### 1.5.4 Tests ✅
+
+**Location**: `tests/unit/constants/cnab400.test.ts`
+
+**Status**: ✅ Complete (68 tests passing)
+
+**Test Coverage**:
+
+- ✅ Layout version constants (10 tests)
+- ✅ Common field sizes (8 tests)
+- ✅ File header sizes (4 tests)
+- ✅ Detail record sizes (4 tests)
+- ✅ Penalty record sizes (2 tests)
+- ✅ File trailer sizes (3 tests)
+- ✅ Total line length (2 tests)
+- ✅ File header positions (6 tests)
+- ✅ File header RETORNO positions (2 tests)
+- ✅ Detail REMESSA positions (7 tests)
+- ✅ Detail RETORNO positions (5 tests)
+- ✅ Penalty record positions (5 tests)
+- ✅ File trailer positions (6 tests)
+- ✅ Position validation helper (4 tests)
+
+**Total**: 68 comprehensive tests validating all constants
+
+### 1.5.5 Export Strategy ✅
+
+**Status**: ✅ Complete
+
+**Challenge**: Namespace conflicts with CNAB240 (both have `LINE_LENGTH`, `COMMON_FIELD_SIZES`, etc.)
+
+**Solution**: Namespace exports in `src/constants/index.ts`
+
+```typescript
+// Before (caused conflicts):
+export * from './cnab240';
+export * from './cnab400';
+
+// After (namespace exports):
+export * as CNAB240 from './cnab240';
+export * as CNAB400 from './cnab400';
+```
+
+**Usage**:
+
+```typescript
+import { CNAB240, CNAB400 } from '@/constants';
+
+console.log(CNAB240.LINE_LENGTH); // 240
+console.log(CNAB400.LINE_LENGTH); // 400
+```
+
+**Benefits**: Clean separation, no conflicts, explicit usage
+
+### 1.5.6 Impact ✅
+
+**Improvements**:
+
+- ✅ Consistency between CNAB240 and CNAB400 implementations
+- ✅ Centralized specification knowledge
+- ✅ Foundation for improved validators (Phase 1.8/2.6)
+- ✅ Better code maintainability
+- ✅ Self-documenting constants
+- ✅ Easier debugging (named constants vs magic numbers)
+- ✅ Type-safe literal types (`as const`)
+
+**Test Results**:
+
+- Before: 551 tests passing
+- After: 619 tests passing (+68 CNAB400 constants tests)
+- All tests passing ✅
+
+**Completion Date**: 2026-01-21
 
 ---
 
