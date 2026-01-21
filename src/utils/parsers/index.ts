@@ -72,11 +72,7 @@ export function parseDate(value: string): Date {
   const date = new Date(year, month - 1, day);
 
   // Validate date is valid (handles invalid dates like 32/01/2026)
-  if (
-    date.getDate() !== day ||
-    date.getMonth() !== month - 1 ||
-    date.getFullYear() !== year
-  ) {
+  if (date.getDate() !== day || date.getMonth() !== month - 1 || date.getFullYear() !== year) {
     throw new Error('Invalid date');
   }
 
@@ -113,11 +109,7 @@ export function parseDateShort(value: string): Date {
   const date = new Date(year, month - 1, day);
 
   // Validate date is valid (handles invalid dates like 32/01/2026)
-  if (
-    date.getDate() !== day ||
-    date.getMonth() !== month - 1 ||
-    date.getFullYear() !== year
-  ) {
+  if (date.getDate() !== day || date.getMonth() !== month - 1 || date.getFullYear() !== year) {
     throw new Error('Invalid date');
   }
 

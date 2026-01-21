@@ -38,8 +38,8 @@ describe('parseDecimal', () => {
     });
 
     it('should parse with implied decimals', () => {
-      expect(parseDecimal('100', 2)).toBe(1.00);
-      expect(parseDecimal('1000', 2)).toBe(10.00);
+      expect(parseDecimal('100', 2)).toBe(1.0);
+      expect(parseDecimal('1000', 2)).toBe(10.0);
     });
 
     it('should handle different decimal places', () => {

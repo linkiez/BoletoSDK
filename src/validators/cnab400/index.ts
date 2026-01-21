@@ -54,9 +54,7 @@ export function validateFileStructure(file: Cnab400File): ValidationResult {
     const actualCount = file.trailer.totalRecords;
 
     if (expectedCount !== actualCount) {
-      errors.push(
-        `Record count mismatch: expected ${expectedCount}, got ${actualCount}`,
-      );
+      errors.push(`Record count mismatch: expected ${expectedCount}, got ${actualCount}`);
     }
   }
 

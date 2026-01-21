@@ -8,7 +8,13 @@
  */
 
 import { GenerationError } from '../../errors';
-import type { Cnab400File, DetailRecord, FileHeader, FileTrailer, PenaltyRecord } from '../../types/cnab400';
+import type {
+  Cnab400File,
+  DetailRecord,
+  FileHeader,
+  FileTrailer,
+  PenaltyRecord,
+} from '../../types/cnab400';
 import { formatDateShort, formatDecimal } from '../../utils';
 import { padLeft, padRight } from '../../utils/generators';
 

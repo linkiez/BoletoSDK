@@ -379,27 +379,18 @@ export function parseCnab400(content: string): Cnab400File | Cnab400ReturnFile {
   // Validate all lines are exactly 400 characters
   for (let i = 0; i < lines.length; i++) {
     if (lines[i].length !== 400) {
-      throw new ParseError(
-        `Invalid line length: ${lines[i].length} (expected 400)`,
-        i + 1,
-      );
+      throw new ParseError(`Invalid line length: ${lines[i].length} (expected 400)`, i + 1);
     }
   }
 
   // Validate first record is header (type 0)
   if (!lines[0].startsWith('0')) {
-    throw new ParseError(
-      'First record must be header (type 0)',
-      1,
-    );
+    throw new ParseError('First record must be header (type 0)', 1);
   }
 
   // Validate last record is trailer (type 9)
   if (!lines.at(-1)!.startsWith('9')) {
-    throw new ParseError(
-      'Last record must be trailer (type 9)',
-      lines.length,
-    );
+    throw new ParseError('Last record must be trailer (type 9)', lines.length);
   }
 
   // Parse header

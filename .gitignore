@@ -43,3 +43,5 @@ yarn-error.log*
 *.tmp
 *.temp
 .cache/
+
+**/BUSINESS_RULES_SOURCES.md
