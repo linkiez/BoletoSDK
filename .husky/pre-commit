@@ -1,0 +1,11 @@
+echo "\n🎨 Running pre-commit hook...\n"
+echo "📝 Formatting and linting staged files...\n"
+
+yarn lint-staged
+
+if [ $? -eq 0 ]; then
+  echo "\n✅ Pre-commit checks passed!\n"
+else
+  echo "\n❌ Pre-commit checks failed. Please fix the issues above.\n"
+  exit 1
+fi

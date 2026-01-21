@@ -1,4 +1,4 @@
-import { LINE_LENGTH, RECORD_TYPE } from '../../constants/cnab240';
+import { BATCH_TRAILER_POSITIONS, LINE_LENGTH, RECORD_TYPE } from '../../constants/cnab240';
 import { BatchTrailer } from '../../types/cnab240';
 import { buildLine, formatField, formatNumericField } from './LineGenerator';
 
@@ -48,51 +48,103 @@ export class BatchTrailerGenerator {
     this.validate(trailer);
 
     const fields = new Map<string, string>();
+    const POS = BATCH_TRAILER_POSITIONS;
 
     // Positions 1-3: Bank code (3 numeric)
-    fields.set('bankCode', formatNumericField(Number(trailer.bankCode), 1, 3));
+    fields.set(
+      'bankCode',
+      formatNumericField(Number(trailer.bankCode), POS.BANK_CODE.start, POS.BANK_CODE.end),
+    );
 
     // Positions 4-7: Batch number (4 numeric)
-    fields.set('batchNumber', formatNumericField(Number(trailer.batchNumber), 4, 7));
+    fields.set(
+      'batchNumber',
+      formatNumericField(Number(trailer.batchNumber), POS.BATCH_NUMBER.start, POS.BATCH_NUMBER.end),
+    );
 
     // Position 8: Record type (always 5 for batch trailer)
-    fields.set('recordType', formatField(RECORD_TYPE.BATCH_TRAILER, 8, 8, 'numeric'));
+    fields.set(
+      'recordType',
+      formatField(RECORD_TYPE.BATCH_TRAILER, POS.RECORD_TYPE.start, POS.RECORD_TYPE.end, 'numeric'),
+    );
 
     // Positions 9-17: Reserved (spaces)
-    fields.set('reserved1', formatField('', 9, 17, 'text'));
+    fields.set('reserved1', formatField('', POS.RESERVED_1.start, POS.RESERVED_1.end, 'text'));
 
     // Positions 18-23: Total records in batch (6 numeric)
-    fields.set('totalRecords', formatNumericField(trailer.totalRecords, 18, 23));
+    fields.set(
+      'totalRecords',
+      formatNumericField(trailer.totalRecords, POS.DETAIL_COUNT.start, POS.DETAIL_COUNT.end),
+    );
 
     // Positions 24-29: Total simple slips quantity (6 numeric, optional)
-    fields.set('totalSimpleSlips', formatNumericField(trailer.totalSimpleSlips || 0, 24, 29));
+    fields.set(
+      'totalSimpleSlips',
+      formatNumericField(
+        trailer.totalSimpleSlips || 0,
+        POS.TOTAL_SIMPLE_SLIPS.start,
+        POS.TOTAL_SIMPLE_SLIPS.end,
+      ),
+    );
 
     // Positions 30-47: Total simple slips amount (18 numeric, optional)
-    fields.set('totalSimpleAmount', formatNumericField(trailer.totalSimpleAmount || 0, 30, 47));
+    fields.set(
+      'totalSimpleAmount',
+      formatNumericField(
+        trailer.totalSimpleAmount || 0,
+        POS.TOTAL_SIMPLE_AMOUNT.start,
+        POS.TOTAL_SIMPLE_AMOUNT.end,
+      ),
+    );
 
     // Positions 48-53: Total endorsed slips quantity (6 numeric, optional)
-    fields.set('totalEndorsedSlips', formatNumericField(trailer.totalEndorsedSlips || 0, 48, 53));
+    fields.set(
+      'totalEndorsedSlips',
+      formatNumericField(
+        trailer.totalEndorsedSlips || 0,
+        POS.TOTAL_ENDORSED_SLIPS.start,
+        POS.TOTAL_ENDORSED_SLIPS.end,
+      ),
+    );
 
     // Positions 54-71: Total endorsed slips amount (18 numeric, optional)
-    fields.set('totalEndorsedAmount', formatNumericField(trailer.totalEndorsedAmount || 0, 54, 71));
+    fields.set(
+      'totalEndorsedAmount',
+      formatNumericField(
+        trailer.totalEndorsedAmount || 0,
+        POS.TOTAL_ENDORSED_AMOUNT.start,
+        POS.TOTAL_ENDORSED_AMOUNT.end,
+      ),
+    );
 
     // Positions 72-77: Total collection slips quantity (6 numeric, optional)
     fields.set(
       'totalCollectionSlips',
-      formatNumericField(trailer.totalCollectionSlips || 0, 72, 77),
+      formatNumericField(
+        trailer.totalCollectionSlips || 0,
+        POS.TOTAL_COLLECTION_SLIPS.start,
+        POS.TOTAL_COLLECTION_SLIPS.end,
+      ),
     );
 
     // Positions 78-95: Total collection slips amount (18 numeric, optional)
     fields.set(
       'totalCollectionAmount',
-      formatNumericField(trailer.totalCollectionAmount || 0, 78, 95),
+      formatNumericField(
+        trailer.totalCollectionAmount || 0,
+        POS.TOTAL_COLLECTION_AMOUNT.start,
+        POS.TOTAL_COLLECTION_AMOUNT.end,
+      ),
     );
 
     // Positions 96-103: Reference number (8 text, optional)
-    fields.set('referenceNumber', formatField(trailer.warningCode || '', 96, 103, 'text'));
+    fields.set(
+      'referenceNumber',
+      formatField(trailer.warningCode || '', POS.WARNING_CODE.start, POS.WARNING_CODE.end, 'text'),
+    );
 
     // Positions 104-240: Reserved (spaces)
-    fields.set('reserved2', formatField('', 104, LINE_LENGTH, 'text'));
+    fields.set('reserved2', formatField('', POS.RESERVED_2.start, POS.RESERVED_2.end, 'text'));
 
     const line = buildLine(fields);
 

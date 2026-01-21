@@ -41,6 +41,7 @@ export const FILE_HEADER_POSITIONS = {
 /**
  * Batch Header (Record Type 1) field positions
  * Total: 240 characters
+ * Based on original implementation for Collection (Cobrança)
  */
 export const BATCH_HEADER_POSITIONS = {
   BANK_CODE: { start: 1, end: 3 },
@@ -48,24 +49,24 @@ export const BATCH_HEADER_POSITIONS = {
   RECORD_TYPE: { start: 8, end: 8 },
   OPERATION_TYPE: { start: 9, end: 9 },
   SERVICE_TYPE: { start: 10, end: 11 },
-  FORM_LAUNCH: { start: 12, end: 13 },
-  LAYOUT_VERSION: { start: 14, end: 16 },
-  RESERVED_1: { start: 17, end: 17 },
+  SERVICE_VERSION: { start: 12, end: 13 },
+  RESERVED_1: { start: 14, end: 14 },
+  FORM_TYPE: { start: 15, end: 17 },
   PERSON_TYPE: { start: 18, end: 18 },
-  TAX_ID: { start: 19, end: 33 },
-  AGREEMENT_CODE: { start: 34, end: 53 },
-  AGENCY: { start: 54, end: 58 },
-  AGENCY_DIGIT: { start: 59, end: 59 },
-  ACCOUNT: { start: 60, end: 71 },
-  ACCOUNT_DIGIT: { start: 72, end: 72 },
-  ACCOUNT_DV: { start: 73, end: 73 },
-  COMPANY_NAME: { start: 74, end: 103 },
-  MESSAGE_1: { start: 104, end: 143 },
-  MESSAGE_2: { start: 144, end: 183 },
-  RETURN_NUMBER: { start: 184, end: 191 },
-  RETURN_DATE: { start: 192, end: 199 },
-  CREDIT_DATE: { start: 200, end: 207 },
-  RESERVED_2: { start: 208, end: 240 },
+  TAX_ID: { start: 19, end: 32 }, // CPF/CNPJ (14 positions)
+  AGREEMENT_CODE: { start: 33, end: 52 },
+  AGENCY: { start: 53, end: 57 },
+  AGENCY_DIGIT: { start: 58, end: 58 },
+  ACCOUNT: { start: 59, end: 70 },
+  ACCOUNT_DIGIT: { start: 71, end: 71 },
+  ACCOUNT_DV: { start: 72, end: 72 },
+  COMPANY_NAME: { start: 73, end: 102 },
+  MESSAGE_1: { start: 103, end: 142 },
+  MESSAGE_2: { start: 143, end: 182 },
+  RETURN_NUMBER: { start: 183, end: 190 },
+  RETURN_DATE: { start: 191, end: 198 },
+  CREDIT_DATE: { start: 199, end: 206 },
+  RESERVED_2: { start: 207, end: 240 },
 } as const;
 
 /**
@@ -184,25 +185,22 @@ export const SEGMENT_R_POSITIONS = {
 /**
  * Batch Trailer (Record Type 5) field positions
  * Total: 240 characters
+ * Based on original implementation for Collection (Cobrança) with multiple total types
  */
 export const BATCH_TRAILER_POSITIONS = {
   BANK_CODE: { start: 1, end: 3 },
   BATCH_NUMBER: { start: 4, end: 7 },
   RECORD_TYPE: { start: 8, end: 8 },
   RESERVED_1: { start: 9, end: 17 },
-  DETAIL_COUNT: { start: 18, end: 23 },
-  SLIP_COUNT: { start: 24, end: 29 },
-  SIMPLE_SLIP_COUNT: { start: 30, end: 35 },
-  GUARANTEED_SLIP_COUNT: { start: 36, end: 41 },
-  DISCOUNT_SLIP_COUNT: { start: 42, end: 47 },
-  PLEDGE_SLIP_COUNT: { start: 48, end: 53 },
-  TOTAL_AMOUNT: { start: 54, end: 70 },
-  SIMPLE_AMOUNT: { start: 71, end: 87 },
-  GUARANTEED_AMOUNT: { start: 88, end: 104 },
-  DISCOUNT_AMOUNT: { start: 105, end: 121 },
-  PLEDGE_AMOUNT: { start: 122, end: 138 },
-  WARNING_NUMBER: { start: 139, end: 146 },
-  RESERVED_2: { start: 147, end: 240 },
+  DETAIL_COUNT: { start: 18, end: 23 }, // Total records in batch
+  TOTAL_SIMPLE_SLIPS: { start: 24, end: 29 }, // Total simple slips quantity
+  TOTAL_SIMPLE_AMOUNT: { start: 30, end: 47 }, // Total simple slips amount (18 positions, 16+2 decimal)
+  TOTAL_ENDORSED_SLIPS: { start: 48, end: 53 }, // Total endorsed slips quantity
+  TOTAL_ENDORSED_AMOUNT: { start: 54, end: 71 }, // Total endorsed slips amount (18 positions, 16+2 decimal)
+  TOTAL_COLLECTION_SLIPS: { start: 72, end: 77 }, // Total collection slips quantity
+  TOTAL_COLLECTION_AMOUNT: { start: 78, end: 95 }, // Total collection slips amount (18 positions, 16+2 decimal)
+  WARNING_CODE: { start: 96, end: 103 }, // Reference/warning number
+  RESERVED_2: { start: 104, end: 240 },
 } as const;
 
 /**
