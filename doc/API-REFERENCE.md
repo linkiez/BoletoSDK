@@ -445,7 +445,7 @@ Thrown when parsing CNAB content fails.
 ```typescript
 class ParseError extends CnabError {
   constructor(message: string, line?: number);
-  
+
   line?: number;  // Line number where error occurred (1-indexed)
 }
 ```
@@ -480,7 +480,7 @@ Thrown when data doesn't match schema.
 ```typescript
 class ValidationError extends CnabError {
   constructor(message: string, issues?: z.ZodIssue[]);
-  
+
   issues?: z.ZodIssue[];  // Detailed validation errors from Zod
 }
 ```
@@ -527,7 +527,7 @@ Thrown when generating CNAB content fails.
 ```typescript
 class GenerationError extends CnabError {
   constructor(message: string, field?: string);
-  
+
   field?: string;  // Field name that caused error
 }
 ```
@@ -566,7 +566,7 @@ class CnabError extends Error {
     code?: string,
     context?: Record<string, unknown>
   );
-  
+
   code?: string;                      // Error code
   context?: Record<string, unknown>;  // Additional context
 }

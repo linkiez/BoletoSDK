@@ -328,13 +328,13 @@ if (remessa.penaltyRecords && remessa.penaltyRecords.length > 0) {
     // 1 = No penalty
     // 2 = Percentage
     // 3 = Fixed amount
-    
+
     if (penalty.penaltyCode === '2') {
       console.log(`Penalty Rate: ${penalty.penaltyValue}%`);
     } else if (penalty.penaltyCode === '3') {
       console.log(`Penalty Amount: R$ ${(penalty.penaltyValue! / 100).toFixed(2)}`);
     }
-    
+
     console.log(`Effective Date: ${penalty.penaltyDate?.toLocaleDateString()}`);
   });
 }

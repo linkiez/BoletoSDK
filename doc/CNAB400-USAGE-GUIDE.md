@@ -157,7 +157,7 @@ remessa.details.forEach((detail, index) => {
   console.log('  Amount: R$', (detail.amount / 100).toFixed(2));
   console.log('  Due Date:', detail.dueDate?.toLocaleDateString('pt-BR'));
   console.log('  Payer:', detail.payerName);
-  
+
   // Instruction codes (REMESSA-specific)
   console.log('  Instruction 1:', detail.instructionCode1);
   console.log('  Instruction 2:', detail.instructionCode2);
@@ -203,10 +203,10 @@ retorno.details.forEach((detail, index) => {
   console.log('  Our Number:', detail.ourNumber);
   console.log('  Document:', detail.documentNumber);
   console.log('  Amount: R$', (detail.amount / 100).toFixed(2));
-  
+
   // Occurrence code (RETORNO-specific)
   console.log('  Occurrence:', detail.occurrenceCode);
-  
+
   // Occurrence code meanings (common values):
   switch (detail.occurrenceCode) {
     case '02':
@@ -278,20 +278,20 @@ const remessaData: Cnab400File = {
       issueDate: new Date('2026-01-21'),
       instructionCode1: '00',    // No instruction
       instructionCode2: '00',
-      
+
       // Interest (optional)
       interestAmount: 0,
-      
+
       // Discount (optional)
       discountDate: undefined,
       discountAmount: 0,
-      
+
       // IOF (optional)
       iofAmount: 0,
-      
+
       // Rebate (optional)
       rebateAmount: 0,
-      
+
       // Payer information
       payerRegistrationType: '02',  // 02 = CNPJ
       payerTaxId: '98765432000100',
@@ -300,7 +300,7 @@ const remessaData: Cnab400File = {
       payerCity: 'SAO PAULO',
       payerState: 'SP',
       payerPostalCode: '01310100',
-      
+
       sequentialNumber: 1
     },
     {
@@ -545,12 +545,12 @@ console.log(`Found ${paidSlips.length} payments`);
 paidSlips.forEach(slip => {
   const amountPaid = slip.amount / 100;
   const paymentDate = slip.paymentDate?.toLocaleDateString('pt-BR');
-  
+
   console.log(`\nSlip ${slip.ourNumber}:`);
   console.log(`  Document: ${slip.documentNumber}`);
   console.log(`  Amount: R$ ${amountPaid.toFixed(2)}`);
   console.log(`  Payment Date: ${paymentDate}`);
-  
+
   // Update your database
   // await updateInvoiceAsPaid(slip.documentNumber, amountPaid, slip.paymentDate);
 });
@@ -585,7 +585,7 @@ const details: DetailRecord[] = [];
 for (let i = 0; i < invoices.length; i++) {
   const invoice = invoices[i];
   const customer = await getCustomer(invoice.customerId);
-  
+
   details.push({
     recordType: '1',
     companyRegistrationNumber: '12345678000195',
@@ -670,7 +670,7 @@ parsed.details.forEach(detail => {
   if (!detail.interestAmount || detail.interestAmount === 0) {
     detail.interestAmount = Math.round(detail.amount * 0.02);
   }
-  
+
   // Add instruction to protest after 10 days
   detail.instructionCode1 = '09';  // Protest after N days
   detail.instructionCode2 = '10';  // 10 days
@@ -786,10 +786,10 @@ function processCnabFile(filename: string) {
     console.log(`[INFO] Processing ${filename}`);
     const content = readFileSync(filename, 'utf-8');
     const parsed = parseCnab400(content);
-    
+
     console.log(`[INFO] Parsed ${parsed.details.length} records`);
     console.log(`[INFO] Operation type: ${parsed.header.operationType === '1' ? 'REMESSA' : 'RETORNO'}`);
-    
+
     return parsed;
   } catch (error) {
     if (error instanceof ParseError) {
@@ -858,7 +858,7 @@ if (parsed.header.operationType === '1') {
 
 **Issue**: Trailer shows different totalRecords than actual count.
 
-**Solution**: 
+**Solution**:
 
 ```typescript
 // Count actual detail records
