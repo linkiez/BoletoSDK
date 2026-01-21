@@ -1,2 +1,10 @@
 // CNAB 240 generators barrel
-// Add exports here as files are created
+export * from './BatchHeaderGenerator';
+export * from './BatchTrailerGenerator';
+export * from './Cnab240Generator';
+export * from './FileHeaderGenerator';
+export * from './FileTrailerGenerator';
+export * from './LineGenerator';
+export * from './SegmentPGenerator';
+export * from './SegmentQGenerator';
+export * from './SegmentRGenerator';
