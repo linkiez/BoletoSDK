@@ -9,16 +9,16 @@
 
 import { ParseError } from '../../errors';
 import type {
-    Cnab400File,
-    Cnab400ReturnFile,
-    DetailRecord,
-    FileHeader,
-    FileTrailer,
-    GuarantorRecord,
-    MessageBackRecord,
-    MessageFrontRecord,
-    PenaltyRecord,
-    ReturnDetailRecord,
+  Cnab400File,
+  Cnab400ReturnFile,
+  DetailRecord,
+  FileHeader,
+  FileTrailer,
+  GuarantorRecord,
+  MessageBackRecord,
+  MessageFrontRecord,
+  PenaltyRecord,
+  ReturnDetailRecord,
 } from '../../types/cnab400';
 import { parseDateShort, parseDecimal, parseNumber } from '../../utils/parsers';
 
@@ -38,9 +38,12 @@ export function parseFileHeader(line: string): FileHeader {
     throw new ParseError(`Invalid record type for header: ${line.charAt(0)}`, 1);
   }
 
+  const operationType = line.substring(1, 2) as '1' | '2';
+  const isRetorno = operationType === '2';
+
   return {
     recordType: '0',
-    operationType: line.substring(1, 2) as '1' | '2',
+    operationType,
     operationLiteral: line.substring(2, 9).trim(),
     serviceCode: line.substring(9, 11),
     serviceLiteral: line.substring(11, 26).trim(),
@@ -53,7 +56,12 @@ export function parseFileHeader(line: string): FileHeader {
     bankName: line.substring(79, 94).trim(),
     generationDate: parseDateShort(line.substring(94, 100)),
     sequenceNumber: parseNumber(line.substring(110, 115).trim()),
-    creationDate: line.substring(113, 119).trim() ? parseDateShort(line.substring(113, 119).trim()) : undefined,
+    // creationDate only exists in RETORNO files (position 114-119)
+    // REMESSA files have blanks in position 101-394
+    creationDate:
+      isRetorno && line.substring(113, 119).trim()
+        ? parseDateShort(line.substring(113, 119).trim())
+        : undefined,
   };
 }
 

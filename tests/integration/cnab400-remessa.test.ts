@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { parseCnab400 } from '../../src/parsers/cnab400';
 import { generateCnab400 } from '../../src/generators/cnab400';
+import { parseCnab400 } from '../../src/parsers/cnab400';
 import type { Cnab400File } from '../../src/types/cnab400';
 
 /**
@@ -139,8 +139,7 @@ describe('CNAB400 REMESSA - Integration Tests', () => {
       });
     });
 
-    // Generator needs REMESSA support (currently optimized for RETORNO)
-    it.skip('should generate same number of lines as original', () => {
+    it('should generate same number of lines as original', () => {
       const originalLines = remessaContent.split('\n').filter((line) => line.length > 0);
       const generated = generateCnab400(parsedRemessa);
       const generatedLines = generated.split('\n').filter((line) => line.length > 0);
@@ -168,8 +167,7 @@ describe('CNAB400 REMESSA - Integration Tests', () => {
       expect(detailLines.length).toBe(parsedRemessa.details.length);
     });
 
-    // Generator needs REMESSA support (currently optimized for RETORNO)
-    it.skip('should preserve header data after round-trip', () => {
+    it('should preserve header data after round-trip', () => {
       const generated = generateCnab400(parsedRemessa);
       const reparsed = parseCnab400(generated) as Cnab400File;
 
@@ -178,14 +176,14 @@ describe('CNAB400 REMESSA - Integration Tests', () => {
       expect(reparsed.header.companyName).toBe(parsedRemessa.header.companyName);
     });
 
-    it.skip('should preserve detail count after round-trip', () => {
+    it('should preserve detail count after round-trip', () => {
       const generated = generateCnab400(parsedRemessa);
       const reparsed = parseCnab400(generated) as Cnab400File;
 
       expect(reparsed.details.length).toBe(parsedRemessa.details.length);
     });
 
-    it.skip('should preserve trailer data after round-trip', () => {
+    it('should preserve trailer data after round-trip', () => {
       const generated = generateCnab400(parsedRemessa);
       const reparsed = parseCnab400(generated) as Cnab400File;
 
