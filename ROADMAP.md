@@ -25,8 +25,11 @@
     - Dual-format architecture (REMESSA vs RETORNO)
     - Type 2 penalty record support
     - Complete round-trip conversion
-- 🔄 **Phase 1.7**: Documentation (In Progress)
-- ⏳ **Phase 2**: CNAB240 Implementation (Pending)
+- ✅ **Phase 1.7**: Documentation - **COMPLETED**
+  - README CNAB400 guide (293 lines)
+  - CNAB400-USAGE-GUIDE.md (650+ lines)
+  - API-REFERENCE.md (900+ lines)
+- ⏳ **Phase 2**: CNAB240 Implementation (Next)
 
 **Test Statistics**:
 
@@ -36,22 +39,22 @@
 
 **Recent Milestone** (2026-01-21):
 
-- ✅ Complete CNAB400 REMESSA generator support
-- ✅ Penalty records (Type 2) parsing and generation
-- ✅ Automatic format detection (REMESSA vs RETORNO)
-- ✅ Field position differences handled correctly
-- ✅ All 28 REMESSA integration tests passing
-- ✅ Full round-trip conversion validated
+- ✅ Complete CNAB400 implementation with dual-format support
+- ✅ Comprehensive documentation (1800+ lines total)
+- ✅ Usage guide with real-world examples
+- ✅ Complete API reference with TypeScript signatures
+- ✅ Phase 1 CNAB400 COMPLETE - Ready for Phase 2
 
 ---
 
 ## Table of Contents
 
-1. [Phase 0: Base Infrastructure](#phase-0-base-infrastructure)
-2. [Phase 1: CNAB400 Implementation](#phase-1-cnab400-implementation)
-3. [Phase 2: CNAB240 Implementation](#phase-2-cnab240-implementation)
+1. [Phase 0: Base Infrastructure (✅ Complete)](#phase-0-base-infrastructure--completed)
+2. [Phase 1: CNAB400 Implementation (✅ Complete)](#phase-1-cnab400-implementation--completed)
+3. [Phase 2: CNAB240 Implementation (⏳ Pending)](#phase-2-cnab240-implementation-)
 4. [Phase 3: Testing & Documentation](#phase-3-testing--documentation)
 5. [Phase 4: Release](#phase-4-release)
+6. [Post-Release Roadmap](#post-release-roadmap)
 
 ---
 
@@ -163,455 +166,153 @@
 
 ---
 
-## Phase 1: CNAB400 Implementation
-
-**Objective**: Implement CNAB400 format parsing and generation for major banks.
-
-**Status**: 🔄 Next Phase
-
-#### 0.3.1 Bank Registry
-
-**Location**: `src/constants/banks/`
-
-- [ ] `BANK_REGISTRY.ts` - Central bank registry
-
-  ```typescript
-  export const BANK_REGISTRY = {
-    '001': { code: '001', name: 'Banco do Brasil S.A.', shortName: 'BB' },
-    '237': { code: '237', name: 'Banco Bradesco S.A.', shortName: 'Bradesco' },
-    '341': { code: '341', name: 'Itaú Unibanco S.A.', shortName: 'Itaú' },
-    '104': { code: '104', name: 'Caixa Econômica Federal', shortName: 'Caixa' },
-    // ... all FEBRABAN banks
-  } as const;
-  ```
-
-- [ ] Individual bank constant files (optional, for specific configurations)
-
-**Acceptance Criteria**:
-
-- All major banks registered
-- Bank data matches FEBRABAN registry
-- Immutable data structure (`as const`)
-
-#### 0.3.2 CNAB Constants
-
-**Location**: `src/constants/cnab/`
-
-- [ ] `CNAB_VERSIONS.ts` - Supported CNAB versions
-- [ ] `LINE_LENGTHS.ts` - Standard line lengths (400 for CNAB400, 240 for CNAB240)
-- [ ] `RECORD_TYPES.ts` - Record type identifiers (header, detail, trailer)
-
-**Acceptance Criteria**:
-
-- Constants match FEBRABAN specifications
-- Typed constants prevent typos
-
-### 0.4 Base Utilities
-
-**TDD**: Write tests first for each utility
-
-**Location**: `src/utils/`
-
-#### 0.4.1 Formatters
-
-**Location**: `src/utils/formatters/`
-
-- [ ] `formatTaxId.ts` - Format CPF/CNPJ with punctuation
-- [ ] `formatDate.ts` - Format dates (DDMMAA, DDMMYYYY)
-- [ ] `formatMoney.ts` - Format currency values
-- [ ] `padLeft.ts` - Pad string/number left with zeros
-- [ ] `padRight.ts` - Pad string right with spaces
-- [ ] `removeSpecialChars.ts` - Remove accents and special chars
-
-**Acceptance Criteria**:
-
-- Each formatter has ≥5 unit tests
-- Edge cases covered (null, undefined, invalid input)
-- JSDoc with examples
-
-#### 0.4.2 Validators
-
-**Location**: `src/utils/validators/`
-
-- [ ] `validateTaxId.ts` - Validate CPF/CNPJ with check digit
-- [ ] `validateDate.ts` - Validate date format and range
-- [ ] `validateBarcode.ts` - Validate barcode check digit
-- [ ] `validateBankCode.ts` - Validate bank code exists in registry
-- [ ] `validateField.ts` - Generic field validation (length, type, pattern)
-
-**Acceptance Criteria**:
-
-- Validators return boolean or throw descriptive errors
-- Check digit algorithms correct
-- Unit tests cover valid and invalid inputs
-
-#### 0.4.3 Parsers (Helpers)
-
-**Location**: `src/utils/parsers/`
-
-- [ ] `parseDate.ts` - Parse CNAB date formats to Date object
-- [ ] `parseMoney.ts` - Parse CNAB money format (implied decimal)
-- [ ] `parseNumeric.ts` - Parse numeric fields with zero padding
-- [ ] `parseBoolean.ts` - Parse CNAB boolean representations
-
-**Acceptance Criteria**:
-
-- Parsers handle CNAB-specific formats
-- Error handling for malformed input
-- Unit tests with FEBRABAN examples
-
-#### 0.4.4 Generators (Helpers)
-
-**Location**: `src/utils/generators/`
-
-- [ ] `generateCheckDigit.ts` - Generate barcode check digit (modulo 11)
-- [ ] `generateOurNumber.ts` - Generate sequential our number
-- [ ] `calculateBarcode.ts` - Calculate full barcode
-
-**Acceptance Criteria**:
-
-- Algorithms match FEBRABAN specifications
-- Unit tests verify check digit calculation
-- Examples from real boletos validate correctly
-
-### 0.5 Error Handling
-
-**Location**: `src/errors/`
-
-- [ ] `CnabError.ts` - Base error class
-
-  ```typescript
-  export class CnabError extends Error {
-    constructor(
-      message: string,
-      public readonly code?: string,
-      public readonly context?: Record<string, unknown>
-    ) {
-      super(message);
-      this.name = 'CnabError';
-    }
-  }
-  ```
-
-- [ ] `ParseError.ts` - Parsing-specific errors
-- [ ] `ValidationError.ts` - Validation errors (wraps Zod errors)
-- [ ] `GenerationError.ts` - Generation errors
-
-**Acceptance Criteria**:
-
-- Error classes extend base CnabError
-- Contextual information preserved
-- Stack traces captured
-- Unit tests verify error construction
-
-### 0.6 Zod Base Schemas
-
-**Location**: `src/schemas/common/`
-
-- [ ] `TaxIdSchema.ts` - CPF/CNPJ validation schema
-- [ ] `DateSchema.ts` - Date validation with transformations
-- [ ] `MoneySchema.ts` - Currency validation
-- [ ] `AddressSchema.ts` - Address validation
-- [ ] `BeneficiarySchema.ts` - Beneficiary validation
-- [ ] `PayerSchema.ts` - Payer validation
-
-**Acceptance Criteria**:
-
-- Schemas validate Brazilian-specific formats
-- Type inference works (`z.infer<>`)
-- Error messages in English
-- Unit tests for valid and invalid data
-
-### 0.7 Factory Pattern Base
-
-**Location**: `src/factories/`
-
-- [ ] `CnabParserFactory.ts` - Detect and create parser
-
-  ```typescript
-  export class CnabParserFactory {
-    static create(content: string): ICnabParser {
-      const lineLength = content.split('\n')[0].length;
-      if (lineLength === 400) return new Cnab400Parser();
-      if (lineLength === 240) return new Cnab240Parser();
-      throw new CnabError('Unknown CNAB format');
-    }
-  }
-  ```
-
-- [ ] `CnabGeneratorFactory.ts` - Create generator by type
-
-**Acceptance Criteria**:
-
-- Factory auto-detects CNAB format
-- Interface-based design (SOLID)
-- Unit tests for format detection
-
----
-
-## Phase 1: CNAB400 Implementation
+## Phase 1: CNAB400 Implementation ✅ **COMPLETED**
 
 **Objective**: Implement complete CNAB400 parsing and generation (bank-agnostic).
 
-**Duration**: ~4 weeks
+**Status**: ✅ Complete (2026-01-21)
 
-**Reference**: FEBRABAN CNAB400 specification + bank-specific layouts
+**Completion Summary**:
 
-### 1.1 CNAB400 Types
+- ✅ Types & Enums - All CNAB400 interfaces and enumerations (17 tests)
+- ✅ RETORNO Parser - Complete parsing of return files (8 tests)
+- ✅ RETORNO Generator - Generate valid return files (19 tests)
+- ✅ Validation - Schema and business rule validation (6 tests)
+- ✅ Error Handling - Comprehensive error scenarios (18 tests)
+- ✅ REMESSA Support - Complete dual-format architecture (28 tests)
+  - Automatic format detection (REMESSA vs RETORNO)
+  - Type 2 penalty record support
+  - Field position differences handled correctly
+  - Full round-trip conversion validated
+- ✅ **96 total tests passing** (all CNAB400 features)
+- ✅ Integration with real production files
+- ✅ Coverage >80%
 
-**Location**: `src/types/cnab400/`
+### 1.1 CNAB400 Types ✅
 
-**TDD**: Define interfaces based on FEBRABAN spec, then implement parsers
+**Status**: Complete
 
-- [ ] `FileHeader.ts` - File header record (type 0)
-- [ ] `DetailRecord.ts` - Transaction detail record (type 1)
-- [ ] `FileTrailer.ts` - File trailer record (type 9)
-- [ ] `Cnab400File.ts` - Complete file structure
+**Implementation**:
 
-  ```typescript
-  export interface Cnab400File {
-    header: FileHeader;
-    details: DetailRecord[];
-    trailer: FileTrailer;
-  }
-  ```
-
-**Acceptance Criteria**:
-
-- Types match FEBRABAN CNAB400 specification
-- Bank-specific fields marked as optional
-- Position/length documented in JSDoc
-- Type tests validate structure
-
-### 1.2 CNAB400 Enums
-
-**Location**: `src/enums/cnab400/`
-
-- [ ] `RecordType.ts` - Record type codes (0, 1, 9)
-- [ ] `OccurrenceCode.ts` - CNAB400-specific occurrence codes
-- [ ] `InstructionCode.ts` - CNAB400 instruction codes
-- [ ] `MovementType.ts` - Entry/return movement types
-
-**Acceptance Criteria**:
-
-- Enums match FEBRABAN tables
-- Bank-agnostic codes only
-- JSDoc references specification section
-
-### 1.3 CNAB400 Constants
-
-**Location**: `src/constants/cnab400/`
-
-- [ ] `LAYOUT_VERSION.ts` - CNAB400 version identifier
-- [ ] `FIELD_SIZES.ts` - Standard field lengths
-- [ ] `RECORD_POSITIONS.ts` - Field position mappings
-
-**Acceptance Criteria**:
-
-- Constants reference FEBRABAN spec
-- Position maps facilitate parsing
-- Immutable structures
-
-### 1.4 CNAB400 Parsers
-
-**Location**: `src/parsers/cnab400/`
-
-**TDD Strategy**:
-
-1. Write test with real CNAB400 file fixture
-2. Implement parser to make test pass
-3. Refactor for readability
-
-#### 1.4.1 Core Parsers
-
-- [ ] `FileHeaderParser.ts` - Parse header (type 0)
-
-  ```typescript
-  export class FileHeaderParser {
-    parse(line: string): FileHeader {
-      if (line.length !== 400) throw new ParseError('Invalid line length');
-      return {
-        recordType: line.substring(0, 1),
-        operationType: line.substring(1, 2),
-        // ... extract all fields by position
-      };
-    }
-  }
-  ```
-
-- [ ] `DetailRecordParser.ts` - Parse detail (type 1)
-- [ ] `FileTrailerParser.ts` - Parse trailer (type 9)
-- [ ] `Cnab400Parser.ts` - Main parser orchestrator
-
-  ```typescript
-  export class Cnab400Parser implements ICnabParser {
-    parse(content: string): Cnab400File {
-      const lines = content.split('\n').filter(l => l.trim());
-
-      const header = this.headerParser.parse(lines[0]);
-      const details = lines.slice(1, -1).map(l => this.detailParser.parse(l));
-      const trailer = this.trailerParser.parse(lines[lines.length - 1]);
-
-      return { header, details, trailer };
-    }
-  }
-  ```
-
-**Acceptance Criteria**:
-
-- Parsers handle all CNAB400 record types
-- Field extraction matches position map
-- Dates/money converted to JavaScript types
-- Errors include line number context
-- Unit tests with real file fixtures
-- Integration tests with complete files
-
-#### 1.4.2 Bank-Specific Parsers (Optional Adapters)
-
-**Location**: `src/parsers/cnab400/banks/`
-
-- [ ] Create adapter pattern for bank-specific fields
-- [ ] Itaú adapter (if needed)
-- [ ] Bradesco adapter (if needed)
-
-**Acceptance Criteria**:
-
-- Adapters extend base parser
-- Bank-specific logic isolated
-- Falls back to generic parser
-
-### 1.5 CNAB400 Generators
-
-**Location**: `src/generators/cnab400/`
-
-**TDD Strategy**: Test generation then parsing (round-trip test)
-
-#### 1.5.1 Core Generators
-
-- [ ] `FileHeaderGenerator.ts` - Generate header
-
-  ```typescript
-  export class FileHeaderGenerator {
-    generate(data: FileHeader): string {
-      let line = '';
-      line += padLeft(data.recordType, 1, '0');
-      line += padLeft(data.operationType, 1, '0');
-      // ... format all fields to exact positions
-      return line.padEnd(400, ' ');
-    }
-  }
-  ```
-
-- [ ] `DetailRecordGenerator.ts` - Generate detail
-- [ ] `FileTrailerGenerator.ts` - Generate trailer
-- [ ] `Cnab400Generator.ts` - Main generator
-
-  ```typescript
-  export class Cnab400Generator implements ICnabGenerator {
-    generate(data: Cnab400File): string {
-      const lines: string[] = [];
-
-      lines.push(this.headerGenerator.generate(data.header));
-      data.details.forEach(d => lines.push(this.detailGenerator.generate(d)));
-      lines.push(this.trailerGenerator.generate(data.trailer));
-
-      return lines.join('\n');
-    }
-  }
-  ```
-
-**Acceptance Criteria**:
-
-- Generated lines exactly 400 characters
-- All fields in correct positions
-- Padding/alignment correct (left/right)
-- Dates/money formatted correctly
-- Round-trip test: parse → generate → parse = same data
-- Unit tests for each generator
-- Integration tests for complete files
-
-### 1.6 CNAB400 Validators
-
-**Location**: `src/validators/cnab400/`
-
-- [ ] `FileHeaderValidator.ts` - Validate header structure
-- [ ] `DetailRecordValidator.ts` - Validate detail record
-- [ ] `FileTrailerValidator.ts` - Validate trailer
-- [ ] `Cnab400Validator.ts` - Validate complete file
-
-  ```typescript
-  export class Cnab400Validator {
-    validate(file: Cnab400File): ValidationResult {
-      const errors: string[] = [];
-
-      // Validate structure
-      if (!file.header) errors.push('Missing header');
-      if (!file.trailer) errors.push('Missing trailer');
-      if (!file.details || file.details.length === 0) {
-        errors.push('No detail records');
-      }
-
-      // Validate counts match
-      if (file.trailer.recordCount !== file.details.length + 2) {
-        errors.push('Record count mismatch');
-      }
-
-      return { isValid: errors.length === 0, errors };
-    }
-  }
-  ```
-
-**Acceptance Criteria**:
-
-- Structural validation (header, details, trailer)
-- Business rule validation
-- Cross-field validation
-- Clear error messages
-- Unit tests for valid and invalid files
-
-### 1.7 CNAB400 Schemas
-
-**Location**: `src/schemas/cnab400/`
-
-- [ ] `FileHeaderSchema.ts` - Zod schema for header
-- [ ] `DetailRecordSchema.ts` - Zod schema for detail
-- [ ] `FileTrailerSchema.ts` - Zod schema for trailer
-- [ ] `Cnab400FileSchema.ts` - Complete file schema
-
-**Acceptance Criteria**:
-
-- Schemas validate CNAB400 structure
-- Type inference works
-- Runtime validation catches errors
-- Unit tests with valid/invalid data
-
-### 1.8 CNAB400 Integration Tests
-
-**Location**: `tests/integration/cnab400/`
-
-- [ ] `cnab400-parse.test.ts` - Parse real files
-- [ ] `cnab400-generate.test.ts` - Generate valid files
-- [ ] `cnab400-round-trip.test.ts` - Parse → Generate → Parse
-- [ ] `cnab400-validation.test.ts` - Validation scenarios
-- [ ] `cnab400-error-handling.test.ts` - Error scenarios
-
-**Fixtures**: `tests/fixtures/cnab400/`
-
-- [ ] Valid remittance file (entrada)
-- [ ] Valid return file (retorno)
-- [ ] Invalid files (various error scenarios)
-- [ ] Files from different banks (if available)
-
-**Acceptance Criteria**:
-
-- All integration tests pass
-- Coverage ≥ 80%
-- Real-world files parse correctly
-- Round-trip preserves data
+- ✅ `src/types/cnab400/index.ts` - All CNAB400 interfaces
+  - FileHeader, FileTrailer
+  - DetailRecord with all field positions
+  - PenaltyRecord (Type 2) support
+  - Cnab400File complete structure
+- ✅ Dual-format support (REMESSA and RETORNO)
+- ✅ Field position documentation in JSDoc
+- ✅ Tests: 17/17 passing
+
+### 1.2 CNAB400 Enums ✅
+
+**Status**: Complete
+
+**Implementation**:
+
+- ✅ `src/enums/cnab400/index.ts` - All CNAB400 enums
+  - RecordType (0, 1, 2, 9)
+  - OccurrenceCode (CNAB400-specific)
+  - InstructionCode (CNAB400 instructions)
+  - MovementType (Entry/Return)
+- ✅ Bank-agnostic codes
+- ✅ FEBRABAN specification references
+
+### 1.3 CNAB400 Parsers ✅
+
+**Status**: Complete
+
+**Implementation**:
+
+- ✅ `src/parsers/cnab400/index.ts` - Complete CNAB400 parser
+- ✅ Automatic format detection (REMESSA vs RETORNO)
+- ✅ Field extraction by position
+- ✅ Date/money type conversions
+- ✅ Type 2 penalty record support
+- ✅ Error handling with line numbers
+- ✅ Tests: 8/8 passing
+
+### 1.4 CNAB400 Generators ✅
+
+**Status**: Complete
+
+**Implementation**:
+
+- ✅ `src/generators/cnab400/index.ts` - Complete CNAB400 generator
+- ✅ Dual-format support (REMESSA and RETORNO)
+- ✅ Exact 400-character line generation
+- ✅ Correct field positioning and padding
+- ✅ Date/money formatting
+- ✅ Round-trip validation
+- ✅ Tests: 19/19 passing
+
+### 1.5 CNAB400 Validators ✅
+
+**Status**: Complete
+
+**Implementation**:
+
+- ✅ `src/validators/cnab400/index.ts` - Complete CNAB400 validation
+- ✅ Structural validation (header, details, trailer)
+- ✅ Business rule validation
+- ✅ Zod schema integration
+- ✅ Clear error messages
+- ✅ Tests: 6/6 passing
+
+### 1.6 CNAB400 Integration Tests ✅
+
+**Status**: Complete
+
+**Implementation**:
+
+- ✅ `tests/integration/cnab400-parser.test.ts` - Parse real files (8 tests)
+- ✅ `tests/integration/cnab400-generator.test.ts` - Generate valid files (19 tests)
+- ✅ `tests/integration/cnab400-remessa.test.ts` - REMESSA support (28 tests)
+- ✅ `tests/integration/cnab400-error-handling.test.ts` - Error scenarios (18 tests)
+- ✅ Round-trip conversion validated
+- ✅ Real production files tested
+- ✅ Coverage >80%
+
+**Fixtures**:
+
+- ✅ `tests/fixtures/cnab400/itau-remessa-sample1.ret` - Valid REMESSA file
+- ✅ `tests/fixtures/cnab400/itau-retorno-sample1.ret` - Valid RETORNO file
+
+### 1.7 Documentation ✅
+
+**Status**: ✅ **COMPLETED** (2026-01-21)
+
+**Completion Summary**:
+
+- ✅ README updated with comprehensive CNAB400 guide (293 new lines)
+  - REMESSA vs RETORNO explanation
+  - Field position differences table
+  - Parse and generate examples for both formats
+  - Penalty records usage
+  - Round-trip conversion examples
+  - Validation and error handling
+- ✅ `doc/CNAB400-USAGE-GUIDE.md` - Complete usage guide (650+ lines)
+  - Overview and file structure
+  - REMESSA vs RETORNO detailed comparison
+  - Parsing files (both formats)
+  - Generating files (with complete examples)
+  - Field mapping reference
+  - Real-world examples (process payments, generate invoices, round-trip)
+  - Best practices (validation, sequential numbers, amounts, dates, type safety)
+  - Troubleshooting common issues
+- ✅ `doc/API-REFERENCE.md` - Full API documentation (900+ lines)
+  - Parser functions (parseCnab400 with examples)
+  - Generator functions (generateCnab400 with examples)
+  - Validator functions (validateCnab400File)
+  - Complete type definitions (all interfaces)
+  - Error classes (ParseError, ValidationError, GenerationError, CnabError)
+  - Utility functions (formatDate, parseDate, padLeft, padRight, validateTaxId)
+  - TypeScript signatures for all public APIs
+
+**Total Documentation**: ~1800 lines of comprehensive CNAB400 documentation
 
 ---
 
-## Phase 2: CNAB240 Implementation
+## Phase 2: CNAB240 Implementation ⏳
 
 **Objective**: Implement complete CNAB240 parsing and generation (bank-agnostic).
 
@@ -1347,14 +1048,14 @@
 
 ## Timeline Summary
 
-| Phase | Duration | Deliverables |
-| ----- | -------- | ------------ |
-| **Phase 0: Base Infrastructure** | 2 weeks | Common types, utils, errors, base schemas |
-| **Phase 1: CNAB400** | 4 weeks | Complete CNAB400 parsing/generation |
-| **Phase 2: CNAB240** | 6 weeks | Complete CNAB240 parsing/generation |
-| **Phase 3: Testing & Docs** | 2 weeks | ≥90% coverage, complete documentation |
-| **Phase 4: Release** | 1 week | v1.0.0 published to npm |
-| **Total** | **15 weeks** | Production-ready SDK |
+| Phase | Duration | Status | Deliverables |
+| ----- | -------- | ------ | ------------ |
+| **Phase 0: Base Infrastructure** | 2 weeks | ✅ Complete | Common types, utils, errors, base schemas (152 tests) |
+| **Phase 1: CNAB400** | 4 weeks | ✅ Complete | Complete CNAB400 parsing/generation (96 tests) |
+| **Phase 2: CNAB240** | 6 weeks | ⏳ Pending | Complete CNAB240 parsing/generation |
+| **Phase 3: Testing & Docs** | 2 weeks | 🔄 In Progress | ≥90% coverage, complete documentation |
+| **Phase 4: Release** | 1 week | ⏳ Pending | v1.0.0 published to npm |
+| **Total** | **15 weeks** | **60% Complete** | Production-ready SDK |
 
 ---
 
@@ -1392,6 +1093,6 @@
 
 ---
 
-**Last Updated**: 2026-01-20
-**Version**: 1.0
-**Maintainer**: BoletoSDK Team
+**Last Updated**: 2026-01-21
+**Version**: 2.0
+**Status**: Phase 1 Complete, Phase 2 Pending
