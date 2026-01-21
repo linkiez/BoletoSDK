@@ -245,6 +245,18 @@ export interface SegmentP {
   currencyCode: string;
 
   /**
+   * Company identification (35.3P) - 25 characters
+   * Internal reference/document number used by the company
+   */
+  companyIdentification?: string;
+
+  /**
+   * Contract number (41.3P) - 10 characters
+   * Loan/credit operation contract number
+   */
+  contractNumber?: string;
+
+  /**
    * Agreement number (optional)
    */
   agreementNumber?: string;

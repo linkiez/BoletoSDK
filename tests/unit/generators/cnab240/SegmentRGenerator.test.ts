@@ -160,8 +160,11 @@ describe('SegmentRGenerator', () => {
       };
       const line = generator.generate(segment);
 
-      // Payer information (positions 90-129 - 40 chars)
-      expect(line.substring(89, 129)).toBe('PAYMENT INSTRUCTION LINE 3              ');
+      // Per FEBRABAN spec:
+      // Position 90-99 (PAYER_INFO): 10 chars - reserved/empty
+      // Position 100-139 (MESSAGE_3): 40 chars - payerInformation
+      expect(line.substring(89, 99)).toBe(' '.repeat(10)); // PAYER_INFO empty
+      expect(line.substring(99, 139)).toBe('PAYMENT INSTRUCTION LINE 3              ');
     });
 
     it('should handle payer information line 4', () => {
@@ -171,8 +174,8 @@ describe('SegmentRGenerator', () => {
       };
       const line = generator.generate(segment);
 
-      // Payer information 2 (positions 130-169 - 40 chars)
-      expect(line.substring(129, 169)).toBe('PAYMENT INSTRUCTION LINE 4              ');
+      // Position 140-179 (MESSAGE_4): 40 chars - payerInformation2
+      expect(line.substring(139, 179)).toBe('PAYMENT INSTRUCTION LINE 4              ');
     });
 
     it('should truncate long payer information', () => {
@@ -183,8 +186,21 @@ describe('SegmentRGenerator', () => {
       };
       const line = generator.generate(segment);
 
-      expect(line.substring(89, 129)).toBe('A'.repeat(40));
-      expect(line.substring(129, 169)).toBe('B'.repeat(40));
+      // MESSAGE_3 at positions 100-139 (40 chars)
+      expect(line.substring(99, 139)).toBe('A'.repeat(40));
+      // MESSAGE_4 at positions 140-179 (40 chars)
+      expect(line.substring(139, 179)).toBe('B'.repeat(40));
+    });
+
+    it('should handle payer info field', () => {
+      const segment: SegmentR = {
+        ...createMinimalSegmentR(),
+        payerInfo: 'INFO12345',
+      };
+      const line = generator.generate(segment);
+
+      // PAYER_INFO at positions 90-99 (10 chars)
+      expect(line.substring(89, 99)).toBe('INFO12345 ');
     });
   });
 

@@ -100,72 +100,67 @@ export interface SegmentR {
   fineAmount?: number;
 
   /**
-   * Information for payer (message line 3)
+   * Payer info - 10 characters (17.3R)
+   */
+  payerInfo?: string;
+
+  /**
+   * Information for payer (message line 3) - 40 characters (18.3R)
    */
   payerInformation?: string;
 
   /**
-   * Information for payer (message line 4)
+   * Information for payer (message line 4) - 40 characters (19.3R)
    */
   payerInformation2?: string;
 
   /**
-   * CNAB reserved field
+   * CNAB reserved field - 20 characters (20.3R)
    */
   cnabReserved2?: string;
 
   /**
-   * CNAB reserved field
+   * Occurrence code complement - 8 characters (21.3R)
    */
-  cnabReserved3?: string;
+  occurrenceCodeComplement?: string;
 
   /**
-   * CNAB reserved field
-   */
-  cnabReserved4?: string;
-
-  /**
-   * Occurrence code (for this segment)
-   */
-  segmentOccurrenceCode?: string;
-
-  /**
-   * Debit bank code (for automatic debit)
+   * Debit bank code (for automatic debit) - 3 characters (22.3R)
    */
   debitBankCode?: string;
 
   /**
-   * Debit agency (for automatic debit)
+   * Debit agency (for automatic debit) - 5 characters (23.3R)
    */
   debitAgency?: string;
 
   /**
-   * Debit agency digit
+   * Debit agency digit - 1 character (24.3R)
    */
   debitAgencyDigit?: string;
 
   /**
-   * Debit account (for automatic debit)
+   * Debit account (for automatic debit) - 12 characters (25.3R)
    */
   debitAccount?: string;
 
   /**
-   * Debit account digit
+   * Debit account digit - 1 character (26.3R)
    */
   debitAccountDigit?: string;
 
   /**
-   * Debit full account digit
+   * Debit account DV (agency/account) - 1 character (27.3R)
    */
-  debitFullAccountDigit?: string;
+  debitAccountDV?: string;
 
   /**
-   * Automatic debit warning code
+   * Debit notice emission - 1 character (28.3R)
    */
-  automaticDebitWarning?: string;
+  debitNoticeEmission?: string;
 
   /**
-   * CNAB reserved field
+   * CNAB reserved field - 9 characters (29.3R)
    */
-  cnabReserved5?: string;
+  cnabReserved3?: string;
 }

@@ -58,8 +58,8 @@ describe('CNAB240 SegmentPGenerator', () => {
 
       const result = generator.generate(segment);
 
-      // Due date at positions 90-97 (DDMMYYYY)
-      expect(result.substring(89, 97)).toBe('31122026');
+      // Per FEBRABAN: Due date at positions 78-85 (DDMMYYYY)
+      expect(result.substring(77, 85)).toBe('31122026');
     });
 
     it('should format amount with implied decimals', () => {
@@ -68,9 +68,9 @@ describe('CNAB240 SegmentPGenerator', () => {
 
       const result = generator.generate(segment);
 
-      // Amount at positions 98-112 (15 digits, 2 implied decimals)
+      // Per FEBRABAN: Amount at positions 86-100 (15 digits, 2 implied decimals)
       // 1234.56 * 100 = 123456
-      expect(result.substring(97, 112)).toBe('000000000123456');
+      expect(result.substring(85, 100)).toBe('000000000123456');
     });
 
     it('should handle interest configuration', () => {
@@ -185,10 +185,10 @@ describe('CNAB240 SegmentPGenerator', () => {
 
     it('should place document number at correct position', () => {
       const segment = createMinimalSegment('001', 1, 1);
-      segment.documentNumber = 'DOC123';
+      segment.ourNumber = 'DOC123'; // This goes to DOCUMENT_NUMBER field (38-57) - "Nosso Número"
       const result = generator.generate(segment);
-      // Document number at positions 75-89 (15 chars)
-      expect(result.substring(74, 89)).toBe('DOC123         ');
+      // Per FEBRABAN: Document number (Nosso Número) at positions 38-57 (20 chars)
+      expect(result.substring(37, 57)).toBe('DOC123              ');
     });
   });
 });
