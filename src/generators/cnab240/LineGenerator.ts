@@ -24,7 +24,7 @@ export function formatField(
     return strValue.padEnd(size, ' ').substring(0, size);
   } else {
     // Numeric: left-pad with zeros, take last N digits if too long
-    const numericValue = strValue.replace(/[^\d]/g, '');
+    const numericValue = strValue.replaceAll(/[^\d]/g, '');
     return numericValue.padStart(size, '0').slice(-size);
   }
 }

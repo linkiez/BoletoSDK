@@ -48,7 +48,7 @@ export function extractField(line: string, start: number, end: number): string {
  */
 export function parseNumericField(line: string, start: number, end: number): number {
   const value = extractField(line, start, end);
-  return value.length === 0 ? 0 : parseInt(value, 10);
+  return value.length === 0 ? 0 : Number.parseInt(value, 10);
 }
 
 /**
@@ -75,7 +75,7 @@ export function parseDecimalField(
   const value = extractField(line, start, end);
   if (value.length === 0) return 0;
 
-  const numValue = parseInt(value, 10);
+  const numValue = Number.parseInt(value, 10);
   return numValue / Math.pow(10, decimals);
 }
 
@@ -97,14 +97,14 @@ export function parseDateField(line: string, start: number, end: number): Date |
   const value = extractField(line, start, end);
 
   // Check for zero date (00000000)
-  if (!value || value === '00000000' || parseInt(value, 10) === 0) {
+  if (!value || value === '00000000' || Number.parseInt(value, 10) === 0) {
     return undefined;
   }
 
   // Parse DDMMYYYY format
-  const day = parseInt(value.substring(0, 2), 10);
-  const month = parseInt(value.substring(2, 4), 10);
-  const year = parseInt(value.substring(4, 8), 10);
+  const day = Number.parseInt(value.substring(0, 2), 10);
+  const month = Number.parseInt(value.substring(2, 4), 10);
+  const year = Number.parseInt(value.substring(4, 8), 10);
 
   return new Date(year, month - 1, day);
 }

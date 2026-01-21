@@ -1,10 +1,10 @@
 import { SegmentR } from '../../types';
 import {
-    buildLine,
-    formatDateField,
-    formatDecimalField,
-    formatField,
-    formatNumericField,
+  buildLine,
+  formatDateField,
+  formatDecimalField,
+  formatField,
+  formatNumericField,
 } from './LineGenerator';
 
 /**

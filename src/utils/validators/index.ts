@@ -16,7 +16,7 @@ export function validateTaxId(taxId: string): boolean {
   if (!taxId) return false;
 
   // Remove formatting
-  const digits = taxId.replace(/\D/g, '');
+  const digits = taxId.replaceAll(/\D/g, '');
 
   // Validate contains only numeric
   if (!/^\d+$/.test(digits)) return false;

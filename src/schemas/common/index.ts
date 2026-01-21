@@ -127,7 +127,7 @@ export const PayerSchema = z.object({
   /** Address */
   address: AddressSchema.optional(),
   /** Email address */
-  email: z.string().email().optional(),
+  email: z.string().regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/).optional(),
   /** Phone number */
   phone: z.string().optional(),
 });

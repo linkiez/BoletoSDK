@@ -6,13 +6,13 @@
 
 import { ParseError } from '../../errors';
 import type {
-    Cnab400File,
-    Cnab400ReturnFile,
-    DetailRecord,
-    GuarantorRecord,
-    MessageBackRecord,
-    MessageFrontRecord,
-    PenaltyRecord,
+  Cnab400File,
+  Cnab400ReturnFile,
+  DetailRecord,
+  GuarantorRecord,
+  MessageBackRecord,
+  MessageFrontRecord,
+  PenaltyRecord,
 } from '../../types/cnab400';
 import { parseDetailRecord } from './DetailRecordParser';
 import { parseFileHeader } from './FileHeaderParser';

@@ -1,11 +1,11 @@
 import { CnabError } from '../../errors';
 import { SegmentP } from '../../types';
 import {
-    buildLine,
-    formatDateField,
-    formatDecimalField,
-    formatField,
-    formatNumericField,
+  buildLine,
+  formatDateField,
+  formatDecimalField,
+  formatField,
+  formatNumericField,
 } from './LineGenerator';
 
 /**

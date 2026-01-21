@@ -5,8 +5,8 @@
  * Follows TDD approach: write test, implement parser, verify.
  */
 
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { parseCnab400 } from '../../src/parsers/cnab400';
 
 describe('CNAB400 Parser - Integration Tests', () => {
@@ -34,13 +34,13 @@ describe('CNAB400 Parser - Integration Tests', () => {
 
     it('should have trailer as last line (type 9)', () => {
       const lines = fileContent.trim().split('\n');
-      const lastLine = lines[lines.length - 1];
+      const lastLine = lines.at(-1)!;
       expect(lastLine[0]).toBe('9');
     });
 
     it('should have detail records (type 1)', () => {
       const lines = fileContent.trim().split('\n');
-      const detailLines = lines.filter((line) => line[0] === '1');
+      const detailLines = lines.filter((line) => line.startsWith('1'));
       expect(detailLines.length).toBeGreaterThan(0);
     });
 

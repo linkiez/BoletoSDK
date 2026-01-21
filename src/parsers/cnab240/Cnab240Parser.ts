@@ -46,7 +46,7 @@ export function parseCnab240(content: string): Cnab240File {
   const fileHeader = parseFileHeader(lines[0]);
 
   // Parse file trailer (last line)
-  const fileTrailer = parseFileTrailer(lines[lines.length - 1]);
+  const fileTrailer = parseFileTrailer(lines.at(-1)!);
 
   // Parse batches (everything between file header and trailer)
   const batches = parseBatches(lines.slice(1, -1));
@@ -99,7 +99,7 @@ function parseBatch(lines: string[]): Batch {
   const header = parseBatchHeader(lines[0]);
 
   // Parse batch trailer
-  const trailer = parseBatchTrailer(lines[lines.length - 1]);
+  const trailer = parseBatchTrailer(lines.at(-1)!);
 
   // Parse detail records (segments P, Q, R)
   const details = parseDetailRecords(lines.slice(1, -1));

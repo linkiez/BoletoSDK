@@ -14,10 +14,10 @@ export function formatTaxId(taxId: string): string {
   if (!taxId) return '';
 
   // Remove existing formatting
-  const digits = taxId.replace(/\D/g, '');
+  const digits = taxId.replaceAll(/\D/g, '');
 
   // Validate contains only digits in original
-  if (taxId.replace(/[.\-/]/g, '') !== digits) {
+  if (taxId.replaceAll(/[.\-/]/g, '') !== digits) {
     throw new Error('Tax ID must contain only digits');
   }
 
@@ -67,7 +67,7 @@ export function formatMoney(value: number, options: FormatMoneyOptions = {}): st
   const [integerPart, decimalPart = ''] = Math.abs(rounded).toFixed(decimalPlaces).split('.');
 
   // Add thousand separators
-  const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  const formattedInteger = integerPart.replaceAll(/\B(?=(\d{3})+(?!\d))/g, '.');
 
   // Combine parts with Brazilian format
   const formattedValue = `${formattedInteger},${decimalPart}`;

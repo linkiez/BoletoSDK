@@ -190,27 +190,27 @@ describe('SegmentRGenerator', () => {
 
   describe('Validation', () => {
     it('should throw error if bankCode is missing', () => {
-      const segment: any = {
+      const segment: Partial<SegmentR> = {
         ...createMinimalSegmentR(),
         bankCode: undefined,
       };
-      expect(() => generator.generate(segment)).toThrow('Bank code is required');
+      expect(() => generator.generate(segment as SegmentR)).toThrow('Bank code is required');
     });
 
     it('should throw error if batchNumber is missing', () => {
-      const segment: any = {
+      const segment: Partial<SegmentR> = {
         ...createMinimalSegmentR(),
         batchNumber: undefined,
       };
-      expect(() => generator.generate(segment)).toThrow('Batch number is required');
+      expect(() => generator.generate(segment as SegmentR)).toThrow('Batch number is required');
     });
 
     it('should throw error if occurrenceCode is missing', () => {
-      const segment: any = {
+      const segment: Partial<SegmentR> = {
         ...createMinimalSegmentR(),
         occurrenceCode: undefined,
       };
-      expect(() => generator.generate(segment)).toThrow('Occurrence code is required');
+      expect(() => generator.generate(segment as SegmentR)).toThrow('Occurrence code is required');
     });
   });
 

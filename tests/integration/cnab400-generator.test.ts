@@ -50,7 +50,7 @@ describe('CNAB400 Generator - Integration Tests', () => {
     it('should generate trailer with type 9', () => {
       const generated = generateCnab400(parsedFile);
       const lines = generated.split('\n').filter((l: string) => l.length > 0);
-      const lastLine = lines[lines.length - 1];
+      const lastLine = lines.at(-1)!;
 
       expect(lastLine.charAt(0)).toBe('9');
     });

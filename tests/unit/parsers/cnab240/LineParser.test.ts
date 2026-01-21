@@ -11,9 +11,9 @@ import {
 describe('CNAB240 LineParser', () => {
   // Create a valid 240-character line for testing
   const createLine = (data: Record<number, string> = {}): string => {
-    const line = Array(240).fill(' ');
+    const line = new Array(240).fill(' ');
     Object.entries(data).forEach(([pos, value]) => {
-      const startPos = parseInt(pos, 10) - 1; // Convert to 0-indexed
+      const startPos = Number.parseInt(pos, 10) - 1; // Convert to 0-indexed
       for (let i = 0; i < value.length; i++) {
         line[startPos + i] = value[i];
       }
