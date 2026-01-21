@@ -6,6 +6,7 @@
  * @module generators/cnab400/Cnab400Generator
  */
 
+import { LINE_LENGTH } from '../../constants/cnab400';
 import { GenerationError } from '../../errors';
 import type { Cnab400File } from '../../types/cnab400';
 import { generateDetailRecord, generateDetailRecordRemessa } from './DetailRecordGenerator';
@@ -95,9 +96,9 @@ export function generateCnab400(file: Cnab400File): string {
 
   // Validate all lines are exactly 400 characters
   for (let i = 0; i < lines.length; i++) {
-    if (lines[i].length !== 400) {
+    if (lines[i].length !== LINE_LENGTH) {
       throw new GenerationError(
-        `Line ${i + 1} has invalid length: ${lines[i].length} (expected 400)`,
+        `Line ${i + 1} has invalid length: ${lines[i].length} (expected ${LINE_LENGTH})`,
         'lineLength',
       );
     }

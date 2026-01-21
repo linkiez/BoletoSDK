@@ -1,3 +1,4 @@
+import { LINE_LENGTH } from '../../constants/cnab240';
 import { BatchTrailer } from '../../types/cnab240';
 import { buildLine, formatField, formatNumericField } from './LineGenerator';
 
@@ -91,13 +92,13 @@ export class BatchTrailerGenerator {
     fields.set('referenceNumber', formatField(trailer.warningCode || '', 96, 103, 'text'));
 
     // Positions 104-240: Reserved (spaces)
-    fields.set('reserved2', formatField('', 104, 240, 'text'));
+    fields.set('reserved2', formatField('', 104, LINE_LENGTH, 'text'));
 
     const line = buildLine(fields);
 
     // Validate line length
-    if (line.length !== 240) {
-      throw new Error(`Invalid batch trailer length: expected 240, got ${line.length}`);
+    if (line.length !== LINE_LENGTH) {
+      throw new Error(`Invalid batch trailer length: expected ${LINE_LENGTH}, got ${line.length}`);
     }
 
     return line;

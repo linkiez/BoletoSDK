@@ -4,6 +4,7 @@
  * @module parsers/cnab400/ReturnDetailRecordParser
  */
 
+import { LINE_LENGTH } from '../../constants/cnab400';
 import { ParseError } from '../../errors';
 import type { ReturnDetailRecord } from '../../types/cnab400';
 import { parseDateShort, parseDecimal, parseNumber } from '../../utils/parsers';
@@ -16,7 +17,7 @@ import { parseDateShort, parseDecimal, parseNumber } from '../../utils/parsers';
  * @throws ParseError if line is invalid
  */
 export function parseReturnDetailRecord(line: string): ReturnDetailRecord {
-  if (line.length !== 400) {
+  if (line.length !== LINE_LENGTH) {
     throw new ParseError(`Invalid detail line length: ${line.length}`);
   }
 
@@ -44,7 +45,7 @@ export function parseReturnDetailRecord(line: string): ReturnDetailRecord {
     payerCity: line.substring(354, 374).trim() || undefined,
     payerState: line.substring(374, 376).trim() || undefined,
     payerZipCode: line.substring(314, 322).trim() || undefined,
-    sequentialNumber: parseNumber(line.substring(394, 400).trim()),
+    sequentialNumber: parseNumber(line.substring(LINE_LENGTH - 6, LINE_LENGTH).trim()),
   };
 
   // Return-specific date field

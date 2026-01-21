@@ -1,11 +1,12 @@
+import { LINE_LENGTH } from '../../constants/cnab240';
 import { CnabError } from '../../errors';
 import { SegmentP } from '../../types';
 import {
-  buildLine,
-  formatDateField,
-  formatDecimalField,
-  formatField,
-  formatNumericField,
+    buildLine,
+    formatDateField,
+    formatDecimalField,
+    formatField,
+    formatNumericField,
 } from './LineGenerator';
 
 /**
@@ -166,7 +167,7 @@ export class SegmentPGenerator {
     fields.set('reserved2', formatField('', 229, 229, 'text'));
 
     // Positions 230-240: Reserved
-    fields.set('reserved3', formatField('', 230, 240, 'text'));
+    fields.set('reserved3', formatField('', 230, LINE_LENGTH, 'text'));
 
     return buildLine(fields);
   }

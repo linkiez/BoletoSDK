@@ -4,15 +4,16 @@
  * @module parsers/cnab400/Cnab400Parser
  */
 
+import { LINE_LENGTH } from '../../constants/cnab400';
 import { ParseError } from '../../errors';
 import type {
-  Cnab400File,
-  Cnab400ReturnFile,
-  DetailRecord,
-  GuarantorRecord,
-  MessageBackRecord,
-  MessageFrontRecord,
-  PenaltyRecord,
+    Cnab400File,
+    Cnab400ReturnFile,
+    DetailRecord,
+    GuarantorRecord,
+    MessageBackRecord,
+    MessageFrontRecord,
+    PenaltyRecord,
 } from '../../types/cnab400';
 import { parseDetailRecord } from './DetailRecordParser';
 import { parseFileHeader } from './FileHeaderParser';
@@ -52,8 +53,11 @@ export function parseCnab400(content: string): Cnab400File | Cnab400ReturnFile {
 
   // Validate all lines are exactly 400 characters
   for (let i = 0; i < lines.length; i++) {
-    if (lines[i].length !== 400) {
-      throw new ParseError(`Invalid line length: ${lines[i].length} (expected 400)`, i + 1);
+    if (lines[i].length !== LINE_LENGTH) {
+      throw new ParseError(
+        `Invalid line length: ${lines[i].length} (expected ${LINE_LENGTH})`,
+        i + 1,
+      );
     }
   }
 

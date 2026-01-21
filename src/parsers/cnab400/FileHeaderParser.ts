@@ -4,14 +4,14 @@
  * @module parsers/cnab400/FileHeaderParser
  */
 
+import {
+  FILE_HEADER_POSITIONS,
+  FILE_HEADER_RETORNO_POSITIONS,
+  LINE_LENGTH,
+} from '../../constants/cnab400';
 import { ParseError } from '../../errors';
 import type { FileHeader } from '../../types/cnab400';
 import { parseDateShort, parseNumber } from '../../utils/parsers';
-import {
-  LINE_LENGTH,
-  FILE_HEADER_POSITIONS,
-  FILE_HEADER_RETORNO_POSITIONS,
-} from '../../constants/cnab400';
 
 /**
  * Parses file header record (Type 0)

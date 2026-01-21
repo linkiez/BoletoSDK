@@ -4,6 +4,7 @@
  * @module parsers/cnab400/PenaltyRecordParser
  */
 
+import { LINE_LENGTH } from '../../constants/cnab400';
 import { ParseError } from '../../errors';
 import type { PenaltyRecord } from '../../types/cnab400';
 import { parseDecimal, parseNumber } from '../../utils/parsers';
@@ -16,7 +17,7 @@ import { parseDecimal, parseNumber } from '../../utils/parsers';
  * @throws ParseError if line is invalid
  */
 export function parsePenaltyRecord(line: string): PenaltyRecord {
-  if (line.length !== 400) {
+  if (line.length !== LINE_LENGTH) {
     throw new ParseError(`Invalid penalty line length: ${line.length}`);
   }
 
@@ -27,7 +28,7 @@ export function parsePenaltyRecord(line: string): PenaltyRecord {
   const record: PenaltyRecord = {
     recordType: '2',
     penaltyCode: line.substring(1, 2) as '1' | '2' | '3',
-    sequentialNumber: parseNumber(line.substring(394, 400).trim()),
+    sequentialNumber: parseNumber(line.substring(LINE_LENGTH - 6, LINE_LENGTH).trim()),
   };
 
   // Optional: penalty date (DDMMYYYY format)

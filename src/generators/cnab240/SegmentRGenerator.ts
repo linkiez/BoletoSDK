@@ -1,4 +1,5 @@
 import { SegmentR } from '../../types';
+import { LINE_LENGTH } from '../../constants/cnab240';
 import {
   buildLine,
   formatDateField,
@@ -93,8 +94,8 @@ export class SegmentRGenerator {
     const line = buildLine(fields);
 
     // Validate line length
-    if (line.length !== 240) {
-      throw new Error(`Generated line has invalid length: ${line.length} (expected 240)`);
+    if (line.length !== LINE_LENGTH) {
+      throw new Error(`Generated line has invalid length: ${line.length} (expected ${LINE_LENGTH})`);
     }
 
     return line;

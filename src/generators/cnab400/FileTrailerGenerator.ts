@@ -6,10 +6,10 @@
  * @module generators/cnab400/FileTrailerGenerator
  */
 
+import { FILE_TRAILER_SIZES } from '../../constants/cnab400';
 import type { FileTrailer } from '../../types/cnab400';
 import { formatDecimal } from '../../utils/formatters';
 import { padLeft } from '../../utils/generators';
-import { FILE_TRAILER_SIZES } from '../../constants/cnab400';
 
 /**
  * Generates file trailer record (Type 9)

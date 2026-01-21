@@ -6,18 +6,18 @@
  * @module generators/cnab400/FileHeaderGenerator
  */
 
-import { GenerationError } from '../../errors';
-import type { FileHeader } from '../../types/cnab400';
-import { formatDateShort } from '../../utils/formatters';
-import { padLeft, padRight } from '../../utils/generators';
 import {
+  COMMON_FIELD_SIZES,
+  FILE_HEADER_SIZES,
   LINE_LENGTH,
   OPERATION_LITERAL_REMESSA,
   SERVICE_CODE_COBRANCA,
   SERVICE_LITERAL_COBRANCA,
-  COMMON_FIELD_SIZES,
-  FILE_HEADER_SIZES,
 } from '../../constants/cnab400';
+import { GenerationError } from '../../errors';
+import type { FileHeader } from '../../types/cnab400';
+import { formatDateShort } from '../../utils/formatters';
+import { padLeft, padRight } from '../../utils/generators';
 
 /**
  * Generates file header record (Type 0)

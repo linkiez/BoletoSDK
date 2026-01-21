@@ -7,6 +7,7 @@
  * @module parsers/cnab240/LineParser
  */
 
+import { LINE_LENGTH } from '../../constants/cnab240';
 import { ParseError } from '../../errors';
 
 /**
@@ -24,8 +25,10 @@ import { ParseError } from '../../errors';
  * ```
  */
 export function extractField(line: string, start: number, end: number): string {
-  if (line.length !== 240) {
-    throw new ParseError(`Invalid CNAB240 line length: expected 240, got ${line.length}`);
+  if (line.length !== LINE_LENGTH) {
+    throw new ParseError(
+      `Invalid CNAB240 line length: expected ${LINE_LENGTH}, got ${line.length}`,
+    );
   }
 
   // Convert from 1-indexed to 0-indexed

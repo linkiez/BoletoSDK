@@ -1,3 +1,4 @@
+import { LINE_LENGTH } from '../../constants/cnab240';
 import { BatchHeader } from '../../types/cnab240';
 import { buildLine, formatDateField, formatField, formatNumericField } from './LineGenerator';
 
@@ -140,13 +141,13 @@ export class BatchHeaderGenerator {
     fields.set('creditDate', formatDateField(header.creditDate, 199, 206));
 
     // Positions 207-240: CNAB reserved (34 spaces)
-    fields.set('cnabReserved2', formatField('', 207, 240, 'text'));
+    fields.set('cnabReserved2', formatField('', 207, LINE_LENGTH, 'text'));
 
     const line = buildLine(fields);
 
     // Validate line length
-    if (line.length !== 240) {
-      throw new Error(`Invalid batch header length: expected 240, got ${line.length}`);
+    if (line.length !== LINE_LENGTH) {
+      throw new Error(`Invalid batch header length: expected ${LINE_LENGTH}, got ${line.length}`);
     }
 
     return line;

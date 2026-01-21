@@ -4,6 +4,7 @@
  * @module parsers/cnab400/MessageRecordParser
  */
 
+import { LINE_LENGTH } from '../../constants/cnab400';
 import { ParseError } from '../../errors';
 import type { MessageBackRecord, MessageFrontRecord } from '../../types/cnab400';
 import { parseNumber } from '../../utils/parsers';
@@ -16,7 +17,7 @@ import { parseNumber } from '../../utils/parsers';
  * @throws ParseError if line is invalid
  */
 export function parseMessageFrontRecord(line: string): MessageFrontRecord {
-  if (line.length !== 400) {
+  if (line.length !== LINE_LENGTH) {
     throw new ParseError(`Invalid message line length: ${line.length}`);
   }
 
@@ -30,7 +31,7 @@ export function parseMessageFrontRecord(line: string): MessageFrontRecord {
     message2: line.substring(81, 161).trim() || undefined,
     message3: line.substring(161, 241).trim() || undefined,
     message4: line.substring(241, 321).trim() || undefined,
-    sequentialNumber: parseNumber(line.substring(394, 400).trim()),
+    sequentialNumber: parseNumber(line.substring(LINE_LENGTH - 6, LINE_LENGTH).trim()),
   };
 }
 
@@ -42,7 +43,7 @@ export function parseMessageFrontRecord(line: string): MessageFrontRecord {
  * @throws ParseError if line is invalid
  */
 export function parseMessageBackRecord(line: string): MessageBackRecord {
-  if (line.length !== 400) {
+  if (line.length !== LINE_LENGTH) {
     throw new ParseError(`Invalid message line length: ${line.length}`);
   }
 
@@ -56,6 +57,6 @@ export function parseMessageBackRecord(line: string): MessageBackRecord {
     message2: line.substring(81, 161).trim() || undefined,
     message3: line.substring(161, 241).trim() || undefined,
     message4: line.substring(241, 321).trim() || undefined,
-    sequentialNumber: parseNumber(line.substring(394, 400).trim()),
+    sequentialNumber: parseNumber(line.substring(LINE_LENGTH - 6, LINE_LENGTH).trim()),
   };
 }

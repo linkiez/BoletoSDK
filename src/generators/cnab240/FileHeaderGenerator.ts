@@ -1,3 +1,4 @@
+import { LINE_LENGTH } from '../../constants/cnab240';
 import { FileHeader } from '../../types';
 import { buildLine, formatDateField, formatField, formatNumericField } from './LineGenerator';
 
@@ -91,12 +92,14 @@ export class FileHeaderGenerator {
     fields.set('companyReserved', formatField(header.companyReserved || '', 192, 211, 'text'));
 
     // Positions 212-240: Reserved (spaces)
-    fields.set('reserved3', formatField('', 212, 240, 'text'));
+    fields.set('reserved3', formatField('', 212, LINE_LENGTH, 'text'));
 
     const line = buildLine(fields);
 
-    if (line.length !== 240) {
-      throw new Error(`Generated file header has invalid length: ${line.length} (expected 240)`);
+    if (line.length !== LINE_LENGTH) {
+      throw new Error(
+        `Generated file header has invalid length: ${line.length} (expected ${LINE_LENGTH})`,
+      );
     }
 
     return line;

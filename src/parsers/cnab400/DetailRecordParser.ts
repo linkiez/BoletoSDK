@@ -4,10 +4,10 @@
  * @module parsers/cnab400/DetailRecordParser
  */
 
+import { DETAIL_RECORD_REMESSA_POSITIONS, LINE_LENGTH } from '../../constants/cnab400';
 import { ParseError } from '../../errors';
 import type { DetailRecord } from '../../types/cnab400';
 import { parseDateShort, parseDecimal, parseNumber } from '../../utils/parsers';
-import { LINE_LENGTH, DETAIL_RECORD_REMESSA_POSITIONS } from '../../constants/cnab400';
 
 /**
  * Parses detail record (Type 1) for REMESSA files

@@ -4,6 +4,7 @@
  * @module parsers/cnab400/GuarantorRecordParser
  */
 
+import { LINE_LENGTH } from '../../constants/cnab400';
 import { ParseError } from '../../errors';
 import type { GuarantorRecord } from '../../types/cnab400';
 import { parseNumber } from '../../utils/parsers';
@@ -16,7 +17,7 @@ import { parseNumber } from '../../utils/parsers';
  * @throws ParseError if line is invalid
  */
 export function parseGuarantorRecord(line: string): GuarantorRecord {
-  if (line.length !== 400) {
+  if (line.length !== LINE_LENGTH) {
     throw new ParseError(`Invalid guarantor line length: ${line.length}`);
   }
 
@@ -34,6 +35,6 @@ export function parseGuarantorRecord(line: string): GuarantorRecord {
     guarantorZipCode: line.substring(289, 297).trim() || undefined,
     guarantorCity: line.substring(297, 312).trim() || undefined,
     guarantorState: line.substring(312, 314).trim() || undefined,
-    sequentialNumber: parseNumber(line.substring(394, 400).trim()),
+    sequentialNumber: parseNumber(line.substring(LINE_LENGTH - 6, LINE_LENGTH).trim()),
   };
 }

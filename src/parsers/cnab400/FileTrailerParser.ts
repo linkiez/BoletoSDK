@@ -4,10 +4,10 @@
  * @module parsers/cnab400/FileTrailerParser
  */
 
+import { FILE_TRAILER_POSITIONS, LINE_LENGTH } from '../../constants/cnab400';
 import { ParseError } from '../../errors';
 import type { FileTrailer } from '../../types/cnab400';
 import { parseDecimal, parseNumber } from '../../utils/parsers';
-import { LINE_LENGTH, FILE_TRAILER_POSITIONS } from '../../constants/cnab400';
 
 /**
  * Parses file trailer record (Type 9)
