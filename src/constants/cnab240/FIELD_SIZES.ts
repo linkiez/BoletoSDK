@@ -320,3 +320,9 @@ export const FILE_TRAILER_SIZES = {
  * Total line length (constant validation)
  */
 export const TOTAL_LINE_LENGTH = 240 as const;
+
+/**
+ * Common position constants (1-indexed)
+ */
+export const RECORD_TYPE_POSITION = 8;
+export const SEGMENT_CODE_POSITION = 14;

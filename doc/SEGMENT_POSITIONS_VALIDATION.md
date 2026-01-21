@@ -181,7 +181,7 @@ export const SEGMENT_P_POSITIONS = {
   DOCUMENT_TYPE: { start: 60, end: 60 }, // Tipo de Documento
   BOLETO_EMISSION: { start: 61, end: 61 }, // Emissão do Boleto
   BOLETO_DISTRIBUTION: { start: 62, end: 62 }, // Distribuição do Boleto
-  
+
   // Fields 19-42: ❌ All need to be corrected
   BILLING_DOCUMENT_NUMBER: { start: 63, end: 77 }, // Nº do Documento de Cobrança (15 chars!)
   DUE_DATE: { start: 78, end: 85 }, // Data de Vencimento
@@ -335,4 +335,3 @@ npm test
 **Status**: ⚠️ VALIDATION COMPLETE - ERRORS FOUND
 **Next Step**: Fix SEGMENT_POSITIONS.ts constants before any refactoring
 **Risk Level**: HIGH if constants not corrected first
-

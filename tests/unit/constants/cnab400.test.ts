@@ -201,7 +201,7 @@ describe('CNAB400 Field Positions', () => {
 
     it('should end at position 400', () => {
       const positions = Object.values(FILE_HEADER_POSITIONS);
-      const lastField = positions[positions.length - 1];
+      const lastField = positions.at(-1)!;
       expect(lastField.end).toBe(400);
     });
 
@@ -241,7 +241,7 @@ describe('CNAB400 Field Positions', () => {
 
     it('should end at position 400', () => {
       const positions = Object.values(DETAIL_RECORD_REMESSA_POSITIONS);
-      const lastField = positions[positions.length - 1];
+      const lastField = positions.at(-1)!;
       expect(lastField.end).toBe(400);
     });
 
@@ -274,7 +274,7 @@ describe('CNAB400 Field Positions', () => {
 
     it('should end at position 400', () => {
       const positions = Object.values(DETAIL_RECORD_RETORNO_POSITIONS);
-      const lastField = positions[positions.length - 1];
+      const lastField = positions.at(-1)!;
       expect(lastField.end).toBe(400);
     });
 
@@ -299,7 +299,7 @@ describe('CNAB400 Field Positions', () => {
 
     it('should end at position 400', () => {
       const positions = Object.values(PENALTY_RECORD_POSITIONS);
-      const lastField = positions[positions.length - 1];
+      const lastField = positions.at(-1)!;
       expect(lastField.end).toBe(400);
     });
 
@@ -327,7 +327,7 @@ describe('CNAB400 Field Positions', () => {
 
     it('should end at position 400', () => {
       const positions = Object.values(FILE_TRAILER_POSITIONS);
-      const lastField = positions[positions.length - 1];
+      const lastField = positions.at(-1)!;
       expect(lastField.end).toBe(400);
     });
 

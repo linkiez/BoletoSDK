@@ -18,6 +18,7 @@
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "sonar": "sonar-scanner",
     "prepare": "husky",
     "prepublishOnly": "yarn test && yarn lint",
     "semantic-release": "semantic-release"
@@ -25,8 +26,7 @@
   "lint-staged": {
     "*.ts": [
       "prettier --write",
-      "eslint --fix",
-      "git add"
+      "eslint --fix"
     ]
   },
   "keywords": [
@@ -64,6 +64,7 @@
     "lint-staged": "^16.2.7",
     "prettier": "^3.2.4",
     "semantic-release": "^23.0.0",
+    "sonarqube-scanner": "^4.3.4",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"

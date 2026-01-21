@@ -7,6 +7,7 @@
  * @module parsers/cnab240/SegmentPParser
  */
 
+import { SEGMENT_P_POSITIONS } from '../../constants/cnab240';
 import { SegmentP } from '../../types/cnab240';
 import {
   extractField,
@@ -30,13 +31,15 @@ import {
  * ```
  */
 export function parseSegmentP(line: string): SegmentP {
+  const POS = SEGMENT_P_POSITIONS;
+
   // Validate record type and segment code
   validateRecordType(line, '3');
   validateSegmentCode(line, 'P');
 
   // Parse required dates
-  const dueDate = parseDateField(line, 81, 88);
-  const issueDate = parseDateField(line, 113, 120);
+  const dueDate = parseDateField(line, POS.DUE_DATE.start, POS.DUE_DATE.end);
+  const issueDate = parseDateField(line, POS.ISSUE_DATE.start, POS.ISSUE_DATE.end);
 
   if (!dueDate) {
     throw new Error('Due date is required in Segment P');
@@ -47,130 +50,142 @@ export function parseSegmentP(line: string): SegmentP {
   }
 
   return {
-    // Positions 1-3: Bank code
-    bankCode: extractField(line, 1, 3),
+    // Bank code (01.3P)
+    bankCode: extractField(line, POS.BANK_CODE.start, POS.BANK_CODE.end),
 
-    // Positions 4-7: Batch number
-    batchNumber: parseNumericField(line, 4, 7),
+    // Batch number (02.3P)
+    batchNumber: parseNumericField(line, POS.BATCH_NUMBER.start, POS.BATCH_NUMBER.end),
 
-    // Position 8: Record type (always "3" for detail)
-    recordType: extractField(line, 8, 8),
+    // Record type (03.3P)
+    recordType: extractField(line, POS.RECORD_TYPE.start, POS.RECORD_TYPE.end),
 
-    // Positions 9-13: Sequential record number within batch
-    sequentialNumber: parseNumericField(line, 9, 13),
+    // Sequential record number (04.3P)
+    sequentialNumber: parseNumericField(line, POS.RECORD_NUMBER.start, POS.RECORD_NUMBER.end),
 
-    // Position 14: Segment code (always "P")
-    segmentCode: extractField(line, 14, 14),
+    // Segment code (05.3P)
+    segmentCode: extractField(line, POS.SEGMENT_CODE.start, POS.SEGMENT_CODE.end),
 
-    // Positions 16-17: Occurrence code
-    occurrenceCode: extractField(line, 16, 17),
+    // Occurrence code (07.3P)
+    occurrenceCode: extractField(line, POS.MOVEMENT_CODE.start, POS.MOVEMENT_CODE.end),
 
-    // Positions 18-22: Agency
-    agency: extractField(line, 18, 22),
+    // Agency (08.3P)
+    agency: extractField(line, POS.AGENCY.start, POS.AGENCY.end),
 
-    // Position 23: Agency check digit
-    agencyDigit: extractField(line, 23, 23) || undefined,
+    // Agency digit (09.3P)
+    agencyDigit: extractField(line, POS.AGENCY_DIGIT.start, POS.AGENCY_DIGIT.end) || undefined,
 
-    // Positions 24-35: Account number
-    account: extractField(line, 24, 35),
+    // Account number (10.3P)
+    account: extractField(line, POS.ACCOUNT.start, POS.ACCOUNT.end),
 
-    // Position 36: Account check digit
-    accountDigit: extractField(line, 36, 36),
+    // Account digit (11.3P)
+    accountDigit: extractField(line, POS.ACCOUNT_DIGIT.start, POS.ACCOUNT_DIGIT.end),
 
-    // Position 37: Full account check digit
-    fullAccountDigit: extractField(line, 37, 37) || undefined,
+    // Full account digit (12.3P)
+    fullAccountDigit: extractField(line, POS.ACCOUNT_DV.start, POS.ACCOUNT_DV.end) || undefined,
 
-    // Positions 38-57: Our number (nosso número)
-    ourNumber: extractField(line, 38, 57),
+    // Our number (13.3P)
+    ourNumber: extractField(line, POS.DOCUMENT_NUMBER.start, POS.DOCUMENT_NUMBER.end),
 
-    // Position 58: Our number check digit
-    ourNumberDigit: extractField(line, 58, 58) || undefined,
+    // Portfolio code (14.3P)
+    portfolioCode: extractField(line, POS.PORTFOLIO.start, POS.PORTFOLIO.end),
 
-    // Positions 59-61: Portfolio code (carteira)
-    portfolioCode: extractField(line, 59, 61),
+    // Form type (15.3P)
+    formType:
+      extractField(line, POS.REGISTRATION_FORM.start, POS.REGISTRATION_FORM.end) || undefined,
 
-    // Position 62: Form type (1=self-copy, 2=deposit receipt, 4=booklet)
-    formType: extractField(line, 62, 62) || undefined,
+    // Document type (16.3P)
+    ourNumberDigit: extractField(line, POS.DOCUMENT_TYPE.start, POS.DOCUMENT_TYPE.end) || undefined,
 
-    // Positions 63-73: Slip number (if pre-printed)
-    slipNumber: extractField(line, 63, 73) || undefined,
+    // Boleto emission (17.3P)
+    issuanceType:
+      extractField(line, POS.BOLETO_EMISSION.start, POS.BOLETO_EMISSION.end) || undefined,
 
-    // Position 74: Slip number check digit
-    slipNumberDigit: extractField(line, 74, 74) || undefined,
+    // Boleto distribution (18.3P)
+    distributionType:
+      extractField(line, POS.BOLETO_DISTRIBUTION.start, POS.BOLETO_DISTRIBUTION.end) || undefined,
 
-    // Position 75: Issuance type (1=Bank, 2=Company)
-    issuanceType: extractField(line, 75, 75) || undefined,
+    // Billing document number (19.3P)
+    documentNumber: extractField(
+      line,
+      POS.BILLING_DOCUMENT_NUMBER.start,
+      POS.BILLING_DOCUMENT_NUMBER.end,
+    ),
 
-    // Position 76: Distribution type (1=Bank, 2=Company)
-    distributionType: extractField(line, 76, 76) || undefined,
-
-    // Positions 66-80: Document number (número do documento)
-    documentNumber: extractField(line, 66, 80),
-
-    // Positions 81-88: Due date (DDMMYYYY) - required
+    // Due date (20.3P) - required
     dueDate,
 
-    // Positions 89-103: Slip amount (15 digits, 2 decimals)
-    amount: parseDecimalField(line, 89, 103, 2),
+    // Amount (21.3P)
+    amount: parseDecimalField(line, POS.AMOUNT.start, POS.AMOUNT.end, 2),
 
-    // Positions 104-108: Collection agency
-    collectionAgency: extractField(line, 104, 108) || undefined,
+    // Collection agency (22.3P)
+    collectionAgency:
+      extractField(line, POS.COLLECTION_AGENCY.start, POS.COLLECTION_AGENCY.end) || undefined,
 
-    // Position 109: Collection agency digit
-    collectionAgencyDigit: extractField(line, 109, 109) || undefined,
+    // Collection agency digit (23.3P)
+    collectionAgencyDigit:
+      extractField(line, POS.COLLECTION_AGENCY_DIGIT.start, POS.COLLECTION_AGENCY_DIGIT.end) ||
+      undefined,
 
-    // Positions 110-111: Species code (01=DM, 02=NP, etc.)
-    speciesCode: extractField(line, 110, 111),
+    // Document species (24.3P)
+    speciesCode: extractField(line, POS.DOCUMENT_SPECIES.start, POS.DOCUMENT_SPECIES.end),
 
-    // Position 112: Acceptance (A=Accepted, N=Not accepted)
-    acceptance: extractField(line, 112, 112),
+    // Acceptance (25.3P)
+    acceptance: extractField(line, POS.ACCEPTANCE.start, POS.ACCEPTANCE.end),
 
-    // Positions 113-120: Issue date (DDMMYYYY) - required
+    // Issue date (26.3P) - required
     issueDate,
 
-    // Position 121: Interest code (1=Daily, 2=Monthly, 3=Exempt)
-    interestCode: extractField(line, 121, 121) || undefined,
+    // Interest code (27.3P)
+    interestCode: extractField(line, POS.INTEREST_CODE.start, POS.INTEREST_CODE.end) || undefined,
 
-    // Positions 122-129: Interest start date (DDMMYYYY)
-    interestDate: parseDateField(line, 122, 129) || undefined,
+    // Interest date (28.3P)
+    interestDate: parseDateField(line, POS.INTEREST_DATE.start, POS.INTEREST_DATE.end) || undefined,
 
-    // Positions 130-144: Interest amount/percentage (15 digits, 2 decimals)
-    interestAmount: parseDecimalField(line, 130, 144, 2) || undefined,
+    // Interest amount (29.3P)
+    interestAmount:
+      parseDecimalField(line, POS.INTEREST_AMOUNT.start, POS.INTEREST_AMOUNT.end, 2) || undefined,
 
-    // Position 145: Discount code (0=None, 1=Fixed, 2=Percentage)
-    discountCode: extractField(line, 145, 145) || undefined,
+    // Discount code (30.3P)
+    discountCode: extractField(line, POS.DISCOUNT_CODE.start, POS.DISCOUNT_CODE.end) || undefined,
 
-    // Positions 146-153: Discount date (DDMMYYYY)
-    discountDate: parseDateField(line, 146, 153) || undefined,
+    // Discount date (31.3P)
+    discountDate: parseDateField(line, POS.DISCOUNT_DATE.start, POS.DISCOUNT_DATE.end) || undefined,
 
-    // Positions 154-168: Discount amount (15 digits, 2 decimals)
-    discountAmount: parseDecimalField(line, 154, 168, 2) || undefined,
+    // Discount amount (32.3P)
+    discountAmount:
+      parseDecimalField(line, POS.DISCOUNT_AMOUNT.start, POS.DISCOUNT_AMOUNT.end, 2) || undefined,
 
-    // Positions 169-183: IOF amount (15 digits, 2 decimals)
-    iofAmount: parseDecimalField(line, 169, 183, 2) || undefined,
+    // IOF amount (33.3P)
+    iofAmount: parseDecimalField(line, POS.IOF_AMOUNT.start, POS.IOF_AMOUNT.end, 2) || undefined,
 
-    // Positions 184-198: Rebate amount (15 digits, 2 decimals)
-    rebateAmount: parseDecimalField(line, 184, 198, 2) || undefined,
+    // Rebate amount (34.3P)
+    rebateAmount:
+      parseDecimalField(line, POS.REBATE_AMOUNT.start, POS.REBATE_AMOUNT.end, 2) || undefined,
 
-    // Positions 199-223: CNAB reserved field
-    cnabReserved2: extractField(line, 199, 223) || undefined,
+    // Company identification (35.3P)
+    cnabReserved2:
+      extractField(line, POS.COMPANY_IDENTIFICATION.start, POS.COMPANY_IDENTIFICATION.end) ||
+      undefined,
 
-    // Position 224: Protest code (1=Protest, 3=Do not protest, 9=Cancel)
-    protestCode: extractField(line, 224, 224) || undefined,
+    // Protest code (36.3P)
+    protestCode: extractField(line, POS.PROTEST_CODE.start, POS.PROTEST_CODE.end) || undefined,
 
-    // Positions 225-226: Protest days
-    protestDays: parseNumericField(line, 225, 226) || undefined,
+    // Protest days (37.3P)
+    protestDays: parseNumericField(line, POS.PROTEST_DAYS.start, POS.PROTEST_DAYS.end) || undefined,
 
-    // Position 227: Write-off code (1=Write-off, 2=Do not write-off)
-    writeOffCode: extractField(line, 227, 227) || undefined,
+    // Low/Return code (38.3P)
+    writeOffCode:
+      extractField(line, POS.LOW_RETURN_CODE.start, POS.LOW_RETURN_CODE.end) || undefined,
 
-    // Positions 228-230: Write-off days
-    writeOffDays: parseNumericField(line, 228, 230) || undefined,
+    // Low/Return days (39.3P)
+    writeOffDays:
+      parseNumericField(line, POS.LOW_RETURN_DAYS.start, POS.LOW_RETURN_DAYS.end) || undefined,
 
-    // Positions 231-232: Currency code (09=Real)
-    currencyCode: extractField(line, 231, 232),
+    // Currency code (40.3P)
+    currencyCode: extractField(line, POS.CURRENCY_CODE.start, POS.CURRENCY_CODE.end),
 
-    // Positions 233-242: Agreement number
-    agreementNumber: extractField(line, 233, 242) || undefined,
+    // Contract number (41.3P)
+    agreementNumber:
+      extractField(line, POS.CONTRACT_NUMBER.start, POS.CONTRACT_NUMBER.end) || undefined,
   };
 }

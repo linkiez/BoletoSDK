@@ -7,6 +7,7 @@
  * @module parsers/cnab240/SegmentQParser
  */
 
+import { SEGMENT_Q_POSITIONS } from '../../constants/cnab240';
 import { SegmentQ } from '../../types/cnab240';
 import {
   extractField,
@@ -28,66 +29,83 @@ import {
  * ```
  */
 export function parseSegmentQ(line: string): SegmentQ {
+  const POS = SEGMENT_Q_POSITIONS;
+
   // Validate record type and segment code
   validateRecordType(line, '3');
   validateSegmentCode(line, 'Q');
 
   return {
-    // Positions 1-3: Bank code
-    bankCode: extractField(line, 1, 3),
+    // Bank code (01.3Q)
+    bankCode: extractField(line, POS.BANK_CODE.start, POS.BANK_CODE.end),
 
-    // Positions 4-7: Batch number
-    batchNumber: parseNumericField(line, 4, 7),
+    // Batch number (02.3Q)
+    batchNumber: parseNumericField(line, POS.BATCH_NUMBER.start, POS.BATCH_NUMBER.end),
 
-    // Position 8: Record type (always "3" for detail)
-    recordType: extractField(line, 8, 8),
+    // Record type (03.3Q)
+    recordType: extractField(line, POS.RECORD_TYPE.start, POS.RECORD_TYPE.end),
 
-    // Positions 9-13: Sequential record number within batch
-    sequentialNumber: parseNumericField(line, 9, 13),
+    // Sequential record number (04.3Q)
+    sequentialNumber: parseNumericField(line, POS.RECORD_NUMBER.start, POS.RECORD_NUMBER.end),
 
-    // Position 14: Segment code (always "Q")
-    segmentCode: extractField(line, 14, 14),
+    // Segment code (05.3Q)
+    segmentCode: extractField(line, POS.SEGMENT_CODE.start, POS.SEGMENT_CODE.end),
 
-    // Positions 16-17: Occurrence code
-    occurrenceCode: extractField(line, 16, 17),
+    // Movement code (07.3Q)
+    occurrenceCode: extractField(line, POS.MOVEMENT_CODE.start, POS.MOVEMENT_CODE.end),
 
-    // Position 18: Payer registration type (0=CPF, 1=CNPJ, 2=PIS/PASEP, 9=Other)
-    payerRegistrationType: extractField(line, 18, 18),
+    // Payer person type (08.3Q)
+    payerRegistrationType: extractField(
+      line,
+      POS.PAYER_PERSON_TYPE.start,
+      POS.PAYER_PERSON_TYPE.end,
+    ),
 
-    // Positions 19-33: Payer tax ID (CPF/CNPJ)
-    payerTaxId: extractField(line, 19, 33),
+    // Payer tax ID (09.3Q)
+    payerTaxId: extractField(line, POS.PAYER_TAX_ID.start, POS.PAYER_TAX_ID.end),
 
-    // Positions 34-73: Payer name
-    payerName: extractField(line, 34, 73),
+    // Payer name (10.3Q)
+    payerName: extractField(line, POS.PAYER_NAME.start, POS.PAYER_NAME.end),
 
-    // Positions 74-113: Payer address (street, number, complement)
-    payerAddress: extractField(line, 74, 113),
+    // Payer address (11.3Q)
+    payerAddress: extractField(line, POS.PAYER_ADDRESS.start, POS.PAYER_ADDRESS.end),
 
-    // Positions 114-128: Payer neighborhood
-    payerNeighborhood: extractField(line, 114, 128),
+    // Payer district (12.3Q)
+    payerNeighborhood: extractField(line, POS.PAYER_DISTRICT.start, POS.PAYER_DISTRICT.end),
 
-    // Positions 129-133: Payer postal code (first 5 digits)
-    payerPostalCode: extractField(line, 129, 136),
+    // Payer postal code (13.3Q)
+    payerPostalCode: extractField(line, POS.PAYER_ZIP_CODE.start, POS.PAYER_ZIP_CODE.end),
 
-    // Positions 137-151: Payer city
-    payerCity: extractField(line, 137, 151),
+    // Payer city (14.3Q)
+    payerCity: extractField(line, POS.PAYER_CITY.start, POS.PAYER_CITY.end),
 
-    // Positions 152-153: Payer state (UF)
-    payerState: extractField(line, 152, 153),
+    // Payer state (15.3Q)
+    payerState: extractField(line, POS.PAYER_STATE.start, POS.PAYER_STATE.end),
 
-    // Position 154: Guarantor registration type (optional)
-    guarantorRegistrationType: extractField(line, 154, 154) || undefined,
+    // Guarantor person type (16.3Q)
+    guarantorRegistrationType:
+      extractField(line, POS.GUARANTOR_PERSON_TYPE.start, POS.GUARANTOR_PERSON_TYPE.end) ||
+      undefined,
 
-    // Positions 155-169: Guarantor tax ID (optional)
-    guarantorTaxId: extractField(line, 155, 169) || undefined,
+    // Guarantor tax ID (17.3Q)
+    guarantorTaxId:
+      extractField(line, POS.GUARANTOR_TAX_ID.start, POS.GUARANTOR_TAX_ID.end) || undefined,
 
-    // Positions 170-209: Guarantor name (optional)
-    guarantorName: extractField(line, 170, 209) || undefined,
+    // Guarantor name (18.3Q)
+    guarantorName:
+      extractField(line, POS.GUARANTOR_NAME.start, POS.GUARANTOR_NAME.end) || undefined,
 
-    // Positions 210-212: Correspondent bank code
-    correspondentBankCode: extractField(line, 210, 212) || undefined,
+    // Bank correspondent code (19.3Q)
+    correspondentBankCode:
+      extractField(line, POS.BANK_CORRESPONDENT_CODE.start, POS.BANK_CORRESPONDENT_CODE.end) ||
+      undefined,
 
-    // Positions 213-232: Correspondent our number
-    correspondentOurNumber: extractField(line, 213, 232) || undefined,
+    // Bank correspondent document (20.3Q)
+    correspondentOurNumber:
+      extractField(
+        line,
+        POS.BANK_CORRESPONDENT_DOCUMENT.start,
+        POS.BANK_CORRESPONDENT_DOCUMENT.end,
+      ) || undefined,
   };
 }

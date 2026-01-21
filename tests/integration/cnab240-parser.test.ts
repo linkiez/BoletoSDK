@@ -58,14 +58,14 @@ describe('CNAB240 Parser - Integration', () => {
     setField(segmentP, '000000017450', 24, 35); // Account
     setField(segmentP, '6', 36, 36); // Account digit
     setField(segmentP, '12345678901234567890', 38, 57); // Our number
-    setField(segmentP, '109', 59, 61); // Portfolio
-    setField(segmentP, 'NF-001', 66, 80); // Document number
-    setField(segmentP, '28022026', 81, 88); // Due date
-    setField(segmentP, '000000000150000', 89, 103); // Amount 1500.00
-    setField(segmentP, '01', 110, 111); // Species code (DM)
-    setField(segmentP, 'N', 112, 112); // Acceptance
-    setField(segmentP, '21012026', 113, 120); // Issue date
-    setField(segmentP, '09', 231, 232); // Currency (Real)
+    setField(segmentP, '109', 58, 58); // Portfolio (58)
+    setField(segmentP, 'NF-001', 63, 77); // Billing document number (63-77)
+    setField(segmentP, '28022026', 78, 85); // Due date (78-85)
+    setField(segmentP, '000000000150000', 86, 100); // Amount 1500.00 (86-100)
+    setField(segmentP, '01', 107, 108); // Species code (107-108)
+    setField(segmentP, 'N', 109, 109); // Acceptance (109)
+    setField(segmentP, '21012026', 110, 117); // Issue date (110-117)
+    setField(segmentP, '09', 228, 229); // Currency (Real) (228-229)
     lines.push(segmentP.join(''));
 
     // Segment Q (Type 3, Segment Q)

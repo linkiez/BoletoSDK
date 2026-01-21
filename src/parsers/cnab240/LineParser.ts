@@ -7,7 +7,7 @@
  * @module parsers/cnab240/LineParser
  */
 
-import { LINE_LENGTH } from '../../constants/cnab240';
+import { LINE_LENGTH, RECORD_TYPE_POSITION, SEGMENT_CODE_POSITION } from '../../constants/cnab240';
 import { ParseError } from '../../errors';
 
 /**
@@ -120,7 +120,7 @@ export function parseDateField(line: string, start: number, end: number): Date |
  * @throws {ParseError} If record type doesn't match
  */
 export function validateRecordType(line: string, expectedType: string): void {
-  const recordType = extractField(line, 8, 8);
+  const recordType = extractField(line, RECORD_TYPE_POSITION, RECORD_TYPE_POSITION);
 
   if (recordType !== expectedType) {
     throw new ParseError(`Invalid record type: expected ${expectedType}, got ${recordType}`);
@@ -135,7 +135,7 @@ export function validateRecordType(line: string, expectedType: string): void {
  * @throws {ParseError} If segment code doesn't match
  */
 export function validateSegmentCode(line: string, expectedSegment: string): void {
-  const segmentCode = extractField(line, 14, 14);
+  const segmentCode = extractField(line, SEGMENT_CODE_POSITION, SEGMENT_CODE_POSITION);
 
   if (segmentCode !== expectedSegment) {
     throw new ParseError(`Invalid segment code: expected ${expectedSegment}, got ${segmentCode}`);

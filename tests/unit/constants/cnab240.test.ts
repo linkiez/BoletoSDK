@@ -261,7 +261,7 @@ describe('CNAB240 Field Positions', () => {
 
     it('should end at position 240', () => {
       const positions = Object.values(FILE_HEADER_POSITIONS);
-      const lastField = positions[positions.length - 1];
+      const lastField = positions.at(-1)!;
       expect(lastField.end).toBe(240);
     });
 
@@ -286,7 +286,7 @@ describe('CNAB240 Field Positions', () => {
 
     it('should end at position 240', () => {
       const positions = Object.values(BATCH_HEADER_POSITIONS);
-      const lastField = positions[positions.length - 1];
+      const lastField = positions.at(-1)!;
       expect(lastField.end).toBe(240);
     });
 
@@ -311,7 +311,7 @@ describe('CNAB240 Field Positions', () => {
 
     it('should end at position 240', () => {
       const positions = Object.values(SEGMENT_P_POSITIONS);
-      const lastField = positions[positions.length - 1];
+      const lastField = positions.at(-1)!;
       expect(lastField.end).toBe(240);
     });
 
@@ -336,7 +336,7 @@ describe('CNAB240 Field Positions', () => {
 
     it('should end at position 240', () => {
       const positions = Object.values(SEGMENT_Q_POSITIONS);
-      const lastField = positions[positions.length - 1];
+      const lastField = positions.at(-1)!;
       expect(lastField.end).toBe(240);
     });
 
@@ -357,7 +357,7 @@ describe('CNAB240 Field Positions', () => {
 
     it('should end at position 240', () => {
       const positions = Object.values(SEGMENT_R_POSITIONS);
-      const lastField = positions[positions.length - 1];
+      const lastField = positions.at(-1)!;
       expect(lastField.end).toBe(240);
     });
 
@@ -378,7 +378,7 @@ describe('CNAB240 Field Positions', () => {
 
     it('should end at position 240', () => {
       const positions = Object.values(BATCH_TRAILER_POSITIONS);
-      const lastField = positions[positions.length - 1];
+      const lastField = positions.at(-1)!;
       expect(lastField.end).toBe(240);
     });
 
@@ -399,7 +399,7 @@ describe('CNAB240 Field Positions', () => {
 
     it('should end at position 240', () => {
       const positions = Object.values(FILE_TRAILER_POSITIONS);
-      const lastField = positions[positions.length - 1];
+      const lastField = positions.at(-1)!;
       expect(lastField.end).toBe(240);
     });
 
