@@ -1,4 +1,9 @@
-import { BATCH_TRAILER_BANK, LINE_LENGTH, RECORD_TYPE } from '../../constants/cnab240';
+import {
+  BATCH_TRAILER_BANK,
+  FILE_TRAILER_POSITIONS,
+  LINE_LENGTH,
+  RECORD_TYPE,
+} from '../../constants/cnab240';
 import { FileTrailer } from '../../types/cnab240';
 import { buildLine, formatField, formatNumericField } from './LineGenerator';
 
@@ -45,38 +50,59 @@ export class FileTrailerGenerator {
     this.validate(trailer);
 
     const fields = new Map<string, string>();
+    const POS = FILE_TRAILER_POSITIONS;
 
     // Positions 1-3: Bank code (3 numeric)
-    fields.set('bankCode', formatNumericField(Number(trailer.bankCode), 1, 3));
+    fields.set(
+      'bankCode',
+      formatNumericField(Number(trailer.bankCode), POS.BANK_CODE.start, POS.BANK_CODE.end),
+    );
 
     // Positions 4-7: Batch number (always 9999 for file trailer)
-    fields.set('batchNumber', formatField(BATCH_TRAILER_BANK, 4, 7, 'numeric'));
+    fields.set(
+      'batchNumber',
+      formatField(BATCH_TRAILER_BANK, POS.BATCH_NUMBER.start, POS.BATCH_NUMBER.end, 'numeric'),
+    );
 
     // Position 8: Record type (always 9 for file trailer)
-    fields.set('recordType', formatField(RECORD_TYPE.FILE_TRAILER, 8, 8, 'numeric'));
+    fields.set(
+      'recordType',
+      formatField(RECORD_TYPE.FILE_TRAILER, POS.RECORD_TYPE.start, POS.RECORD_TYPE.end, 'numeric'),
+    );
 
     // Positions 9-17: Reserved (spaces)
-    fields.set('reserved1', formatField('', 9, 17, 'text'));
+    fields.set('reserved1', formatField('', POS.RESERVED_1.start, POS.RESERVED_1.end, 'text'));
 
     // Positions 18-23: Total batches in file (6 numeric)
-    fields.set('totalBatches', formatNumericField(trailer.totalBatches, 18, 23));
+    fields.set(
+      'totalBatches',
+      formatNumericField(trailer.totalBatches, POS.BATCH_COUNT.start, POS.BATCH_COUNT.end),
+    );
 
     // Positions 24-29: Total records in file (6 numeric)
-    fields.set('totalRecords', formatNumericField(trailer.totalRecords, 24, 29));
+    fields.set(
+      'totalRecords',
+      formatNumericField(trailer.totalRecords, POS.RECORD_COUNT.start, POS.RECORD_COUNT.end),
+    );
 
     // Positions 30-35: Total accounts (6 numeric, optional)
-    fields.set('totalAccounts', formatNumericField(trailer.totalAccounts || 0, 30, 35));
+    fields.set(
+      'totalAccounts',
+      formatNumericField(
+        trailer.totalAccounts || 0,
+        POS.ACCOUNT_COUNT.start,
+        POS.ACCOUNT_COUNT.end,
+      ),
+    );
 
     // Positions 36-240: Reserved (spaces)
-    fields.set('reserved2', formatField('', 36, LINE_LENGTH, 'text'));
+    fields.set('reserved2', formatField('', POS.RESERVED_2.start, POS.RESERVED_2.end, 'text'));
 
     const line = buildLine(fields);
 
     // Validate line length
     if (line.length !== LINE_LENGTH) {
-      throw new Error(
-        `Invalid file trailer length: expected ${LINE_LENGTH}, got ${line.length}`,
-      );
+      throw new Error(`Invalid file trailer length: expected ${LINE_LENGTH}, got ${line.length}`);
     }
 
     return line;

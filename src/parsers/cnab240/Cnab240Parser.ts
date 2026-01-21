@@ -7,8 +7,8 @@
  * @module parsers/cnab240/Cnab240Parser
  */
 
-import { ParseError } from '../../errors';
 import { RECORD_TYPE } from '../../constants/cnab240';
+import { ParseError } from '../../errors';
 import { Batch, Cnab240File, DetailRecord, FileTrailer } from '../../types/cnab240';
 import { parseFileHeader } from './FileHeaderParser';
 import {

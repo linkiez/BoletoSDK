@@ -4,7 +4,7 @@
  * @module parsers/cnab400/Cnab400Parser
  */
 
-import { LINE_LENGTH, FILE_TYPE_RETORNO } from '../../constants/cnab400';
+import { FILE_TYPE_RETORNO, LINE_LENGTH } from '../../constants/cnab400';
 import { ParseError } from '../../errors';
 import type {
   Cnab400File,

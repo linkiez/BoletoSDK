@@ -5,8 +5,10 @@
  */
 
 import {
-    FILE_HEADER_POSITIONS,
-    FILE_HEADER_RETORNO_POSITIONS,  FILE_TYPE_RETORNO,    LINE_LENGTH,
+  FILE_HEADER_POSITIONS,
+  FILE_HEADER_RETORNO_POSITIONS,
+  FILE_TYPE_RETORNO,
+  LINE_LENGTH,
 } from '../../constants/cnab400';
 import { ParseError } from '../../errors';
 import type { FileHeader } from '../../types/cnab400';
