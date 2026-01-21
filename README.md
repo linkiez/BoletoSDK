@@ -179,14 +179,14 @@ const beneficiary = BeneficiarySchema.parse({
 ### Utility Functions
 
 ```typescript
-import { 
-  formatTaxId, 
-  formatMoney, 
-  validateTaxId, 
+import {
+  formatTaxId,
+  formatMoney,
+  validateTaxId,
   calculateModulo11,
   parseDate,
   padLeft,
-  padRight 
+  padRight
 } from '@linkiez/boleto-sdk';
 
 // Format CPF/CNPJ
@@ -230,12 +230,12 @@ console.log(Object.keys(BANKS)); // ["001", "033", "104", "237", "341", "756"]
 ### Enums and Constants
 
 ```typescript
-import { 
-  DocumentType, 
-  SpeciesCode, 
+import {
+  DocumentType,
+  SpeciesCode,
   AcceptanceType,
   CurrencyCode,
-  MovementType 
+  MovementType
 } from '@linkiez/boleto-sdk';
 
 const docType = DocumentType.DUPLICATA;  // "DM"

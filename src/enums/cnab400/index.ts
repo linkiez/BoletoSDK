@@ -389,4 +389,3 @@ export enum RejectionReasonCode {
   /** System error */
   SYSTEM_ERROR = '99',
 }
-

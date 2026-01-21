@@ -1,13 +1,13 @@
 import {
-  AddressSchema,
-  TaxIdSchema,
-  BankAccountSchema,
-  BeneficiarySchema,
-  PayerSchema,
-  DiscountSchema,
-  FeeSchema,
-  FineSchema,
-  InterestSchema,
+    AddressSchema,
+    BankAccountSchema,
+    BeneficiarySchema,
+    DiscountSchema,
+    FeeSchema,
+    FineSchema,
+    InterestSchema,
+    PayerSchema,
+    TaxIdSchema,
 } from '@schemas/common';
 
 describe('Common Schemas', () => {

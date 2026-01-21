@@ -3,8 +3,8 @@
  * @module schemas/common
  */
 
-import { z } from 'zod';
 import { validateTaxId } from '@utils/validators';
+import { z } from 'zod';
 
 /**
  * Brazilian states (UF)
@@ -178,4 +178,3 @@ export type Discount = z.infer<typeof DiscountSchema>;
 export type Fee = z.infer<typeof FeeSchema>;
 export type Fine = z.infer<typeof FineSchema>;
 export type Interest = z.infer<typeof InterestSchema>;
-

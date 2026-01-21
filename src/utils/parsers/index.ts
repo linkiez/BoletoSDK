@@ -12,14 +12,15 @@
  * ```
  */
 export function parseNumber(value: string): number {
-  if (!value) return 0;
+  const trimmed = value?.trim() || '';
+  if (!trimmed) return 0;
 
   // Validate contains only digits
-  if (!/^\d+$/.test(value)) {
+  if (!/^\d+$/.test(trimmed)) {
     throw new Error('Invalid number format');
   }
 
-  return parseInt(value, 10);
+  return Number.parseInt(trimmed, 10);
 }
 
 /**
@@ -39,7 +40,7 @@ export function parseNumber(value: string): number {
 export function parseDecimal(value: string, decimalPlaces: number): number {
   if (!value) return 0;
 
-  const number = parseNumber(value);
+  const number = parseNumber(value.trim());
   return number / Math.pow(10, decimalPlaces);
 }
 
@@ -64,9 +65,50 @@ export function parseDate(value: string): Date {
     throw new Error('Invalid date format');
   }
 
-  const day = parseInt(value.substring(0, 2), 10);
-  const month = parseInt(value.substring(2, 4), 10);
-  const year = parseInt(value.substring(4, 8), 10);
+  const day = Number.parseInt(value.substring(0, 2), 10);
+  const month = Number.parseInt(value.substring(2, 4), 10);
+  const year = Number.parseInt(value.substring(4, 8), 10);
+
+  const date = new Date(year, month - 1, day);
+
+  // Validate date is valid (handles invalid dates like 32/01/2026)
+  if (
+    date.getDate() !== day ||
+    date.getMonth() !== month - 1 ||
+    date.getFullYear() !== year
+  ) {
+    throw new Error('Invalid date');
+  }
+
+  return date;
+}
+
+/**
+ * Parse short date from DDMMYY format (6 characters)
+ * Assumes 21st century (20YY) for years 00-99
+ *
+ * @param value - Date string in DDMMYY format
+ * @returns Parsed Date object
+ *
+ * @example
+ * ```typescript
+ * parseDateShort('010126'); // Returns Date(2026, 0, 1)
+ * parseDateShort('311299'); // Returns Date(2099, 11, 31)
+ * ```
+ */
+export function parseDateShort(value: string): Date {
+  if (value.length !== 6) {
+    throw new Error('Invalid short date format');
+  }
+
+  // Validate contains only digits
+  if (!/^\d{6}$/.test(value)) {
+    throw new Error('Invalid short date format');
+  }
+
+  const day = Number.parseInt(value.substring(0, 2), 10);
+  const month = Number.parseInt(value.substring(2, 4), 10);
+  const year = 2000 + Number.parseInt(value.substring(4, 6), 10); // Assume 21st century
 
   const date = new Date(year, month - 1, day);
 

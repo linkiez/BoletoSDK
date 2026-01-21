@@ -6,15 +6,15 @@
  */
 
 import type {
-  FileHeader,
-  DetailRecord,
-  GuarantorRecord,
-  MessageFrontRecord,
-  MessageBackRecord,
-  FileTrailer,
   Cnab400File,
-  ReturnDetailRecord,
   Cnab400ReturnFile,
+  DetailRecord,
+  FileHeader,
+  FileTrailer,
+  GuarantorRecord,
+  MessageBackRecord,
+  MessageFrontRecord,
+  ReturnDetailRecord,
 } from '../../../src/types/cnab400';
 
 describe('CNAB400 Types', () => {

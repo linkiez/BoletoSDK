@@ -1,2 +1,318 @@
-// CNAB 400 parsers barrel
-// Add exports here as files are created
+/**
+ * CNAB400 Parser - Itaú Layout
+ *
+ * Parses CNAB400 files according to FEBRABAN standard and Itaú specifications.
+ * Extracts fields from fixed-position 400-character lines.
+ *
+ * @module parsers/cnab400
+ */
+
+import { ParseError } from '../../errors';
+import type {
+    Cnab400File,
+    Cnab400ReturnFile,
+    DetailRecord,
+    FileHeader,
+    FileTrailer,
+    GuarantorRecord,
+    MessageBackRecord,
+    MessageFrontRecord,
+    ReturnDetailRecord,
+} from '../../types/cnab400';
+import { parseDateShort, parseDecimal, parseNumber } from '../../utils/parsers';
+
+/**
+ * Parses file header record (Type 0)
+ *
+ * @param line - 400-character header line
+ * @returns Parsed FileHeader object
+ * @throws ParseError if line is invalid
+ */
+export function parseFileHeader(line: string): FileHeader {
+  if (line.length !== 400) {
+    throw new ParseError(`Invalid header line length: ${line.length}`, 1);
+  }
+
+  if (!line.startsWith('0')) {
+    throw new ParseError(`Invalid record type for header: ${line.charAt(0)}`, 1);
+  }
+
+  return {
+    recordType: '0',
+    operationType: line.substring(1, 2) as '1' | '2',
+    operationLiteral: line.substring(2, 9).trim(),
+    serviceCode: line.substring(9, 11),
+    serviceLiteral: line.substring(11, 26).trim(),
+    agency: line.substring(26, 30),
+    zeros: line.substring(30, 32),
+    account: line.substring(32, 37),
+    accountDigit: line.substring(37, 38),
+    companyName: line.substring(46, 76).trim(),
+    bankCode: line.substring(76, 79),
+    bankName: line.substring(79, 94).trim(),
+    generationDate: parseDateShort(line.substring(94, 100)),
+    sequenceNumber: parseNumber(line.substring(110, 115).trim()),
+    creationDate: line.substring(113, 119).trim() ? parseDateShort(line.substring(113, 119).trim()) : undefined,
+  };
+}
+
+/**
+ * Parses detail record (Type 1)
+ *
+ * @param line - 400-character detail line
+ * @returns Parsed DetailRecord object
+ * @throws ParseError if line is invalid
+ */
+export function parseDetailRecord(line: string): DetailRecord {
+  if (line.length !== 400) {
+    throw new ParseError(`Invalid detail line length: ${line.length}`);
+  }
+
+  if (!line.startsWith('1')) {
+    throw new ParseError(`Invalid record type for detail: ${line.charAt(0)}`);
+  }
+
+  const detail: DetailRecord = {
+    recordType: '1',
+    companyRegistrationType: line.substring(1, 3) as '01' | '02' | '03',
+    companyRegistrationNumber: line.substring(3, 17).trim(),
+    agency: line.substring(17, 21),
+    zeros: line.substring(21, 23),
+    account: line.substring(23, 28),
+    accountDigit: line.substring(28, 29),
+    companyControl: line.substring(29, 54).trim() || undefined,
+    ourNumber: line.substring(54, 62).trim(),
+    amount: parseDecimal(line.substring(152, 165), 2),
+    bankCode: line.substring(119, 122),
+    dueDate: parseDateShort(line.substring(146, 152)),
+    payerName: line.substring(214, 244).trim(),
+    payerAddress: line.substring(244, 284).trim() || undefined,
+    payerCity: line.substring(354, 374).trim() || undefined,
+    payerState: line.substring(374, 376).trim() || undefined,
+    payerZipCode: line.substring(314, 322).trim() || undefined,
+    sequentialNumber: parseNumber(line.substring(394, 400).trim()),
+  };
+
+  // Optional fields
+  const portfolioCode = line.substring(82, 85).trim();
+  if (portfolioCode) detail.portfolioCode = portfolioCode;
+
+  const documentNumber = line.substring(87, 97).trim();
+  if (documentNumber) detail.documentNumber = documentNumber;
+
+  const speciesCode = line.substring(127, 129).trim();
+  if (speciesCode) detail.speciesCode = speciesCode;
+
+  const acceptance = line.substring(129, 130).trim();
+  if (acceptance === 'A' || acceptance === 'N') detail.acceptance = acceptance;
+
+  const issueDate = line.substring(130, 136).trim();
+  if (issueDate && issueDate !== '000000' && /^\d{6}$/.test(issueDate)) {
+    detail.issueDate = parseDateShort(issueDate);
+  }
+
+  const instructionCode1 = line.substring(136, 138).trim();
+  if (instructionCode1) detail.instructionCode1 = instructionCode1;
+
+  const instructionCode2 = line.substring(138, 140).trim();
+  if (instructionCode2) detail.instructionCode2 = instructionCode2;
+
+  return detail;
+}
+
+/**
+ * Parses return detail record (Type 1 with occurrence data)
+ *
+ * @param line - 400-character return detail line
+ * @returns Parsed ReturnDetailRecord object
+ */
+export function parseReturnDetailRecord(line: string): ReturnDetailRecord {
+  const detail = parseDetailRecord(line) as ReturnDetailRecord;
+
+  // Add return-specific fields
+  detail.occurrenceCode = line.substring(108, 110);
+
+  const occurrenceDate = line.substring(110, 116).trim();
+  if (occurrenceDate && occurrenceDate !== '000000') {
+    detail.occurrenceDate = parseDateShort(occurrenceDate);
+  }
+
+  const bankDocumentNumber = line.substring(116, 126).trim();
+  if (bankDocumentNumber) detail.bankDocumentNumber = bankDocumentNumber;
+
+  return detail;
+}
+
+/**
+ * Parses guarantor record (Type 5)
+ *
+ * @param line - 400-character guarantor line
+ * @returns Parsed GuarantorRecord object
+ */
+export function parseGuarantorRecord(line: string): GuarantorRecord {
+  if (line.length !== 400) {
+    throw new ParseError(`Invalid guarantor line length: ${line.length}`);
+  }
+
+  if (!line.startsWith('5')) {
+    throw new ParseError(`Invalid record type for guarantor: ${line.charAt(0)}`);
+  }
+
+  return {
+    recordType: '5',
+    companyRegistrationType: line.substring(1, 3) as '01' | '02',
+    companyRegistrationNumber: line.substring(3, 17).trim(),
+    documentNumber: line.substring(87, 97).trim(),
+    guarantorName: line.substring(214, 244).trim(),
+    guarantorAddress: line.substring(244, 289).trim() || undefined,
+    guarantorZipCode: line.substring(289, 297).trim() || undefined,
+    guarantorCity: line.substring(297, 312).trim() || undefined,
+    guarantorState: line.substring(312, 314).trim() || undefined,
+    sequentialNumber: parseNumber(line.substring(394, 400).trim()),
+  };
+}
+
+/**
+ * Parses message front record (Type 7)
+ *
+ * @param line - 400-character message line
+ * @returns Parsed MessageFrontRecord object
+ */
+export function parseMessageFrontRecord(line: string): MessageFrontRecord {
+  if (line.length !== 400) {
+    throw new ParseError(`Invalid message line length: ${line.length}`);
+  }
+
+  if (!line.startsWith('7')) {
+    throw new ParseError(`Invalid record type for message front: ${line.charAt(0)}`);
+  }
+
+  return {
+    recordType: '7',
+    message1: line.substring(1, 81).trim() || undefined,
+    message2: line.substring(81, 161).trim() || undefined,
+    message3: line.substring(161, 241).trim() || undefined,
+    message4: line.substring(241, 321).trim() || undefined,
+    sequentialNumber: parseNumber(line.substring(394, 400).trim()),
+  };
+}
+
+/**
+ * Parses message back record (Type 8)
+ *
+ * @param line - 400-character message line
+ * @returns Parsed MessageBackRecord object
+ */
+export function parseMessageBackRecord(line: string): MessageBackRecord {
+  if (line.length !== 400) {
+    throw new ParseError(`Invalid message line length: ${line.length}`);
+  }
+
+  if (!line.startsWith('8')) {
+    throw new ParseError(`Invalid record type for message back: ${line.charAt(0)}`);
+  }
+
+  return {
+    recordType: '8',
+    message1: line.substring(1, 81).trim() || undefined,
+    message2: line.substring(81, 161).trim() || undefined,
+    message3: line.substring(161, 241).trim() || undefined,
+    message4: line.substring(241, 321).trim() || undefined,
+    sequentialNumber: parseNumber(line.substring(394, 400).trim()),
+  };
+}
+
+/**
+ * Parses file trailer record (Type 9)
+ *
+ * @param line - 400-character trailer line
+ * @returns Parsed FileTrailer object
+ */
+export function parseFileTrailer(line: string): FileTrailer {
+  if (line.length !== 400) {
+    throw new ParseError(`Invalid trailer line length: ${line.length}`);
+  }
+
+  if (!line.startsWith('9')) {
+    throw new ParseError(`Invalid record type for trailer: ${line.charAt(0)}`);
+  }
+
+  return {
+    recordType: '9',
+    totalRecords: parseNumber(line.substring(1, 7).trim()),
+    totalAmount: parseDecimal(line.substring(7, 20), 2),
+    sequentialNumber: parseNumber(line.substring(394, 400).trim()),
+  };
+}
+
+/**
+ * Main CNAB400 Parser
+ *
+ * Parses complete CNAB400 files (remittance or return).
+ *
+ * @param content - Complete file content
+ * @returns Parsed Cnab400File or Cnab400ReturnFile
+ * @throws ParseError if file is malformed
+ */
+export function parseCnab400(content: string): Cnab400File | Cnab400ReturnFile {
+  const lines = content.split('\n').filter((line) => line.length > 0);
+
+  if (lines.length < 2) {
+    throw new ParseError('File must have at least header and trailer');
+  }
+
+  // Parse header
+  const header = parseFileHeader(lines[0]);
+
+  // Parse trailer
+  const trailer = parseFileTrailer(lines.at(-1)!);
+
+  // Parse detail lines
+  const details: DetailRecord[] = [];
+  const guarantorRecords: GuarantorRecord[] = [];
+  const messageFrontRecords: MessageFrontRecord[] = [];
+  const messageBackRecords: MessageBackRecord[] = [];
+
+  const isReturn = header.operationType === '2';
+
+  for (let i = 1; i < lines.length - 1; i++) {
+    const line = lines[i];
+    const recordType = line[0];
+
+    try {
+      switch (recordType) {
+        case '1':
+          details.push(isReturn ? parseReturnDetailRecord(line) : parseDetailRecord(line));
+          break;
+        case '5':
+          guarantorRecords.push(parseGuarantorRecord(line));
+          break;
+        case '7':
+          messageFrontRecords.push(parseMessageFrontRecord(line));
+          break;
+        case '8':
+          messageBackRecords.push(parseMessageBackRecord(line));
+          break;
+        default:
+          throw new ParseError(`Unknown record type: ${recordType}`, i + 1);
+      }
+    } catch (error) {
+      if (error instanceof ParseError) {
+        throw new ParseError(`${error.message} at line ${i + 1}`, i + 1);
+      }
+      throw error;
+    }
+  }
+
+  const result: Cnab400File = {
+    header,
+    details,
+    trailer,
+  };
+
+  if (guarantorRecords.length > 0) result.guarantorRecords = guarantorRecords;
+  if (messageFrontRecords.length > 0) result.messageFrontRecords = messageFrontRecords;
+  if (messageBackRecords.length > 0) result.messageBackRecords = messageBackRecords;
+
+  return result;
+}
