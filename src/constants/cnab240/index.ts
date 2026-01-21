@@ -1,7 +1,8 @@
 /**
  * CNAB 240 constants barrel
- * Add exports here as files are created
+ * Exports all CNAB240-related constants
  */
 
-// Placeholder to make this a valid module
-export const CNAB240_PLACEHOLDER = true;
+export * from './FIELD_SIZES';
+export * from './LAYOUT_VERSION';
+export * from './SEGMENT_POSITIONS';

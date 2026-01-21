@@ -145,7 +145,7 @@ function parseDetailRecords(lines: string[]): DetailRecord[] {
 /**
  * Parse batch header (record type 1)
  */
-function parseBatchHeader(line: string) {
+function parseBatchHeader(line: string): any {
   validateRecordType(line, '1');
 
   return {

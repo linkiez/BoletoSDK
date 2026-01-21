@@ -10,7 +10,7 @@
 
 ## Current Status 🚀
 
-**Active Phase**: ✅ Phase 2.4 - CNAB240 Generators (COMPLETE)
+**Active Phase**: ✅ Phase 2.5 - CNAB240 Constants (COMPLETE)
 
 **Completed Phases**:
 
@@ -20,27 +20,28 @@
 - ✅ **Phase 2.2**: CNAB240 Enums (15 tests)
 - ✅ **Phase 2.3**: CNAB240 Parsers (51 tests)
 - ✅ **Phase 2.4**: CNAB240 Generators (148 tests)
+- ✅ **Phase 2.5**: CNAB240 Constants (78 tests)
 
 **Overall Statistics**:
 
-- **Total Tests**: 473 (471 passing, 2 skipped)
+- **Total Tests**: 551 (549 passing, 2 skipped)
 - **Code Coverage**: >80%
 - **Documentation**: ~1800 lines (README + USAGE-GUIDE + API-REFERENCE)
 - **Production Ready**: CNAB400 fully operational with real files
-- **CNAB240**: Complete parsers + Complete generators (File/Batch/Segments P/Q/R + Main orchestrator)
+- **CNAB240**: Complete parsers + generators + constants (File/Batch/Segments P/Q/R)
 
 **Recent Accomplishments (2026-01-21)**:
 
-- ✅ Implemented all CNAB240 component generators (File, Batch, Segments)
-- ✅ Created LineGenerator with universal formatting utilities (27 tests)
-- ✅ Created FileHeader/Trailer generators (19 tests)
-- ✅ Created BatchHeader/Trailer generators (30 tests)
-- ✅ Created Segment P/Q/R generators (55 tests)
-- ✅ Implemented main Cnab240Generator orchestrator (17 tests)
-- ✅ Complete hierarchical generation: File → Batches → Details → Segments
-- ✅ All 148 CNAB240 generator tests passing
+- ✅ Implemented all CNAB240 constants (78 tests)
+- ✅ Created LAYOUT_VERSION constants (FEBRABAN spec v087)
+- ✅ Created FIELD_SIZES constants (100+ field definitions)
+- ✅ Created SEGMENT_POSITIONS constants (position maps for all segments)
+- ✅ Position validation helper (validates no gaps/overlaps in 240-char lines)
+- ✅ All field sizes and positions match FEBRABAN specification
+- ✅ Type-safe constants using `as const` literal types
+- ✅ Comprehensive documentation with JSDoc on all exports
 
-**Next Steps**: Phase 2.5 - CNAB240 Constants, Phase 2.6 - CNAB240 Validators
+**Next Steps**: Phase 2.6 - CNAB240 Validators
 
 ---
 
@@ -391,21 +392,48 @@
 
 **Status**: ✅ COMPLETE (148 tests passing)
 
-### 2.5 CNAB240 Constants
+### 2.5 CNAB240 Constants ✅
 
 **Location**: `src/constants/cnab240/`
 
-**Status**: ⏳ Pending
+**Status**: ✅ Complete (2026-01-21)
 
-- [ ] `LAYOUT_VERSION.ts` - CNAB240 version (087)
-- [ ] `FIELD_SIZES.ts` - Standard field lengths
-- [ ] `SEGMENT_POSITIONS.ts` - Segment field positions
+- ✅ `LAYOUT_VERSION.ts` - CNAB240 layout version and file-level constants
+  - LAYOUT_VERSION = '087' (FEBRABAN specification version)
+  - FILE_TYPE_CODE, LINE_LENGTH (240), FILE_DENSITY
+  - CURRENCY_CODE = '009' (BRL), BATCH_TRAILER_BANK
+- ✅ `FIELD_SIZES.ts` - Standard field lengths for all records and segments
+  - COMMON_FIELD_SIZES (40+ shared fields: bank code, dates, amounts, names, addresses)
+  - FILE_HEADER_SIZES (layout version, file density, generation date/time)
+  - BATCH_HEADER_SIZES (launch form, messages, warning codes)
+  - SEGMENT_P_SIZES (20+ payment fields: amounts, interest, discount, protest)
+  - SEGMENT_Q_SIZES (payer and guarantor information)
+  - SEGMENT_R_SIZES (additional discounts and fine configuration)
+  - BATCH_TRAILER_SIZES (detail count, slip count, total amounts)
+  - FILE_TRAILER_SIZES (batch count, record count)
+  - TOTAL_LINE_LENGTH validation constant
+- ✅ `SEGMENT_POSITIONS.ts` - Exact byte positions for all fields
+  - FILE_HEADER_POSITIONS (complete 240-character position map)
+  - BATCH_HEADER_POSITIONS (all batch header fields)
+  - SEGMENT_P_POSITIONS (payment data field positions)
+  - SEGMENT_Q_POSITIONS (payer/guarantor field positions)
+  - SEGMENT_R_POSITIONS (discount/fine field positions)
+  - BATCH_TRAILER_POSITIONS (batch totals field positions)
+  - FILE_TRAILER_POSITIONS (file totals field positions)
+  - validatePositions() helper function (validates no gaps/overlaps)
+- ✅ Barrel exports in `index.ts`
+- ✅ Tests: 78/78 passing
 
 **Acceptance Criteria**:
 
-- Constants match FEBRABAN spec
-- Position maps for all segments
-- Immutable structures
+- ✅ All constants match FEBRABAN CNAB240 specification
+- ✅ Position maps validated (start at 1, end at 240, no gaps/overlaps)
+- ✅ Field sizes documented with character counts and descriptions
+- ✅ All constants immutable (using `as const`)
+- ✅ Type-safe with TypeScript literal types
+- ✅ Comprehensive test coverage (78 tests)
+
+**Status**: ✅ COMPLETE (78 tests passing)
 
 ### 2.6 CNAB240 Validators
 

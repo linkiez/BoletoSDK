@@ -5,7 +5,10 @@ export * from './cnab240';
 
 // CNAB400 parsers - selective re-export to avoid conflicts
 export {
-    parseCnab400, parseFileHeader as parseCnab400FileHeader, parseDetailRecord, parseFileTrailer,
+    parseCnab400,
+    parseFileHeader as parseCnab400FileHeader,
+    parseDetailRecord,
+    parseFileTrailer,
     parseGuarantorRecord,
     parseMessageBackRecord,
     parseMessageFrontRecord,

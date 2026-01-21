@@ -25,12 +25,12 @@ export function generateCnab(data: Cnab240File | Cnab400File): string {
   // Detect format by presence of specific properties
   if ('fileHeader' in data && 'batches' in data) {
     // CNAB240 has fileHeader and batches
-    return generateCnab240(data as Cnab240File);
+    return generateCnab240(data);
   }
 
   if ('header' in data && 'details' in data && 'trailer' in data) {
     // CNAB400 has header, details, trailer
-    return generateCnab400(data as Cnab400File);
+    return generateCnab400(data);
   }
 
   throw new CnabError('Invalid CNAB data structure: cannot determine format');
