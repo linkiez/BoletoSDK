@@ -245,7 +245,299 @@ const currency = CurrencyCode.REAL;  // "09"
 
 ---
 
-## 📚 Documentation
+## � CNAB400 Complete Guide
+
+The SDK provides full support for both CNAB400 REMESSA (outbound to bank) and RETORNO (return from bank) formats.
+
+### Understanding REMESSA vs RETORNO
+
+**REMESSA (Remittance - Operation Type '1')**:
+
+- Files **sent TO the bank** with payment instructions
+- Contains bank slip registration, updates, and cancellations
+- Includes instruction codes for bank actions
+- May include penalty records (Type 2) for fines/fees
+
+**RETORNO (Return - Operation Type '2')**:
+
+- Files **received FROM the bank** with payment status
+- Contains occurrence codes showing what happened to each slip
+- Includes payment confirmations, rejections, and status updates
+- Has creation date field (REMESSA does not)
+
+**Key Field Position Differences**:
+
+| Field              | REMESSA Position | RETORNO Position |
+| ------------------ | ---------------- | ---------------- |
+| Due Date           | 121-126          | 147-152          |
+| Amount             | 127-139          | 153-165          |
+| Bank Code          | 140-142          | 120-122          |
+| Instruction Codes  | 157-160          | N/A              |
+| Occurrence Code    | N/A              | 109-110          |
+
+### Parse CNAB400 Files
+
+The parser **automatically detects** whether it's REMESSA or RETORNO:
+
+```typescript
+import { parseCnab400 } from '@linkiez/boleto-sdk';
+import { readFileSync } from 'fs';
+
+// Parse REMESSA file (operation type '1')
+const remessaContent = readFileSync('remessa.ret', 'utf-8');
+const remessa = parseCnab400(remessaContent);
+
+console.log(remessa.header.operationType);  // "1" (REMESSA)
+console.log(remessa.header.bankCode);       // "341"
+console.log(remessa.details.length);        // 15
+
+// Access detail records
+remessa.details.forEach(detail => {
+  console.log(`Document: ${detail.documentNumber}`);
+  console.log(`Amount: R$ ${(detail.amount / 100).toFixed(2)}`);
+  console.log(`Due Date: ${detail.dueDate?.toLocaleDateString()}`);
+  console.log(`Instruction Codes: ${detail.instructionCode1}, ${detail.instructionCode2}`);
+});
+
+// Parse RETORNO file (operation type '2')
+const retornoContent = readFileSync('retorno.ret', 'utf-8');
+const retorno = parseCnab400(retornoContent);
+
+console.log(retorno.header.operationType);  // "2" (RETORNO)
+console.log(retorno.header.creationDate);   // Date (only in RETORNO)
+
+// Access occurrence codes (RETORNO-specific)
+retorno.details.forEach(detail => {
+  console.log(`Our Number: ${detail.ourNumber}`);
+  console.log(`Occurrence: ${detail.occurrenceCode}`);
+  console.log(`Amount Paid: R$ ${(detail.amount / 100).toFixed(2)}`);
+});
+```
+
+### Parse Penalty Records (Type 2 - REMESSA Only)
+
+```typescript
+import { parseCnab400 } from '@linkiez/boleto-sdk';
+
+const remessa = parseCnab400(remessaContent);
+
+// Check if file has penalty records
+if (remessa.penaltyRecords && remessa.penaltyRecords.length > 0) {
+  remessa.penaltyRecords.forEach(penalty => {
+    console.log(`Penalty Code: ${penalty.penaltyCode}`);
+    // 1 = No penalty
+    // 2 = Percentage
+    // 3 = Fixed amount
+    
+    if (penalty.penaltyCode === '2') {
+      console.log(`Penalty Rate: ${penalty.penaltyValue}%`);
+    } else if (penalty.penaltyCode === '3') {
+      console.log(`Penalty Amount: R$ ${(penalty.penaltyValue! / 100).toFixed(2)}`);
+    }
+    
+    console.log(`Effective Date: ${penalty.penaltyDate?.toLocaleDateString()}`);
+  });
+}
+```
+
+### Generate CNAB400 REMESSA Files
+
+```typescript
+import { generateCnab400, Cnab400File } from '@linkiez/boleto-sdk';
+
+const remessaData: Cnab400File = {
+  header: {
+    recordType: '0',
+    operationType: '1',  // REMESSA
+    operationLiteral: 'REMESSA',
+    serviceCode: '01',
+    serviceLiteral: 'COBRANCA',
+    agency: '4897',
+    account: '17450',
+    accountDigit: '6',
+    companyName: 'JCM INDUSTRIA E COMERCIO',
+    bankCode: '341',
+    bankName: 'BANCO ITAU SA',
+    generationDate: new Date('2026-01-21'),
+    sequenceNumber: 1
+  },
+  details: [
+    {
+      recordType: '1',
+      companyRegistrationNumber: '12345678000195',
+      agency: '4897',
+      account: '17450',
+      accountDigit: '6',
+      companyControl: 'DOC001',
+      ourNumber: '12345678',
+      portfolioCode: '109',
+      occurrenceCode: '01',  // Entry registration
+      documentNumber: 'NF-001',
+      dueDate: new Date('2026-02-28'),
+      amount: 15000,  // R$ 150.00 (in cents)
+      bankCode: '341',
+      speciesCode: '01',
+      acceptance: 'N',
+      issueDate: new Date('2026-01-21'),
+      instructionCode1: '00',
+      instructionCode2: '00',
+      payerName: 'JOHN DOE LTDA',
+      payerTaxId: '98765432000100',
+      payerAddress: 'RUA EXEMPLO 123',
+      payerCity: 'SAO PAULO',
+      payerState: 'SP',
+      payerPostalCode: '01310100',
+      sequentialNumber: 1
+    }
+  ],
+  trailer: {
+    recordType: '9',
+    totalRecords: 0,  // Can be blank or calculated
+    sequentialNumber: 3
+  }
+};
+
+const cnabContent = generateCnab400(remessaData);
+console.log('Generated CNAB400 with', cnabContent.split('\n').length, 'lines');
+```
+
+### Generate with Penalty Records
+
+```typescript
+import { generateCnab400, Cnab400File, PenaltyRecord } from '@linkiez/boleto-sdk';
+
+const penaltyRecord: PenaltyRecord = {
+  recordType: '2',
+  penaltyCode: '2',  // Percentage
+  penaltyDate: new Date('2026-03-01'),
+  penaltyValue: 200,  // 2% (200 = 2.00%)
+  sequentialNumber: 2
+};
+
+const remessaWithPenalty: Cnab400File = {
+  header: { /* ... */ },
+  details: [ /* ... */ ],
+  penaltyRecords: [penaltyRecord],
+  trailer: { /* ... */ }
+};
+
+const cnabContent = generateCnab400(remessaWithPenalty);
+```
+
+### Generate CNAB400 RETORNO Files
+
+```typescript
+import { generateCnab400, Cnab400File } from '@linkiez/boleto-sdk';
+
+const retornoData: Cnab400File = {
+  header: {
+    recordType: '0',
+    operationType: '2',  // RETORNO
+    operationLiteral: 'RETORNO',
+    serviceCode: '01',
+    serviceLiteral: 'COBRANCA',
+    agency: '4897',
+    account: '17450',
+    accountDigit: '6',
+    companyName: 'JCM INDUSTRIA E COMERCIO',
+    bankCode: '341',
+    bankName: 'BANCO ITAU SA',
+    generationDate: new Date('2026-01-21'),
+    sequenceNumber: 1,
+    creationDate: new Date('2026-01-21')  // Only in RETORNO
+  },
+  details: [
+    {
+      recordType: '1',
+      companyRegistrationNumber: '12345678000195',
+      agency: '4897',
+      account: '17450',
+      accountDigit: '6',
+      ourNumber: '12345678',
+      portfolioCode: '109',
+      occurrenceCode: '06',  // Payment confirmed
+      documentNumber: 'NF-001',
+      dueDate: new Date('2026-02-28'),
+      amount: 15000,  // Amount paid
+      bankCode: '341',
+      paymentDate: new Date('2026-02-27'),
+      sequentialNumber: 1
+    }
+  ],
+  trailer: {
+    recordType: '9',
+    totalRecords: 1,
+    sequentialNumber: 3
+  }
+};
+
+const retornoContent = generateCnab400(retornoData);
+```
+
+### Round-Trip Conversion
+
+Parse → Modify → Generate maintains all data:
+
+```typescript
+import { parseCnab400, generateCnab400 } from '@linkiez/boleto-sdk';
+
+// Parse original file
+const original = readFileSync('remessa.ret', 'utf-8');
+const parsed = parseCnab400(original);
+
+// Modify data
+parsed.details[0].amount = 20000;  // Change amount to R$ 200.00
+parsed.details[0].dueDate = new Date('2026-03-15');
+
+// Generate new file
+const modified = generateCnab400(parsed);
+writeFileSync('remessa_modified.ret', modified);
+
+// Verify round-trip
+const reparsed = parseCnab400(modified);
+console.log('Amount:', reparsed.details[0].amount);  // 20000
+console.log('Due Date:', reparsed.details[0].dueDate);  // 2026-03-15
+```
+
+### Validate CNAB400 Files
+
+```typescript
+import { validateCnab400File } from '@linkiez/boleto-sdk';
+
+try {
+  const validData = validateCnab400File(parsed);
+  console.log('✓ File structure is valid');
+} catch (error) {
+  console.error('✗ Validation failed:', error.message);
+  if (error instanceof ValidationError) {
+    error.issues?.forEach(issue => {
+      console.error(`- ${issue.path}: ${issue.message}`);
+    });
+  }
+}
+```
+
+### CNAB400 Error Handling
+
+```typescript
+import { ParseError, ValidationError } from '@linkiez/boleto-sdk';
+
+try {
+  const parsed = parseCnab400(content);
+} catch (error) {
+  if (error instanceof ParseError) {
+    console.error(`Parse error at line ${error.line}: ${error.message}`);
+  } else if (error instanceof ValidationError) {
+    console.error('Validation errors:', error.issues);
+  } else {
+    console.error('Unknown error:', error);
+  }
+}
+```
+
+---
+
+## �📚 Documentation
 
 ### Core Concepts
 
