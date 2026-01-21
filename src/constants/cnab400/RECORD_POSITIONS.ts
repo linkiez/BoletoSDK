@@ -54,14 +54,16 @@ export const DETAIL_RECORD_REMESSA_POSITIONS = {
   ZEROS: { start: 22, end: 23 },
   ACCOUNT: { start: 24, end: 28 },
   ACCOUNT_DIGIT: { start: 29, end: 29 },
-  RESERVED_1: { start: 30, end: 37 },
-  COMPANY_CONTROL: { start: 38, end: 62 },
-  OUR_NUMBER: { start: 63, end: 70 },
-  RESERVED_2: { start: 71, end: 83 },
-  PORTFOLIO_CODE: { start: 84, end: 86 },
-  RESERVED_3: { start: 87, end: 107 },
-  RESERVED_4: { start: 108, end: 110 },
-  DOCUMENT_NUMBER: { start: 111, end: 120 },
+  RESERVED_1: { start: 30, end: 33 }, // BRANCOS - 4 chars
+  INSTRUCTION_CANCELLATION: { start: 34, end: 37 }, // INSTRUÇÃO/ALEGAÇÃO - Instruction code to cancel
+  COMPANY_CONTROL: { start: 38, end: 62 }, // USO DA EMPRESA - Company control
+  OUR_NUMBER: { start: 63, end: 70 }, // NOSSO NÚMERO - Our number
+  CURRENCY_QUANTITY: { start: 71, end: 83 }, // QTDE DE MOEDA - Variable currency quantity
+  PORTFOLIO_CODE: { start: 84, end: 86 }, // Nº DA CARTEIRA - Portfolio number
+  RESERVED_3: { start: 87, end: 107 }, // USO DO BANCO - Bank use
+  PORTFOLIO_TYPE: { start: 108, end: 108 }, // CARTEIRA - Portfolio code
+  OCCURRENCE_CODE: { start: 109, end: 110 }, // CÓD. DE OCORRÊNCIA - Occurrence identification (CRITICAL)
+  DOCUMENT_NUMBER: { start: 111, end: 120 }, // Nº DO DOCUMENTO - Document number
   DUE_DATE: { start: 121, end: 126 },
   AMOUNT: { start: 127, end: 139 },
   BANK_CODE: { start: 140, end: 142 },
@@ -80,14 +82,17 @@ export const DETAIL_RECORD_REMESSA_POSITIONS = {
   PAYER_REGISTRATION_NUMBER: { start: 221, end: 234 },
   PAYER_NAME: { start: 235, end: 264 },
   RESERVED_5: { start: 265, end: 274 },
-  PAYER_ADDRESS: { start: 275, end: 314 },
-  RESERVED_6: { start: 315, end: 326 },
-  PAYER_ZIP_CODE: { start: 327, end: 334 },
+  PAYER_ADDRESS: { start: 275, end: 314 }, // LOGRADOURO - Payer address
+  PAYER_DISTRICT: { start: 315, end: 326 }, // BAIRRO - Payer district/neighborhood
+  PAYER_ZIP_CODE: { start: 327, end: 334 }, // CEP - Payer postal code
   PAYER_CITY: { start: 335, end: 349 },
   PAYER_STATE: { start: 350, end: 351 },
-  GUARANTOR_NAME: { start: 352, end: 381 },
-  RESERVED_7: { start: 382, end: 394 },
-  SEQUENTIAL_NUMBER: { start: 395, end: 400 },
+  GUARANTOR_NAME: { start: 352, end: 381 }, // SACADOR/AVALISTA - Guarantor name
+  RESERVED_7: { start: 382, end: 385 }, // BRANCOS - 4 chars
+  INTEREST_DATE: { start: 386, end: 391 }, // DATA DE MORA - Interest/late fee start date (DDMMAA)
+  DAYS_COUNT: { start: 392, end: 393 }, // PRAZO - Number of days (for instructions)
+  RESERVED_8: { start: 394, end: 394 }, // BRANCOS - 1 char
+  SEQUENTIAL_NUMBER: { start: 395, end: 400 }, // NÚMERO SEQÜENCIAL - Sequential record number
 } as const;
 
 /**
@@ -173,7 +178,7 @@ export function validatePositions(
   if (ranges[0].start !== 1) return false;
 
   // Check last position ends at 400
-  if (ranges[ranges.length - 1].end !== 400) return false;
+  if (ranges.at(-1)?.end !== 400) return false;
 
   // Check no gaps or overlaps
   for (let i = 0; i < ranges.length - 1; i++) {
