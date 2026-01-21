@@ -150,9 +150,7 @@ describe('CNAB240 SegmentQGenerator', () => {
         segmentCode: 'Q',
       };
 
-      expect(() =>
-        generator.generate(invalidSegment as SegmentQ),
-      ).toThrow('Bank code is required');
+      expect(() => generator.generate(invalidSegment as SegmentQ)).toThrow('Bank code is required');
     });
 
     it('should handle multiple sequential numbers', () => {
@@ -230,18 +228,14 @@ describe('CNAB240 SegmentQGenerator', () => {
       const segment = createMinimalSegmentQ('001', 1, 1);
       segment.payerName = 'MARIA SILVA';
       const result = generator.generate(segment);
-      expect(result.substring(33, 73)).toBe(
-        'MARIA SILVA                             ',
-      );
+      expect(result.substring(33, 73)).toBe('MARIA SILVA                             ');
     });
 
     it('should place payer address at positions 74-113', () => {
       const segment = createMinimalSegmentQ('001', 1, 1);
       segment.payerAddress = 'AV BRASIL 100';
       const result = generator.generate(segment);
-      expect(result.substring(73, 113)).toBe(
-        'AV BRASIL 100                           ',
-      );
+      expect(result.substring(73, 113)).toBe('AV BRASIL 100                           ');
     });
   });
 });

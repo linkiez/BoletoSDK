@@ -5,25 +5,25 @@
  */
 
 // Main parsers (CNAB → JSON)
-export * from '@/parsers';
+export * from './parsers';
 
 // Main generators (JSON → CNAB)
-export * from '@/generators';
+export * from './generators';
 
 // Validators
-export * from '@/validators';
+export * from './validators';
 
 // Public types
-export type * from '@/types';
+export type * from './types';
 
 // Public enums
-export * from '@/enums';
+export * from './enums';
 
 // Public utilities
-export * from '@/utils';
+export * from './utils';
 
 // Custom errors
-export * from '@/errors';
+export * from './errors';
 
 // Constants
-export * from '@/constants';
+export * from './constants';
