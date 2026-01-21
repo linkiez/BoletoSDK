@@ -154,10 +154,9 @@ export const PENALTY_RECORD_POSITIONS = {
  */
 export const FILE_TRAILER_POSITIONS = {
   RECORD_TYPE: { start: 1, end: 1 },
-  RESERVED_1: { start: 2, end: 7 },
-  TOTAL_RECORDS: { start: 8, end: 13 },
-  TOTAL_AMOUNT: { start: 14, end: 26 },
-  RESERVED_2: { start: 27, end: 394 },
+  TOTAL_RECORDS: { start: 2, end: 7 },
+  TOTAL_AMOUNT: { start: 8, end: 20 },
+  RESERVED: { start: 21, end: 394 },
   SEQUENTIAL_NUMBER: { start: 395, end: 400 },
 } as const;
 

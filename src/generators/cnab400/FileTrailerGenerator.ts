@@ -9,6 +9,7 @@
 import type { FileTrailer } from '../../types/cnab400';
 import { formatDecimal } from '../../utils/formatters';
 import { padLeft } from '../../utils/generators';
+import { FILE_TRAILER_SIZES } from '../../constants/cnab400';
 
 /**
  * Generates file trailer record (Type 9)
@@ -38,13 +39,13 @@ export function generateFileTrailer(trailer: FileTrailer): string {
   line += '9';
 
   // Position 002-007: Total records (including header and trailer)
-  line += padLeft(trailer.totalRecords, 6, '0');
+  line += padLeft(trailer.totalRecords, FILE_TRAILER_SIZES.TOTAL_RECORDS, '0');
 
   // Position 008-020: Total amount (13 positions, implied 2 decimals) - optional
   if (trailer.totalAmount) {
-    line += formatDecimal(trailer.totalAmount, 13, 2);
+    line += formatDecimal(trailer.totalAmount, FILE_TRAILER_SIZES.TOTAL_AMOUNT, 2);
   } else {
-    line += padLeft('0', 13, '0');
+    line += padLeft('0', FILE_TRAILER_SIZES.TOTAL_AMOUNT, '0');
   }
 
   // Position 021-027: Zeros

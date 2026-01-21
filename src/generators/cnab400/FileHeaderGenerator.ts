@@ -10,6 +10,14 @@ import { GenerationError } from '../../errors';
 import type { FileHeader } from '../../types/cnab400';
 import { formatDateShort } from '../../utils/formatters';
 import { padLeft, padRight } from '../../utils/generators';
+import {
+  LINE_LENGTH,
+  OPERATION_LITERAL_REMESSA,
+  SERVICE_CODE_COBRANCA,
+  SERVICE_LITERAL_COBRANCA,
+  COMMON_FIELD_SIZES,
+  FILE_HEADER_SIZES,
+} from '../../constants/cnab400';
 
 /**
  * Generates file header record (Type 0)
@@ -56,37 +64,45 @@ export function generateFileHeader(header: FileHeader): string {
   line += header.operationType;
 
   // Position 003-009: Operation literal
-  line += padRight(header.operationLiteral || 'RETORNO', 7, ' ');
+  line += padRight(
+    header.operationLiteral || OPERATION_LITERAL_REMESSA,
+    FILE_HEADER_SIZES.OPERATION_LITERAL,
+    ' ',
+  );
 
   // Position 010-011: Service code
-  line += padLeft(header.serviceCode || '01', 2, '0');
+  line += padLeft(header.serviceCode || SERVICE_CODE_COBRANCA, 2, '0');
 
   // Position 012-026: Service literal
-  line += padRight(header.serviceLiteral || 'COBRANCA', 15, ' ');
+  line += padRight(
+    header.serviceLiteral || SERVICE_LITERAL_COBRANCA,
+    FILE_HEADER_SIZES.SERVICE_LITERAL,
+    ' ',
+  );
 
   // Position 027-030: Agency
-  line += padLeft(header.agency || '0', 4, '0');
+  line += padLeft(header.agency || '0', COMMON_FIELD_SIZES.AGENCY, '0');
 
   // Position 031-032: Zeros
   line += '00';
 
   // Position 033-037: Account
-  line += padLeft(header.account || '0', 5, '0');
+  line += padLeft(header.account || '0', COMMON_FIELD_SIZES.ACCOUNT, '0');
 
   // Position 038-038: Account digit
-  line += padLeft(header.accountDigit || '0', 1, '0');
+  line += padLeft(header.accountDigit || '0', COMMON_FIELD_SIZES.ACCOUNT_DIGIT, '0');
 
   // Position 039-046: Blank/spaces (8 positions)
   line += '        ';
 
   // Position 047-076: Company name
-  line += padRight(header.companyName || '', 30, ' ');
+  line += padRight(header.companyName || '', FILE_HEADER_SIZES.COMPANY_NAME, ' ');
 
   // Position 077-079: Bank code
-  line += padLeft(header.bankCode, 3, '0');
+  line += padLeft(header.bankCode, COMMON_FIELD_SIZES.BANK_CODE, '0');
 
   // Position 080-094: Bank name
-  line += padRight(header.bankName || 'BANCO ITAU S.A.', 15, ' ');
+  line += padRight(header.bankName || 'BANCO ITAU S.A.', FILE_HEADER_SIZES.BANK_NAME, ' ');
 
   // Position 095-100: Generation date (DDMMYY)
   line += formatDateShort(header.generationDate);
@@ -108,7 +124,7 @@ export function generateFileHeader(header: FileHeader): string {
   }
 
   // Position 121-400: Fill with spaces to complete 400 characters
-  line = padRight(line, 400, ' ');
+  line = padRight(line, LINE_LENGTH, ' ');
 
   return line;
 }

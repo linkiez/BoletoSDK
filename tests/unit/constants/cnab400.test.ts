@@ -4,29 +4,29 @@
  */
 
 import {
-    COMMON_FIELD_SIZES,
-    CURRENCY_CODE,
-    DETAIL_RECORD_REMESSA_POSITIONS,
-    DETAIL_RECORD_RETORNO_POSITIONS,
-    DETAIL_RECORD_SIZES,
-    FILE_HEADER_POSITIONS,
-    FILE_HEADER_RETORNO_POSITIONS,
-    FILE_HEADER_SIZES,
-    FILE_TRAILER_POSITIONS,
-    FILE_TRAILER_SIZES,
-    FILE_TYPE_REMESSA,
-    FILE_TYPE_RETORNO,
-    FILLER_CHARACTER,
-    LINE_LENGTH,
-    OPERATION_LITERAL_REMESSA,
-    OPERATION_LITERAL_RETORNO,
-    PENALTY_RECORD_POSITIONS,
-    PENALTY_RECORD_SIZES,
-    SERVICE_CODE_COBRANCA,
-    SERVICE_LITERAL_COBRANCA,
-    TOTAL_LINE_LENGTH,
-    validatePositions,
-    ZERO_PAD_CHARACTER,
+  COMMON_FIELD_SIZES,
+  CURRENCY_CODE,
+  DETAIL_RECORD_REMESSA_POSITIONS,
+  DETAIL_RECORD_RETORNO_POSITIONS,
+  DETAIL_RECORD_SIZES,
+  FILE_HEADER_POSITIONS,
+  FILE_HEADER_RETORNO_POSITIONS,
+  FILE_HEADER_SIZES,
+  FILE_TRAILER_POSITIONS,
+  FILE_TRAILER_SIZES,
+  FILE_TYPE_REMESSA,
+  FILE_TYPE_RETORNO,
+  FILLER_CHARACTER,
+  LINE_LENGTH,
+  OPERATION_LITERAL_REMESSA,
+  OPERATION_LITERAL_RETORNO,
+  PENALTY_RECORD_POSITIONS,
+  PENALTY_RECORD_SIZES,
+  SERVICE_CODE_COBRANCA,
+  SERVICE_LITERAL_COBRANCA,
+  TOTAL_LINE_LENGTH,
+  validatePositions,
+  ZERO_PAD_CHARACTER,
 } from '../../../src/constants/cnab400';
 
 describe('CNAB400 Layout Version Constants', () => {
@@ -224,9 +224,7 @@ describe('CNAB400 Field Positions', () => {
 
   describe('File Header RETORNO Positions', () => {
     it('should include all standard header fields', () => {
-      expect(FILE_HEADER_RETORNO_POSITIONS.RECORD_TYPE).toEqual(
-        FILE_HEADER_POSITIONS.RECORD_TYPE,
-      );
+      expect(FILE_HEADER_RETORNO_POSITIONS.RECORD_TYPE).toEqual(FILE_HEADER_POSITIONS.RECORD_TYPE);
       expect(FILE_HEADER_RETORNO_POSITIONS.BANK_CODE).toEqual(FILE_HEADER_POSITIONS.BANK_CODE);
     });
 
@@ -341,12 +339,12 @@ describe('CNAB400 Field Positions', () => {
       expect(FILE_TRAILER_POSITIONS.RECORD_TYPE).toEqual({ start: 1, end: 1 });
     });
 
-    it('should have total records at positions 8-13', () => {
-      expect(FILE_TRAILER_POSITIONS.TOTAL_RECORDS).toEqual({ start: 8, end: 13 });
+    it('should have total records at positions 2-7', () => {
+      expect(FILE_TRAILER_POSITIONS.TOTAL_RECORDS).toEqual({ start: 2, end: 7 });
     });
 
-    it('should have total amount at positions 14-26', () => {
-      expect(FILE_TRAILER_POSITIONS.TOTAL_AMOUNT).toEqual({ start: 14, end: 26 });
+    it('should have total amount at positions 8-20', () => {
+      expect(FILE_TRAILER_POSITIONS.TOTAL_AMOUNT).toEqual({ start: 8, end: 20 });
     });
   });
 });
