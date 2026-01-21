@@ -4,8 +4,8 @@
  * Tests business rule validation for CNAB400 files
  */
 
-import { validateCnab400File, validateFileStructure } from '../../../src/validators/cnab400';
 import type { Cnab400File } from '../../../src/types/cnab400';
+import { validateCnab400File, validateFileStructure } from '../../../src/validators/cnab400';
 
 describe('CNAB400 Validators', () => {
   describe('validateFileStructure', () => {

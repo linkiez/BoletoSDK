@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { parseCnab400 } from '../../src/parsers/cnab400';
 import { ParseError } from '../../src/errors';
+import { parseCnab400 } from '../../src/parsers/cnab400';
 
 /**
  * Integration tests for CNAB400 error handling

@@ -25,6 +25,7 @@
 **Status**: ✅ Complete (2026-01-20)
 
 **Completion Summary**:
+
 - ✅ Error handling with custom error hierarchy (CnabError, ValidationError, ParseError, GenerationError)
 - ✅ TypeScript interfaces for all common types (Address, TaxId, BankAccount, Beneficiary, Payer, Discount, Fee, Fine, Interest)
 - ✅ Enums and constants (BankCode, DocumentType, SpeciesCode, etc.)
@@ -39,6 +40,7 @@
 **Status**: Complete
 
 **Implementation**:
+
 - ✅ `src/errors/index.ts` - Custom error classes with context
 - ✅ CnabError (base), ParseError, ValidationError, GenerationError
 - ✅ Error.captureStackTrace integration
@@ -49,6 +51,7 @@
 **Status**: Complete
 
 **Implementation**:
+
 - ✅ `src/types/common/index.ts` - 9 TypeScript interfaces
 - ✅ Address, TaxId, BankAccount, Beneficiary, Payer
 - ✅ Discount, Fee, Fine, Interest
@@ -60,6 +63,7 @@
 **Status**: Complete
 
 **Implementation**:
+
 - ✅ `src/enums/common/index.ts` - 8 enums
   - BankCode, DocumentType, SpeciesCode
   - AcceptanceType, CurrencyCode, CnabType
@@ -74,6 +78,7 @@
 **Status**: Complete
 
 **Implementation**:
+
 - ✅ `src/utils/formatters/index.ts`
   - formatTaxId() - CPF/CNPJ formatting
   - formatMoney() - Brazilian Real currency
@@ -93,6 +98,7 @@
 **Status**: Complete
 
 **Implementation**:
+
 - ✅ `src/schemas/common/index.ts` - 9 Zod schemas
   - AddressSchema with BRAZILIAN_STATES enum
   - TaxIdSchema with validateTaxId() refinement
@@ -107,6 +113,7 @@
 **Status**: Complete
 
 **Metrics**:
+
 - ✅ **152 passing tests** (2 skipped SDK placeholders)
 - ✅ **95.79% code coverage** (exceeds 80% threshold)
   - Statements: 95.79%
