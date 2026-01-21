@@ -1,12 +1,12 @@
-import { LINE_LENGTH } from '../../constants/cnab240';
+import { LINE_LENGTH, RECORD_TYPE } from '../../constants/cnab240';
 import { CnabError } from '../../errors';
 import { SegmentP } from '../../types';
 import {
-    buildLine,
-    formatDateField,
-    formatDecimalField,
-    formatField,
-    formatNumericField,
+  buildLine,
+  formatDateField,
+  formatDecimalField,
+  formatField,
+  formatNumericField,
 } from './LineGenerator';
 
 /**
@@ -32,7 +32,7 @@ export class SegmentPGenerator {
     fields.set('batchNumber', formatNumericField(segment.batchNumber, 4, 7));
 
     // Position 8: Record type (always 3 for detail)
-    fields.set('recordType', '3');
+    fields.set('recordType', RECORD_TYPE.DETAIL);
 
     // Positions 9-13: Sequential record number within batch
     fields.set('sequentialNumber', formatNumericField(segment.sequentialNumber, 9, 13));

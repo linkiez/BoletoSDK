@@ -1,4 +1,4 @@
-import { LINE_LENGTH } from '../../constants/cnab240';
+import { LINE_LENGTH, RECORD_TYPE } from '../../constants/cnab240';
 import { BatchHeader } from '../../types/cnab240';
 import { buildLine, formatDateField, formatField, formatNumericField } from './LineGenerator';
 
@@ -72,7 +72,7 @@ export class BatchHeaderGenerator {
     fields.set('batchNumber', formatNumericField(Number(header.batchNumber), 4, 7));
 
     // Position 8: Record type (always 1 for batch header)
-    fields.set('recordType', formatField('1', 8, 8, 'numeric'));
+    fields.set('recordType', formatField(RECORD_TYPE.BATCH_HEADER, 8, 8, 'numeric'));
 
     // Position 9: Operation type (C, D, E, I)
     fields.set('operationType', formatField(header.operationType, 9, 9, 'text'));

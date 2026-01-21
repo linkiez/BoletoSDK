@@ -8,6 +8,7 @@
  */
 
 import { ParseError } from '../../errors';
+import { RECORD_TYPE } from '../../constants/cnab240';
 import { Batch, Cnab240File, DetailRecord, FileTrailer } from '../../types/cnab240';
 import { parseFileHeader } from './FileHeaderParser';
 import {
@@ -68,7 +69,7 @@ function parseBatches(lines: string[]): Batch[] {
   for (const line of lines) {
     const recordType = extractField(line, 8, 8);
 
-    if (recordType === '1') {
+    if (recordType === RECORD_TYPE.BATCH_HEADER) {
       // Batch header - start new batch
       if (currentBatchLines.length > 0) {
         batches.push(parseBatch(currentBatchLines));

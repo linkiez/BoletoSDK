@@ -1,4 +1,4 @@
-import { LINE_LENGTH } from '../../constants/cnab240';
+import { LINE_LENGTH, RECORD_TYPE } from '../../constants/cnab240';
 import { FileHeader } from '../../types';
 import { buildLine, formatDateField, formatField, formatNumericField } from './LineGenerator';
 
@@ -26,7 +26,7 @@ export class FileHeaderGenerator {
     fields.set('batchNumber', formatNumericField(0, 4, 7));
 
     // Position 8: Record type (always 0 for file header)
-    fields.set('recordType', '0');
+    fields.set('recordType', RECORD_TYPE.FILE_HEADER);
 
     // Positions 9-17: Reserved (spaces)
     fields.set('reserved1', formatField('', 9, 17, 'text'));

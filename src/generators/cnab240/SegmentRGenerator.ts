@@ -1,5 +1,5 @@
+import { LINE_LENGTH, RECORD_TYPE } from '../../constants/cnab240';
 import { SegmentR } from '../../types';
-import { LINE_LENGTH } from '../../constants/cnab240';
 import {
   buildLine,
   formatDateField,
@@ -37,7 +37,7 @@ export class SegmentRGenerator {
     fields.set('batchNumber', formatNumericField(segment.batchNumber, 4, 7));
 
     // Position 8: Record type - Always "3" for detail
-    fields.set('recordType', '3');
+    fields.set('recordType', RECORD_TYPE.DETAIL);
 
     // Positions 9-13: Sequential number within batch
     fields.set('sequentialNumber', formatNumericField(segment.sequentialNumber, 9, 13));
@@ -95,7 +95,9 @@ export class SegmentRGenerator {
 
     // Validate line length
     if (line.length !== LINE_LENGTH) {
-      throw new Error(`Generated line has invalid length: ${line.length} (expected ${LINE_LENGTH})`);
+      throw new Error(
+        `Generated line has invalid length: ${line.length} (expected ${LINE_LENGTH})`,
+      );
     }
 
     return line;

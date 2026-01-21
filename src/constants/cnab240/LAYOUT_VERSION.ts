@@ -60,3 +60,20 @@ export const CURRENCY_CODE = '009' as const;
  * @constant
  */
 export const BATCH_TRAILER_BANK = '9999' as const;
+
+/**
+ * Record type codes for CNAB240 file structure
+ * @constant
+ */
+export const RECORD_TYPE = {
+  /** File Header (Type 0) */
+  FILE_HEADER: '0',
+  /** Batch Header (Type 1) */
+  BATCH_HEADER: '1',
+  /** Detail Record (Type 3) - Segments P, Q, R, etc. */
+  DETAIL: '3',
+  /** Batch Trailer (Type 5) */
+  BATCH_TRAILER: '5',
+  /** File Trailer (Type 9) */
+  FILE_TRAILER: '9',
+} as const;

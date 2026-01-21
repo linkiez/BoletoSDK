@@ -4,16 +4,16 @@
  * @module parsers/cnab400/Cnab400Parser
  */
 
-import { LINE_LENGTH } from '../../constants/cnab400';
+import { LINE_LENGTH, FILE_TYPE_RETORNO } from '../../constants/cnab400';
 import { ParseError } from '../../errors';
 import type {
-    Cnab400File,
-    Cnab400ReturnFile,
-    DetailRecord,
-    GuarantorRecord,
-    MessageBackRecord,
-    MessageFrontRecord,
-    PenaltyRecord,
+  Cnab400File,
+  Cnab400ReturnFile,
+  DetailRecord,
+  GuarantorRecord,
+  MessageBackRecord,
+  MessageFrontRecord,
+  PenaltyRecord,
 } from '../../types/cnab400';
 import { parseDetailRecord } from './DetailRecordParser';
 import { parseFileHeader } from './FileHeaderParser';
@@ -84,7 +84,7 @@ export function parseCnab400(content: string): Cnab400File | Cnab400ReturnFile {
   const messageFrontRecords: MessageFrontRecord[] = [];
   const messageBackRecords: MessageBackRecord[] = [];
 
-  const isReturn = header.operationType === '2';
+  const isReturn = header.operationType === FILE_TYPE_RETORNO;
 
   for (let i = 1; i < lines.length - 1; i++) {
     const line = lines[i];

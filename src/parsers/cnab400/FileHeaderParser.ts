@@ -5,9 +5,8 @@
  */
 
 import {
-  FILE_HEADER_POSITIONS,
-  FILE_HEADER_RETORNO_POSITIONS,
-  LINE_LENGTH,
+    FILE_HEADER_POSITIONS,
+    FILE_HEADER_RETORNO_POSITIONS,  FILE_TYPE_RETORNO,    LINE_LENGTH,
 } from '../../constants/cnab400';
 import { ParseError } from '../../errors';
 import type { FileHeader } from '../../types/cnab400';
@@ -47,7 +46,7 @@ export function parseFileHeader(line: string): FileHeader {
   const { CREATION_DATE } = FILE_HEADER_RETORNO_POSITIONS;
 
   const operationType = line.substring(OPERATION_TYPE.start - 1, OPERATION_TYPE.end) as '1' | '2';
-  const isRetorno = operationType === '2';
+  const isRetorno = operationType === FILE_TYPE_RETORNO;
 
   return {
     recordType: '0',

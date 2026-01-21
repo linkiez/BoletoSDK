@@ -1,4 +1,4 @@
-import { LINE_LENGTH } from '../../constants/cnab240';
+import { LINE_LENGTH, RECORD_TYPE } from '../../constants/cnab240';
 import { BatchTrailer } from '../../types/cnab240';
 import { buildLine, formatField, formatNumericField } from './LineGenerator';
 
@@ -56,7 +56,7 @@ export class BatchTrailerGenerator {
     fields.set('batchNumber', formatNumericField(Number(trailer.batchNumber), 4, 7));
 
     // Position 8: Record type (always 5 for batch trailer)
-    fields.set('recordType', formatField('5', 8, 8, 'numeric'));
+    fields.set('recordType', formatField(RECORD_TYPE.BATCH_TRAILER, 8, 8, 'numeric'));
 
     // Positions 9-17: Reserved (spaces)
     fields.set('reserved1', formatField('', 9, 17, 'text'));
