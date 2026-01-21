@@ -7,7 +7,7 @@ describe('formatMoney', () => {
     });
 
     it('should format decimal values', () => {
-      expect(formatMoney(150.50)).toBe('R$ 150,50');
+      expect(formatMoney(150.5)).toBe('R$ 150,50');
     });
 
     it('should format values with single decimal', () => {

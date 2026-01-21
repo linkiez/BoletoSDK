@@ -1,10 +1,4 @@
-import {
-    BankInfo,
-    BANKS,
-    getBankInfo,
-    getBankName,
-    isValidBankCode,
-} from '@constants/bancos';
+import { BankInfo, BANKS, getBankInfo, getBankName, isValidBankCode } from '@constants/bancos';
 import { BankCode } from '@enums/common';
 
 describe('Bank Constants', () => {

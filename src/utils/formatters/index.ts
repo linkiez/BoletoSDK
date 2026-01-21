@@ -78,3 +78,63 @@ export function formatMoney(value: number, options: FormatMoneyOptions = {}): st
   // Add currency symbol if requested
   return showSymbol ? `R$ ${withSign}` : withSign;
 }
+
+/**
+ * Format Date to DDMMYY (6-character) format for CNAB400
+ *
+ * @param date - Date object to format
+ * @returns 6-character date string (DDMMYY)
+ *
+ * @example
+ * ```typescript
+ * formatDateShort(new Date('2026-01-15')); // Returns '150126'
+ * ```
+ */
+export function formatDateShort(date: Date): string {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = String(date.getFullYear()).slice(-2);
+
+  return `${day}${month}${year}`;
+}
+
+/**
+ * Format Date to DDMMYYYY (8-character) format for CNAB240
+ *
+ * @param date - Date object to format
+ * @returns 8-character date string (DDMMYYYY)
+ *
+ * @example
+ * ```typescript
+ * formatDateLong(new Date('2026-01-15')); // Returns '15012026'
+ * ```
+ */
+export function formatDateLong(date: Date): string {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = String(date.getFullYear());
+
+  return `${day}${month}${year}`;
+}
+
+/**
+ * Format decimal number for CNAB (remove decimal point, pad with zeros)
+ *
+ * @param value - Decimal number
+ * @param length - Total length including decimal places
+ * @param decimalPlaces - Number of decimal places (default: 2)
+ * @returns Zero-padded string without decimal point
+ *
+ * @example
+ * ```typescript
+ * formatDecimal(150.50, 13, 2); // Returns '0000000015050'
+ * formatDecimal(1000, 13, 2); // Returns '0000000100000'
+ * ```
+ */
+export function formatDecimal(value: number, length: number, decimalPlaces = 2): string {
+  // Convert to integer by multiplying by 10^decimalPlaces
+  const intValue = Math.round(value * Math.pow(10, decimalPlaces));
+
+  // Pad left with zeros
+  return String(intValue).padStart(length, '0');
+}

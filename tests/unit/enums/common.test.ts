@@ -1,12 +1,12 @@
 import {
-    AcceptanceType,
-    BankCode,
-    CnabType,
-    CurrencyCode,
-    DocumentType,
-    InstructionCode,
-    MovementType,
-    SpeciesCode,
+  AcceptanceType,
+  BankCode,
+  CnabType,
+  CurrencyCode,
+  DocumentType,
+  InstructionCode,
+  MovementType,
+  SpeciesCode,
 } from '@enums/common';
 
 describe('Common Enums', () => {

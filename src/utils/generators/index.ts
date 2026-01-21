@@ -82,7 +82,7 @@ export function calculateModulo10(value: string): number {
 
   // Process from right to left
   for (let i = value.length - 1; i >= 0; i--) {
-    let digit = parseInt(value[i]) * multiplier;
+    let digit = Number.parseInt(value[i]) * multiplier;
 
     // If result is two digits, sum them
     if (digit > 9) {
@@ -121,7 +121,7 @@ export function calculateModulo11(value: string, options: Modulo11Options = {}):
 
   // Process from right to left
   for (let i = value.length - 1; i >= 0; i--) {
-    sum += parseInt(value[i]) * weight;
+    sum += Number.parseInt(value[i]) * weight;
     weight = weight >= maxWeight ? 2 : weight + 1;
   }
 

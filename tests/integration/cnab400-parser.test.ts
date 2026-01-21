@@ -40,7 +40,7 @@ describe('CNAB400 Parser - Integration Tests', () => {
 
     it('should have detail records (type 1)', () => {
       const lines = fileContent.trim().split('\n');
-      const detailLines = lines.filter(line => line[0] === '1');
+      const detailLines = lines.filter((line) => line[0] === '1');
       expect(detailLines.length).toBeGreaterThan(0);
     });
 
