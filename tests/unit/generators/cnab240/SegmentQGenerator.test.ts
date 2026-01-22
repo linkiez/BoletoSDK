@@ -1,3 +1,4 @@
+import * as LineGenerator from '../../../../src/generators/cnab240/LineGenerator';
 import { SegmentQGenerator } from '../../../../src/generators/cnab240/SegmentQGenerator';
 import { SegmentQ } from '../../../../src/types';
 
@@ -190,6 +191,48 @@ describe('CNAB240 SegmentQGenerator', () => {
       expect(result).toHaveLength(240);
       // Guarantor fields should be filled with spaces/zeros
     });
+
+    it('should include guarantor fields when provided', () => {
+      const segment: SegmentQ = {
+        bankCode: '341',
+        batchNumber: 1,
+        recordType: '3',
+        sequentialNumber: 1,
+        segmentCode: 'Q',
+        occurrenceCode: '01',
+        payerRegistrationType: '2',
+        payerTaxId: '12345678000195',
+        payerName: 'JOAO DA SILVA',
+        payerAddress: 'RUA A',
+        payerNeighborhood: 'CENTRO',
+        payerPostalCode: '12345678',
+        payerCity: 'SAO PAULO',
+        payerState: 'SP',
+        guarantorRegistrationType: '1',
+        guarantorTaxId: '12345678901',
+        guarantorName: 'GARANTIDOR TESTE',
+      };
+
+      const result = generator.generate(segment);
+
+      const guarantorName = result.substring(169, 209);
+
+      expect(result.substring(153, 154)).toBe('1');
+      expect(result.substring(154, 169)).toBe('000012345678901');
+      expect(guarantorName).toHaveLength(40);
+      expect(guarantorName.trim()).toBe('GARANTIDOR TESTE');
+    });
+
+    it('should throw when generated line length is invalid', () => {
+      const segment = createMinimalSegmentQ('341', 1, 1);
+      const buildLineSpy = jest.spyOn(LineGenerator, 'buildLine').mockReturnValue('INVALID');
+
+      expect(() => generator.generate(segment)).toThrow(
+        'Invalid segment Q length: expected 240, got 7',
+      );
+
+      buildLineSpy.mockRestore();
+    });
   });
 
   describe('Field positioning', () => {
@@ -236,6 +279,167 @@ describe('CNAB240 SegmentQGenerator', () => {
       segment.payerAddress = 'AV BRASIL 100';
       const result = generator.generate(segment);
       expect(result.substring(73, 113)).toBe('AV BRASIL 100                           ');
+    });
+  });
+
+  describe('Validation', () => {
+    it('should throw error if batchNumber is missing', () => {
+      const invalidSegment = {
+        bankCode: '341',
+        batchNumber: undefined,
+        recordType: '3',
+        sequentialNumber: 1,
+        segmentCode: 'Q',
+        occurrenceCode: '01',
+        payerRegistrationType: '1',
+        payerTaxId: '12345678901',
+        payerName: 'JOAO DA SILVA',
+        payerAddress: 'RUA A',
+        payerNeighborhood: 'CENTRO',
+        payerPostalCode: '12345678',
+        payerCity: 'SAO PAULO',
+        payerState: 'SP',
+      };
+
+      expect(() => generator.generate(invalidSegment as unknown as SegmentQ)).toThrow(
+        'Batch number is required',
+      );
+    });
+
+    it('should throw error if occurrenceCode is missing', () => {
+      const invalidSegment = {
+        bankCode: '341',
+        batchNumber: 1,
+        recordType: '3',
+        sequentialNumber: 1,
+        segmentCode: 'Q',
+        occurrenceCode: '',
+        payerRegistrationType: '1',
+        payerTaxId: '12345678901',
+        payerName: 'JOAO DA SILVA',
+        payerAddress: 'RUA A',
+        payerNeighborhood: 'CENTRO',
+        payerPostalCode: '12345678',
+        payerCity: 'SAO PAULO',
+        payerState: 'SP',
+      };
+
+      expect(() => generator.generate(invalidSegment as unknown as SegmentQ)).toThrow(
+        'Occurrence code is required',
+      );
+    });
+
+    it('should throw error if payerTaxId is missing', () => {
+      const invalidSegment = {
+        bankCode: '341',
+        batchNumber: 1,
+        recordType: '3',
+        sequentialNumber: 1,
+        segmentCode: 'Q',
+        occurrenceCode: '01',
+        payerRegistrationType: '1',
+        payerTaxId: '',
+        payerName: 'JOAO DA SILVA',
+        payerAddress: 'RUA A',
+        payerNeighborhood: 'CENTRO',
+        payerPostalCode: '12345678',
+        payerCity: 'SAO PAULO',
+        payerState: 'SP',
+      };
+
+      expect(() => generator.generate(invalidSegment as unknown as SegmentQ)).toThrow(
+        'Payer tax ID is required',
+      );
+    });
+
+    it('should throw error if recordType is missing', () => {
+      const invalidSegment = createMinimalSegmentQ('341', 1, 1);
+      invalidSegment.recordType = '';
+
+      expect(() => generator.generate(invalidSegment as unknown as SegmentQ)).toThrow(
+        'Record type is required',
+      );
+    });
+
+    it('should throw error if sequentialNumber is missing', () => {
+      const invalidSegment = createMinimalSegmentQ('341', 1, 1);
+      invalidSegment.sequentialNumber = undefined as unknown as SegmentQ['sequentialNumber'];
+
+      expect(() => generator.generate(invalidSegment as unknown as SegmentQ)).toThrow(
+        'Sequential number is required',
+      );
+    });
+
+    it('should throw error if segmentCode is missing', () => {
+      const invalidSegment = createMinimalSegmentQ('341', 1, 1);
+      invalidSegment.segmentCode = '';
+
+      expect(() => generator.generate(invalidSegment as unknown as SegmentQ)).toThrow(
+        'Segment code is required',
+      );
+    });
+
+    it('should throw error if payerRegistrationType is missing', () => {
+      const invalidSegment = createMinimalSegmentQ('341', 1, 1);
+      invalidSegment.payerRegistrationType = '';
+
+      expect(() => generator.generate(invalidSegment as unknown as SegmentQ)).toThrow(
+        'Payer registration type is required',
+      );
+    });
+
+    it('should throw error if payerName is missing', () => {
+      const invalidSegment = createMinimalSegmentQ('341', 1, 1);
+      invalidSegment.payerName = '';
+
+      expect(() => generator.generate(invalidSegment as unknown as SegmentQ)).toThrow(
+        'Payer name is required',
+      );
+    });
+
+    it('should throw error if payerAddress is missing', () => {
+      const invalidSegment = createMinimalSegmentQ('341', 1, 1);
+      invalidSegment.payerAddress = '';
+
+      expect(() => generator.generate(invalidSegment as unknown as SegmentQ)).toThrow(
+        'Payer address is required',
+      );
+    });
+
+    it('should throw error if payerNeighborhood is missing', () => {
+      const invalidSegment = createMinimalSegmentQ('341', 1, 1);
+      invalidSegment.payerNeighborhood = '';
+
+      expect(() => generator.generate(invalidSegment as unknown as SegmentQ)).toThrow(
+        'Payer neighborhood is required',
+      );
+    });
+
+    it('should throw error if payerPostalCode is missing', () => {
+      const invalidSegment = createMinimalSegmentQ('341', 1, 1);
+      invalidSegment.payerPostalCode = '';
+
+      expect(() => generator.generate(invalidSegment as unknown as SegmentQ)).toThrow(
+        'Payer postal code is required',
+      );
+    });
+
+    it('should throw error if payerCity is missing', () => {
+      const invalidSegment = createMinimalSegmentQ('341', 1, 1);
+      invalidSegment.payerCity = '';
+
+      expect(() => generator.generate(invalidSegment as unknown as SegmentQ)).toThrow(
+        'Payer city is required',
+      );
+    });
+
+    it('should throw error if payerState is missing', () => {
+      const invalidSegment = createMinimalSegmentQ('341', 1, 1);
+      invalidSegment.payerState = '';
+
+      expect(() => generator.generate(invalidSegment as unknown as SegmentQ)).toThrow(
+        'Payer state is required',
+      );
     });
   });
 });

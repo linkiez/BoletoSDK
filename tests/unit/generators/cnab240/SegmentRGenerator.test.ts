@@ -228,6 +228,66 @@ describe('SegmentRGenerator', () => {
       };
       expect(() => generator.generate(segment as SegmentR)).toThrow('Occurrence code is required');
     });
+
+    it('should throw error when discount2Code is set without date', () => {
+      const segment: SegmentR = {
+        ...createMinimalSegmentR(),
+        discount2Code: '1',
+        discount2Amount: 10,
+      };
+
+      expect(() => generator.generate(segment)).toThrow('Discount 2 date is required');
+    });
+
+    it('should throw error when discount2Code is set without amount', () => {
+      const segment: SegmentR = {
+        ...createMinimalSegmentR(),
+        discount2Code: '1',
+        discount2Date: new Date('2024-02-15'),
+      };
+
+      expect(() => generator.generate(segment)).toThrow('Discount 2 amount is required');
+    });
+
+    it('should throw error when discount3Code is set without date', () => {
+      const segment: SegmentR = {
+        ...createMinimalSegmentR(),
+        discount3Code: '1',
+        discount3Amount: 10,
+      };
+
+      expect(() => generator.generate(segment)).toThrow('Discount 3 date is required');
+    });
+
+    it('should throw error when discount3Code is set without amount', () => {
+      const segment: SegmentR = {
+        ...createMinimalSegmentR(),
+        discount3Code: '1',
+        discount3Date: new Date('2024-03-10'),
+      };
+
+      expect(() => generator.generate(segment)).toThrow('Discount 3 amount is required');
+    });
+
+    it('should throw error when fineCode is set without date', () => {
+      const segment: SegmentR = {
+        ...createMinimalSegmentR(),
+        fineCode: '1',
+        fineAmount: 5,
+      };
+
+      expect(() => generator.generate(segment)).toThrow('Fine date is required');
+    });
+
+    it('should throw error when fineCode is set without amount', () => {
+      const segment: SegmentR = {
+        ...createMinimalSegmentR(),
+        fineCode: '1',
+        fineDate: new Date('2024-01-16'),
+      };
+
+      expect(() => generator.generate(segment)).toThrow('Fine amount is required');
+    });
   });
 
   describe('Field positioning', () => {

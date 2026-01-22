@@ -114,7 +114,9 @@ describe('CNAB240 SegmentPGenerator', () => {
         recordType: '3',
       };
 
-      expect(() => generator.generate(invalidSegment as SegmentP)).toThrow('Bank code is required');
+      expect(() => generator.generate(invalidSegment as unknown as SegmentP)).toThrow(
+        'Bank code is required',
+      );
     });
 
     it('should handle sequential numbering', () => {
@@ -189,6 +191,78 @@ describe('CNAB240 SegmentPGenerator', () => {
       const result = generator.generate(segment);
       // Per FEBRABAN: Document number (Nosso Número) at positions 38-57 (20 chars)
       expect(result.substring(37, 57)).toBe('DOC123              ');
+    });
+  });
+
+  describe('Validation', () => {
+    it('should throw error if bankCode is missing', () => {
+      const invalidSegment = {
+        bankCode: '',
+        batchNumber: 1,
+        recordType: '3',
+      };
+
+      expect(() => generator.generate(invalidSegment as SegmentP)).toThrow('Bank code is required');
+    });
+
+    it('should throw error if batchNumber is missing', () => {
+      const invalidSegment = {
+        bankCode: '341',
+        batchNumber: undefined,
+        sequentialNumber: 1,
+        recordType: '3',
+        dueDate: new Date('2026-12-31'),
+        amount: 10,
+      };
+
+      expect(() => generator.generate(invalidSegment as unknown as SegmentP)).toThrow(
+        'Batch number is required',
+      );
+    });
+
+    it('should throw error if sequentialNumber is missing', () => {
+      const invalidSegment = {
+        bankCode: '341',
+        batchNumber: 1,
+        sequentialNumber: undefined,
+        recordType: '3',
+        dueDate: new Date('2026-12-31'),
+        amount: 10,
+      };
+
+      expect(() => generator.generate(invalidSegment as unknown as SegmentP)).toThrow(
+        'Sequential number is required',
+      );
+    });
+
+    it('should throw error if dueDate is missing', () => {
+      const invalidSegment = {
+        bankCode: '341',
+        batchNumber: 1,
+        sequentialNumber: 1,
+        recordType: '3',
+        dueDate: undefined,
+        amount: 10,
+      };
+
+      expect(() => generator.generate(invalidSegment as unknown as SegmentP)).toThrow(
+        'Due date is required',
+      );
+    });
+
+    it('should throw error if amount is missing', () => {
+      const invalidSegment = {
+        bankCode: '341',
+        batchNumber: 1,
+        sequentialNumber: 1,
+        recordType: '3',
+        dueDate: new Date('2026-12-31'),
+        amount: undefined,
+      };
+
+      expect(() => generator.generate(invalidSegment as unknown as SegmentP)).toThrow(
+        'Amount is required',
+      );
     });
   });
 });

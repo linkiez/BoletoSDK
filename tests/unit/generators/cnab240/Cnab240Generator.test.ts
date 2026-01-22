@@ -298,6 +298,22 @@ describe('Cnab240Generator', () => {
       expect(() => generator.generate(file)).toThrow('At least one detail is required in batch');
     });
 
+    it('should throw error if detail has no segmentP', () => {
+      const file = createMinimalFile();
+      file.batches[0].details[0].segmentP =
+        undefined as unknown as Cnab240File['batches'][0]['details'][0]['segmentP'];
+
+      expect(() => generator.generate(file)).toThrow('Segment P is required in detail');
+    });
+
+    it('should throw error if detail has no segmentQ', () => {
+      const file = createMinimalFile();
+      file.batches[0].details[0].segmentQ =
+        undefined as unknown as Cnab240File['batches'][0]['details'][0]['segmentQ'];
+
+      expect(() => generator.generate(file)).toThrow('Segment Q is required in detail');
+    });
+
     it('should throw error if fileTrailer is missing', () => {
       const file: Partial<Cnab240File> = createMinimalFile();
       file.fileTrailer = undefined;

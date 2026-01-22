@@ -1,4 +1,5 @@
 import { BatchTrailerGenerator } from '../../../../src/generators/cnab240/BatchTrailerGenerator';
+import * as LineGenerator from '../../../../src/generators/cnab240/LineGenerator';
 import { BatchTrailer } from '../../../../src/types';
 
 describe('CNAB240 BatchTrailerGenerator', () => {
@@ -87,6 +88,17 @@ describe('CNAB240 BatchTrailerGenerator', () => {
       expect(() => generator.generate(invalidTrailer as BatchTrailer)).toThrow(
         'Bank code is required',
       );
+    });
+
+    it('should throw when generated line length is invalid', () => {
+      const trailer = createMinimalTrailer('341', 1);
+      const buildLineSpy = jest.spyOn(LineGenerator, 'buildLine').mockReturnValue('INVALID');
+
+      expect(() => generator.generate(trailer)).toThrow(
+        'Invalid batch trailer length: expected 240, got 7',
+      );
+
+      buildLineSpy.mockRestore();
     });
 
     it('should fill reserved fields with spaces', () => {
@@ -178,6 +190,29 @@ describe('CNAB240 BatchTrailerGenerator', () => {
       const result = generator.generate(trailer);
       // Total simple amount at positions 30-47 (18 digits with 2 decimal places implied)
       expect(result.substring(29, 47)).toBe('000000000000123456');
+    });
+  });
+
+  describe('Validation', () => {
+    it('should throw error if batchNumber is missing', () => {
+      const invalidTrailer = createMinimalTrailer('341', 1);
+      invalidTrailer.batchNumber = undefined as unknown as BatchTrailer['batchNumber'];
+
+      expect(() => generator.generate(invalidTrailer)).toThrow('Batch number is required');
+    });
+
+    it('should throw error if recordType is missing', () => {
+      const invalidTrailer = createMinimalTrailer('341', 1);
+      invalidTrailer.recordType = '';
+
+      expect(() => generator.generate(invalidTrailer)).toThrow('Record type is required');
+    });
+
+    it('should throw error if totalRecords is missing', () => {
+      const invalidTrailer = createMinimalTrailer('341', 1);
+      invalidTrailer.totalRecords = undefined as unknown as BatchTrailer['totalRecords'];
+
+      expect(() => generator.generate(invalidTrailer)).toThrow('Total records is required');
     });
   });
 });

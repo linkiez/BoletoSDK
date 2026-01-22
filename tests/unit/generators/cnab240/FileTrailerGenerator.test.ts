@@ -1,4 +1,5 @@
 import { FileTrailerGenerator } from '../../../../src/generators/cnab240/FileTrailerGenerator';
+import * as LineGenerator from '../../../../src/generators/cnab240/LineGenerator';
 import { FileTrailer } from '../../../../src/types';
 
 describe('CNAB240 FileTrailerGenerator', () => {
@@ -97,6 +98,17 @@ describe('CNAB240 FileTrailerGenerator', () => {
       );
     });
 
+    it('should throw when generated line length is invalid', () => {
+      const trailer = createMinimalTrailer('341');
+      const buildLineSpy = jest.spyOn(LineGenerator, 'buildLine').mockReturnValue('INVALID');
+
+      expect(() => generator.generate(trailer)).toThrow(
+        'Invalid file trailer length: expected 240, got 7',
+      );
+
+      buildLineSpy.mockRestore();
+    });
+
     it('should fill reserved fields with spaces', () => {
       const trailer: FileTrailer = {
         bankCode: '104',
@@ -159,6 +171,36 @@ describe('CNAB240 FileTrailerGenerator', () => {
       };
       const result = generator.generate(trailer);
       expect(result.substring(23, 29)).toBe('012345');
+    });
+  });
+
+  describe('Validation', () => {
+    it('should throw error if batchNumber is missing', () => {
+      const invalidTrailer = createMinimalTrailer('341');
+      invalidTrailer.batchNumber = '';
+
+      expect(() => generator.generate(invalidTrailer)).toThrow('Batch number is required');
+    });
+
+    it('should throw error if recordType is missing', () => {
+      const invalidTrailer = createMinimalTrailer('341');
+      invalidTrailer.recordType = '';
+
+      expect(() => generator.generate(invalidTrailer)).toThrow('Record type is required');
+    });
+
+    it('should throw error if totalBatches is missing', () => {
+      const invalidTrailer = createMinimalTrailer('341');
+      invalidTrailer.totalBatches = undefined as unknown as FileTrailer['totalBatches'];
+
+      expect(() => generator.generate(invalidTrailer)).toThrow('Total batches is required');
+    });
+
+    it('should throw error if totalRecords is missing', () => {
+      const invalidTrailer = createMinimalTrailer('341');
+      invalidTrailer.totalRecords = undefined as unknown as FileTrailer['totalRecords'];
+
+      expect(() => generator.generate(invalidTrailer)).toThrow('Total records is required');
     });
   });
 });

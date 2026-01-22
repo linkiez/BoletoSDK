@@ -1,4 +1,5 @@
 import { FileHeaderGenerator } from '../../../../src/generators/cnab240/FileHeaderGenerator';
+import * as LineGenerator from '../../../../src/generators/cnab240/LineGenerator';
 import { FileHeader } from '../../../../src/types';
 
 describe('CNAB240 FileHeaderGenerator', () => {
@@ -169,6 +170,17 @@ describe('CNAB240 FileHeaderGenerator', () => {
 
       expect(() => generator.generate(invalidHeader as FileHeader)).toThrow();
     });
+
+    it('should throw when generated line length is invalid', () => {
+      const header = createMinimalHeader('341');
+      const buildLineSpy = jest.spyOn(LineGenerator, 'buildLine').mockReturnValue('INVALID');
+
+      expect(() => generator.generate(header)).toThrow(
+        'Generated file header has invalid length: 7 (expected 240)',
+      );
+
+      buildLineSpy.mockRestore();
+    });
   });
 
   describe('Field positioning', () => {
@@ -188,6 +200,51 @@ describe('CNAB240 FileHeaderGenerator', () => {
       const header = createMinimalHeader('001');
       const result = generator.generate(header);
       expect(result.substring(7, 8)).toBe('0'); // Always 0 for file header
+    });
+  });
+
+  describe('Validation', () => {
+    it('should throw error if bankCode is missing', () => {
+      const invalidHeader = createMinimalHeader('');
+
+      expect(() => generator.generate(invalidHeader)).toThrow('Bank code is required');
+    });
+
+    it('should throw error if companyRegistrationNumber is missing', () => {
+      const invalidHeader = createMinimalHeader('341');
+      invalidHeader.companyRegistrationNumber = '';
+
+      expect(() => generator.generate(invalidHeader)).toThrow(
+        'Company registration number is required',
+      );
+    });
+
+    it('should throw error if companyName is missing', () => {
+      const invalidHeader = createMinimalHeader('341');
+      invalidHeader.companyName = '';
+
+      expect(() => generator.generate(invalidHeader)).toThrow('Company name is required');
+    });
+
+    it('should throw error if bankName is missing', () => {
+      const invalidHeader = createMinimalHeader('341');
+      invalidHeader.bankName = '';
+
+      expect(() => generator.generate(invalidHeader)).toThrow('Bank name is required');
+    });
+
+    it('should throw error if generationDate is missing', () => {
+      const invalidHeader = createMinimalHeader('341');
+      invalidHeader.generationDate = undefined as unknown as FileHeader['generationDate'];
+
+      expect(() => generator.generate(invalidHeader)).toThrow('File generation date is required');
+    });
+
+    it('should throw error if layoutVersion is missing', () => {
+      const invalidHeader = createMinimalHeader('341');
+      invalidHeader.layoutVersion = '';
+
+      expect(() => generator.generate(invalidHeader)).toThrow('Layout version is required');
     });
   });
 });

@@ -1,4 +1,5 @@
 import { BatchHeaderGenerator } from '../../../../src/generators/cnab240/BatchHeaderGenerator';
+import * as LineGenerator from '../../../../src/generators/cnab240/LineGenerator';
 import { BatchHeader } from '../../../../src/types';
 
 describe('CNAB240 BatchHeaderGenerator', () => {
@@ -142,6 +143,17 @@ describe('CNAB240 BatchHeaderGenerator', () => {
       );
     });
 
+    it('should throw when generated line length is invalid', () => {
+      const header = createMinimalBatchHeader('341', 1);
+      const buildLineSpy = jest.spyOn(LineGenerator, 'buildLine').mockReturnValue('INVALID');
+
+      expect(() => generator.generate(header)).toThrow(
+        'Invalid batch header length: expected 240, got 7',
+      );
+
+      buildLineSpy.mockRestore();
+    });
+
     it('should format dates as DDMMYYYY', () => {
       const header = createMinimalBatchHeader('341', 1);
       header.recordingDate = new Date('2026-01-21');
@@ -215,6 +227,75 @@ describe('CNAB240 BatchHeaderGenerator', () => {
       header.companyRegistrationNumber = '12345678000195';
       const result = generator.generate(header);
       expect(result.substring(18, 32)).toBe('12345678000195');
+    });
+  });
+
+  describe('Validation', () => {
+    it('should throw error if recordType is missing', () => {
+      const invalidHeader = createMinimalBatchHeader('341', 1);
+      invalidHeader.recordType = '';
+
+      expect(() => generator.generate(invalidHeader)).toThrow('Record type is required');
+    });
+
+    it('should throw error if operationType is missing', () => {
+      const invalidHeader = createMinimalBatchHeader('341', 1);
+      invalidHeader.operationType = '';
+
+      expect(() => generator.generate(invalidHeader)).toThrow('Operation type is required');
+    });
+
+    it('should throw error if serviceType is missing', () => {
+      const invalidHeader = createMinimalBatchHeader('341', 1);
+      invalidHeader.serviceType = '';
+
+      expect(() => generator.generate(invalidHeader)).toThrow('Service type is required');
+    });
+
+    it('should throw error if companyRegistrationType is missing', () => {
+      const invalidHeader = createMinimalBatchHeader('341', 1);
+      invalidHeader.companyRegistrationType = '';
+
+      expect(() => generator.generate(invalidHeader)).toThrow(
+        'Company registration type is required',
+      );
+    });
+
+    it('should throw error if companyRegistrationNumber is missing', () => {
+      const invalidHeader = createMinimalBatchHeader('341', 1);
+      invalidHeader.companyRegistrationNumber = '';
+
+      expect(() => generator.generate(invalidHeader)).toThrow(
+        'Company registration number is required',
+      );
+    });
+
+    it('should throw error if agency is missing', () => {
+      const invalidHeader = createMinimalBatchHeader('341', 1);
+      invalidHeader.agency = '';
+
+      expect(() => generator.generate(invalidHeader)).toThrow('Agency is required');
+    });
+
+    it('should throw error if account is missing', () => {
+      const invalidHeader = createMinimalBatchHeader('341', 1);
+      invalidHeader.account = '';
+
+      expect(() => generator.generate(invalidHeader)).toThrow('Account is required');
+    });
+
+    it('should throw error if accountDigit is missing', () => {
+      const invalidHeader = createMinimalBatchHeader('341', 1);
+      invalidHeader.accountDigit = '';
+
+      expect(() => generator.generate(invalidHeader)).toThrow('Account digit is required');
+    });
+
+    it('should throw error if companyName is missing', () => {
+      const invalidHeader = createMinimalBatchHeader('341', 1);
+      invalidHeader.companyName = '';
+
+      expect(() => generator.generate(invalidHeader)).toThrow('Company name is required');
     });
   });
 });
