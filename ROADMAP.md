@@ -65,6 +65,7 @@
 - ✅ Added unit tests for CNAB400 generator records and orchestration
 - ✅ Added cross-format integration tests (CNAB240/400)
 - ✅ Added large-file CNAB240 integration test
+- ✅ Added CONTRIBUTING, ARCHITECTURE, and TESTING guides
 
 **Next Steps**: Phase 3.3 - Documentation
 
@@ -806,9 +807,9 @@ console.log(CNAB400.LINE_LENGTH); // 400
 
 #### 3.3.3 Developer Guides
 
-- [ ] `CONTRIBUTING.md` - Contribution guidelines
-- [ ] `ARCHITECTURE.md` - Architecture overview
-- [ ] `TESTING.md` - Testing strategy
+- [x] `CONTRIBUTING.md` - Contribution guidelines
+- [x] `ARCHITECTURE.md` - Architecture overview
+- [x] `TESTING.md` - Testing strategy
 - [ ] Update `.doc.md` files for all components
 
 **Acceptance Criteria**:
