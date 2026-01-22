@@ -19,6 +19,14 @@ const createPenaltyLine = (): string => {
   return line.join('');
 };
 
+const createPenaltyLineWithoutOptionalFields = (): string => {
+  const line = new Array(LINE_LENGTH).fill(' ');
+  line[0] = '2';
+  setField(line, '1', 2, 2);
+  setField(line, '000001', LINE_LENGTH - 5, LINE_LENGTH);
+  return line.join('');
+};
+
 describe('CNAB400 PenaltyRecordParser', () => {
   it('should parse penalty record', () => {
     const record = parsePenaltyRecord(createPenaltyLine());
@@ -28,6 +36,13 @@ describe('CNAB400 PenaltyRecordParser', () => {
     expect(record.penaltyDate).toBeInstanceOf(Date);
     expect(record.penaltyValue).toBe(15);
     expect(record.sequentialNumber).toBe(1);
+  });
+
+  it('should allow missing optional fields', () => {
+    const record = parsePenaltyRecord(createPenaltyLineWithoutOptionalFields());
+
+    expect(record.penaltyDate).toBeUndefined();
+    expect(record.penaltyValue).toBeUndefined();
   });
 
   it('should throw on invalid line length', () => {

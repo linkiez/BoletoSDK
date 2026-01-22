@@ -21,6 +21,13 @@ const createMessageLine = (recordType: '7' | '8'): string => {
   return line.join('');
 };
 
+const createEmptyMessageLine = (recordType: '7' | '8'): string => {
+  const line = new Array(LINE_LENGTH).fill(' ');
+  line[0] = recordType;
+  setField(line, '000001', LINE_LENGTH - 5, LINE_LENGTH);
+  return line.join('');
+};
+
 describe('CNAB400 MessageRecordParser', () => {
   it('should parse message front record', () => {
     const record = parseMessageFrontRecord(createMessageLine('7'));
@@ -38,6 +45,15 @@ describe('CNAB400 MessageRecordParser', () => {
     expect(record.message1).toBe('FIRST MESSAGE LINE');
     expect(record.message2).toBe('SECOND MESSAGE LINE');
     expect(record.sequentialNumber).toBe(1);
+  });
+
+  it('should return undefined for empty messages', () => {
+    const record = parseMessageFrontRecord(createEmptyMessageLine('7'));
+
+    expect(record.message1).toBeUndefined();
+    expect(record.message2).toBeUndefined();
+    expect(record.message3).toBeUndefined();
+    expect(record.message4).toBeUndefined();
   });
 
   it('should throw on invalid line length', () => {

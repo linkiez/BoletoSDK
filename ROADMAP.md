@@ -27,7 +27,7 @@
 
 **Overall Statistics**:
 
-- **Total Tests**: 712 (710 passing, 2 skipped)
+- **Total Tests**: 714 (712 passing, 2 skipped)
 - **Code Coverage**: >80%
 - **Documentation**: ~1800 lines (README + USAGE-GUIDE + API-REFERENCE)
 - **Production Ready**: CNAB400 fully operational with real files
@@ -58,6 +58,7 @@
 - ✅ Added unit tests for CNAB400 header/trailer parsers
 - ✅ Added unit tests for CNAB400 detail and return detail parsers
 - ✅ Added unit tests for CNAB400 message, penalty, and guarantor parsers
+- ✅ Added edge case tests for CNAB400 message/penalty parsers
 
 **Next Steps**: Phase 3.1 - Unit Test Coverage
 
