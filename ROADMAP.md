@@ -73,6 +73,7 @@
 - ✅ Added parser documentation (CNAB240/400 + factory)
 - ✅ Added utilities documentation (formatters, parsers, generators, validators)
 - ✅ Added index documentation (errors, constants, enums, types)
+- ✅ Completed .doc.md coverage for core components
 
 **Next Steps**: Phase 3.3 - Documentation
 
@@ -817,7 +818,7 @@ console.log(CNAB400.LINE_LENGTH); // 400
 - [x] `CONTRIBUTING.md` - Contribution guidelines
 - [x] `ARCHITECTURE.md` - Architecture overview
 - [x] `TESTING.md` - Testing strategy
-- [ ] Update `.doc.md` files for all components
+- [x] Update `.doc.md` files for all components
 
 **Acceptance Criteria**:
 
