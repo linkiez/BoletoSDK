@@ -1,8 +1,15 @@
 /**
- * CNAB 400 schemas barrel
- * Add exports here as files are created
- * Example: export * from './HeaderArquivoSchema';
+ * CNAB400 schemas barrel
  */
 
-// Placeholder to make this a valid module
-export const CNAB400_SCHEMA_PLACEHOLDER = true;
+export * from './Cnab400FileSchema';
+export * from './Cnab400ReturnFileSchema';
+export * from './DetailRecordSchema';
+export * from './FileHeaderSchema';
+export * from './FileTrailerSchema';
+export * from './GuarantorRecordSchema';
+export * from './MessageBackRecordSchema';
+export * from './MessageFrontRecordSchema';
+export * from './PenaltyRecordSchema';
+export * from './ReturnDetailRecordSchema';
+export * from './shared';
