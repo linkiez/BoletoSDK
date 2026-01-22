@@ -70,6 +70,7 @@
 - ✅ Updated README with current API and docs links
 - ✅ Added integration test .doc.md documentation
 - ✅ Added generator documentation (CNAB240/400 + factory)
+- ✅ Added parser documentation (CNAB240/400 + factory)
 
 **Next Steps**: Phase 3.3 - Documentation
 
