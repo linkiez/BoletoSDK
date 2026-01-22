@@ -1,14 +1,6 @@
+import { Cnab400FileSchema, Cnab400ReturnFileSchema } from '../../schemas/cnab400';
 import { Cnab400File } from '../../types/cnab400';
-
-/**
- * Result of validation operations
- */
-export interface ValidationResult {
-  /** Whether validation passed */
-  isValid: boolean;
-  /** List of validation error messages */
-  errors: string[];
-}
+import { ValidationResult } from '../common';
 
 /**
  * Validates the basic structure of a CNAB400 file
@@ -87,6 +79,17 @@ export function validateFileStructure(file: Cnab400File): ValidationResult {
  */
 export function validateCnab400File(file: Cnab400File): ValidationResult {
   const errors: string[] = [];
+
+  const schemaResult = Cnab400FileSchema.safeParse(file);
+  if (!schemaResult.success) {
+    const returnSchemaResult = Cnab400ReturnFileSchema.safeParse(file);
+    if (!returnSchemaResult.success) {
+      schemaResult.error.issues.forEach((issue) => {
+        const path = issue.path.join('.') || 'root';
+        errors.push(`Schema validation error at ${path}: ${issue.message}`);
+      });
+    }
+  }
 
   // Perform structural validation
   const structureResult = validateFileStructure(file);
