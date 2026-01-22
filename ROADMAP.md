@@ -10,7 +10,7 @@
 
 ## Current Status 🚀
 
-**Active Phase**: ⏳ Phase 3.1 - Unit Test Coverage
+**Active Phase**: ⏳ Phase 3.3 - Documentation
 
 **Completed Phases**:
 
@@ -66,7 +66,7 @@
 - ✅ Added cross-format integration tests (CNAB240/400)
 - ✅ Added large-file CNAB240 integration test
 
-**Next Steps**: Phase 3.2 - Integration Test Coverage
+**Next Steps**: Phase 3.3 - Documentation
 
 ---
 
@@ -775,11 +775,11 @@ console.log(CNAB400.LINE_LENGTH); // 400
 
 **Target**: ≥ 80% coverage
 
-- [ ] CNAB400 end-to-end tests
-- [ ] CNAB240 end-to-end tests
+- [x] CNAB400 end-to-end tests
+- [x] CNAB240 end-to-end tests
 - [x] Cross-format tests
 - [x] Performance tests (large files)
-- [ ] Error scenario tests
+- [x] Error scenario tests
 
 **Acceptance Criteria**:
 
