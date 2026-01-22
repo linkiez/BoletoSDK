@@ -1,5 +1,5 @@
-import { ParseError } from '../../../../src/errors';
 import { SEGMENT_P_POSITIONS } from '../../../../src/constants/cnab240';
+import { ParseError } from '../../../../src/errors';
 import { parseSegmentP } from '../../../../src/parsers/cnab240/SegmentPParser';
 import { createMinimalCnab240Content, updateLineField } from '../../../helpers/cnab240-content';
 
