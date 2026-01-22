@@ -27,7 +27,7 @@
 
 **Overall Statistics**:
 
-- **Total Tests**: 737 (735 passing, 2 skipped)
+- **Total Tests**: 794 (792 passing, 2 skipped)
 - **Code Coverage**: >80%
 - **Documentation**: ~1800 lines (README + USAGE-GUIDE + API-REFERENCE)
 - **Production Ready**: CNAB400 fully operational with real files
@@ -63,8 +63,10 @@
 - ✅ Added barrel export coverage tests
 - ✅ Added CNAB400 return schema validation test
 - ✅ Added unit tests for CNAB400 generator records and orchestration
+- ✅ Added cross-format integration tests (CNAB240/400)
+- ✅ Added large-file CNAB240 integration test
 
-**Next Steps**: Phase 3.1 - Unit Test Coverage
+**Next Steps**: Phase 3.2 - Integration Test Coverage
 
 ---
 
@@ -775,8 +777,8 @@ console.log(CNAB400.LINE_LENGTH); // 400
 
 - [ ] CNAB400 end-to-end tests
 - [ ] CNAB240 end-to-end tests
-- [ ] Cross-format tests
-- [ ] Performance tests (large files)
+- [x] Cross-format tests
+- [x] Performance tests (large files)
 - [ ] Error scenario tests
 
 **Acceptance Criteria**:
