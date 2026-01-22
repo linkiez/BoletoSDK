@@ -3,5 +3,5 @@
  * Add exports here as files are created
  */
 
-// Placeholder to make this a valid module
-export const COMMON_VALIDATOR_PLACEHOLDER = true;
+export * from './CommonValidators';
+export * from './ValidationResult';
