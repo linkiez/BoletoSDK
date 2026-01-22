@@ -10,7 +10,7 @@
 
 ## Current Status 🚀
 
-**Active Phase**: ⏳ Phase 3.3 - Documentation
+**Active Phase**: ⏳ Phase 3.5 - Boleto HTML/PDF Generation
 
 **Completed Phases**:
 
@@ -75,7 +75,7 @@
 - ✅ Added index documentation (errors, constants, enums, types)
 - ✅ Completed .doc.md coverage for core components
 
-**Next Steps**: Phase 3.3 - Documentation
+**Next Steps**: Phase 3.5 - Boleto HTML/PDF Generation
 
 ---
 
