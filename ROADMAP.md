@@ -66,6 +66,7 @@
 - ✅ Added cross-format integration tests (CNAB240/400)
 - ✅ Added large-file CNAB240 integration test
 - ✅ Added CONTRIBUTING, ARCHITECTURE, and TESTING guides
+- ✅ Added CNAB240 guide, migration notes, examples, and FAQ
 
 **Next Steps**: Phase 3.3 - Documentation
 
@@ -799,11 +800,11 @@ console.log(CNAB400.LINE_LENGTH); // 400
 #### 3.3.2 User Guides
 
 - [ ] `README.md` - Overview, installation, quick start
-- [ ] `docs/CNAB400_GUIDE.md` - CNAB400 usage guide
-- [ ] `docs/CNAB240_GUIDE.md` - CNAB240 usage guide
-- [ ] `docs/MIGRATION.md` - Migration guide (if updating existing library)
-- [ ] `docs/EXAMPLES.md` - Code examples
-- [ ] `docs/FAQ.md` - Frequently asked questions
+- [x] `doc/CNAB400-USAGE-GUIDE.md` - CNAB400 usage guide
+- [x] `doc/CNAB240_GUIDE.md` - CNAB240 usage guide
+- [x] `doc/MIGRATION.md` - Migration guide (if updating existing library)
+- [x] `doc/EXAMPLES.md` - Code examples
+- [x] `doc/FAQ.md` - Frequently asked questions
 
 #### 3.3.3 Developer Guides
 
