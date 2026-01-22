@@ -22,9 +22,9 @@ Full TypeScript support with strict typing, autocomplete, and compile-time valid
 
 Works with any Brazilian bank. Extensible architecture for bank-specific features.
 
-### ⚡ Zero Dependencies
+### ⚡ Minimal Dependencies
 
-No external dependencies in production. Lightweight and fast.
+Only one runtime dependency (`zod`) for safe validation.
 
 ### 📋 CNAB 240 & 400
 
@@ -63,69 +63,102 @@ pnpm add @linkiez/boleto-sdk
 ### Parse CNAB Files
 
 ```typescript
+import { readFileSync } from 'node:fs';
 import { parseCnab } from '@linkiez/boleto-sdk';
 
 // Auto-detect format (CNAB240 or CNAB400)
 const cnabContent = readFileSync('remessa.txt', 'utf-8');
 const parsed = parseCnab(cnabContent);
 
-console.log(parsed.header.bankCode); // "341"
-console.log(parsed.batches.length);  // 5
+if ('batches' in parsed) {
+  console.log(parsed.fileHeader.bankCode); // "341"
+  console.log(parsed.batches.length);
+} else {
+  console.log(parsed.header.bankCode); // "341"
+  console.log(parsed.details.length);
+}
 ```
 
-### Generate CNAB Files
+### Generate CNAB240 Files
 
 ```typescript
-import { generateCnab } from '@linkiez/boleto-sdk';
+import { generateCnab240 } from '@linkiez/boleto-sdk';
+import type { Cnab240File } from '@linkiez/boleto-sdk';
 
-const data = {
-  header: {
+const file: Cnab240File = {
+  fileHeader: {
     bankCode: '341',
+    batchNumber: '0000',
+    recordType: '0',
+    companyRegistrationType: '2',
+    companyRegistrationNumber: '12345678000195',
+    agency: '1234',
+    agencyDigit: '5',
+    account: '123456',
+    accountDigit: '7',
     companyName: 'ACME Corp',
-    // ... other fields
+    bankName: 'BANCO ITAU SA',
+    fileCode: '1',
+    generationDate: new Date('2026-01-15'),
+    sequentialNumber: 1,
+    layoutVersion: '087',
   },
-  batches: [
-    {
-      header: { /* ... */ },
-      details: [
-        {
-          ourNumber: '12345678',
-          amount: 150.00,
-          dueDate: new Date('2026-03-01'),
-          payer: {
-            name: 'John Doe',
-            taxId: '12345678901'
-          }
-        }
-      ],
-      trailer: { /* ... */ }
-    }
-  ],
-  trailer: { /* ... */ }
+  batches: [],
+  fileTrailer: {
+    bankCode: '341',
+    batchNumber: '9999',
+    recordType: '9',
+    totalBatches: 0,
+    totalRecords: 2,
+  },
 };
 
-const cnabFile = generateCnab(data, '240');
-writeFileSync('remessa.ret', cnabFile);
+const cnabFile = generateCnab240(file);
+```
+
+### Generate CNAB400 Files
+
+```typescript
+import { generateCnab400 } from '@linkiez/boleto-sdk';
+import type { Cnab400File } from '@linkiez/boleto-sdk';
+
+const file: Cnab400File = {
+  header: {
+    recordType: '0',
+    operationType: '1',
+    bankCode: '341',
+    companyName: 'ACME Corp',
+    generationDate: new Date('2026-02-01'),
+    sequenceNumber: 1,
+  },
+  details: [
+    {
+      recordType: '1',
+      ourNumber: '12345678',
+      amount: 150.0,
+      dueDate: new Date('2026-03-15'),
+      payerName: 'John Doe',
+      sequentialNumber: 2,
+    },
+  ],
+  trailer: {
+    recordType: '9',
+    totalRecords: 3,
+    totalAmount: 150.0,
+    sequentialNumber: 3,
+  },
+};
+
+const cnabFile = generateCnab400(file);
 ```
 
 ### Validate Data
 
 ```typescript
-import { validateBankSlip } from '@linkiez/boleto-sdk';
+import { validateCnab240File } from '@linkiez/boleto-sdk';
 
-try {
-  const slip = validateBankSlip({
-    documentNumber: '12345',
-    amount: 100.50,
-    dueDate: new Date('2026-12-31'),
-    beneficiary: { name: 'Company', taxId: '12345678000195' },
-    payer: { name: 'Customer', taxId: '12345678901' }
-  });
-
-  console.log('✓ Valid bank slip');
-} catch (error) {
-  console.error('✗ Validation failed:', error.message);
-}
+const result = validateCnab240File(file);
+console.log(result.isValid);
 ```
 
 ---
@@ -537,12 +570,17 @@ try {
 
 ---
 
-## �📚 Documentation
+## 📚 Documentation
 
 ### Core Concepts
 
 - **[CNAB 240 - FEBRABAN](./doc/CNAB240-FEBRABAN.md)** - Complete CNAB240 specification
+- **[CNAB240 Guide](./doc/CNAB240_GUIDE.md)** - Parsing and generation guide
+- **[CNAB400 Guide](./doc/CNAB400-USAGE-GUIDE.md)** - Parsing and generation guide
 - **[Bank-Specific Differences](./doc/BANK_DIFFERENCES.md)** - Detailed guide on bank-specific implementations
+- **[Examples](./doc/EXAMPLES.md)** - Working code samples
+- **[FAQ](./doc/FAQ.md)** - Common questions and answers
+- **[Migration](./doc/MIGRATION.md)** - Migration notes
 - **[Roadmap](./ROADMAP.md)** - Development roadmap and project phases
 
 ### Bank-Specific CNAB400 Layouts
@@ -556,42 +594,30 @@ try {
 
 ```typescript
 // Parsing
-parseCnab(content: string): CnabFile
+parseCnab(content: string): Cnab240File | Cnab400File | Cnab400ReturnFile
 parseCnab240(content: string): Cnab240File
-parseCnab400(content: string): Cnab400File
+parseCnab400(content: string): Cnab400File | Cnab400ReturnFile
 
 // Generation
-generateCnab(data: CnabFile, type: '240' | '400'): string
+generateCnab(data: Cnab240File | Cnab400File): string
 generateCnab240(data: Cnab240File): string
 generateCnab400(data: Cnab400File): string
 
 // Validation
-validateCnabFile(file: CnabFile): ValidationResult
-validateBankSlip(slip: BankSlip): BankSlip
+validateCnab240File(file: Cnab240File): ValidationResult
+validateCnab400File(file: Cnab400File): ValidationResult
 validateTaxId(taxId: string): boolean
-validateBarcode(barcode: string): boolean
 
 // Utilities
 formatTaxId(taxId: string): string // "123.456.789-01"
 formatMoney(amount: number): string // "R$ 1.234,56"
-calculateCheckDigit(value: string): string
+calculateModulo10(value: string): number
+calculateModulo11(value: string, options?: Modulo11Options): number
 ```
 
 ### Type Definitions
 
 ```typescript
-interface BankSlip {
-  documentNumber: string;
-  ourNumber: string;
-  amount: number;
-  dueDate: Date;
-  beneficiary: Beneficiary;
-  payer: Payer;
-  fine?: Fine;
-  interest?: Interest;
-  discount?: Discount;
-}
-
 interface Cnab240File {
   fileHeader: FileHeader;
   batches: Batch[];
@@ -605,7 +631,13 @@ interface Cnab400File {
 }
 ```
 
-Full API documentation available in the [docs](./docs) folder.
+Full API documentation available in the [doc](./doc) folder.
+
+### Project Guides
+
+- [CONTRIBUTING.md](./CONTRIBUTING.md)
+- [ARCHITECTURE.md](./ARCHITECTURE.md)
+- [TESTING.md](./TESTING.md)
 
 ---
 
