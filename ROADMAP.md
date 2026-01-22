@@ -4,13 +4,13 @@
 
 **Development Flow**: BASE → CNAB400 → CNAB240
 
-**Last Updated**: 2026-01-21
+**Last Updated**: 2026-01-22
 
 ---
 
 ## Current Status 🚀
 
-**Active Phase**: ✅ Phase 2.5 - CNAB240 Constants (COMPLETE)
+**Active Phase**: ⏳ Phase 2.8 - CNAB240 Integration Tests
 
 **Completed Phases**:
 
@@ -22,16 +22,18 @@
 - ✅ **Phase 2.3**: CNAB240 Parsers (51 tests)
 - ✅ **Phase 2.4**: CNAB240 Generators (148 tests)
 - ✅ **Phase 2.5**: CNAB240 Constants (78 tests)
+- ✅ **Phase 2.6**: CNAB240 Validators
+- ✅ **Phase 2.7**: CNAB240 Schemas
 
 **Overall Statistics**:
 
-- **Total Tests**: 619 (617 passing, 2 skipped)
+- **Total Tests**: 633 (631 passing, 2 skipped)
 - **Code Coverage**: >80%
 - **Documentation**: ~1800 lines (README + USAGE-GUIDE + API-REFERENCE)
 - **Production Ready**: CNAB400 fully operational with real files
-- **CNAB240**: Complete parsers + generators + constants (File/Batch/Segments P/Q/R)
+- **CNAB240**: Complete parsers + generators + constants + validators + schemas (File/Batch/Segments P/Q/R)
 
-**Recent Accomplishments (2026-01-21)**:
+**Recent Accomplishments (2026-01-22)**:
 
 - ✅ Implemented CNAB400 constants for consistency (68 tests)
 - ✅ Created LAYOUT_VERSION constants (400-char format, file types, service codes)
@@ -46,8 +48,11 @@
 - ✅ Created CNAB240 LAYOUT_VERSION constants (FEBRABAN spec v087)
 - ✅ Created CNAB240 FIELD_SIZES constants (100+ field definitions)
 - ✅ Created CNAB240 SEGMENT_POSITIONS constants (position maps for all segments)
+- ✅ Implemented CNAB240 validators with structure and sequence validation
+- ✅ Implemented CNAB240 Zod schemas with unit tests
+- ✅ Implemented CNAB400 Zod schemas with unit tests
 
-**Next Steps**: Phase 2.6 - CNAB240 Validators
+**Next Steps**: Phase 2.8 - CNAB240 Integration Tests
 
 ---
 
@@ -216,6 +221,25 @@
   - TypeScript signatures for all public APIs
 
 **Total Documentation**: ~1800 lines of comprehensive CNAB400 documentation
+
+### 1.8 CNAB400 Schemas ✅
+
+**Status**: ✅ Complete
+
+**Location**: `src/schemas/cnab400/`
+
+- ✅ `shared.ts`
+- ✅ `FileHeaderSchema.ts`
+- ✅ `DetailRecordSchema.ts`
+- ✅ `ReturnDetailRecordSchema.ts`
+- ✅ `PenaltyRecordSchema.ts`
+- ✅ `GuarantorRecordSchema.ts`
+- ✅ `MessageFrontRecordSchema.ts`
+- ✅ `MessageBackRecordSchema.ts`
+- ✅ `FileTrailerSchema.ts`
+- ✅ `Cnab400FileSchema.ts`
+- ✅ `Cnab400ReturnFileSchema.ts`
+- ✅ Unit tests: `tests/unit/schemas/cnab400.test.ts`
 
 ---
 
@@ -629,58 +653,12 @@ console.log(CNAB400.LINE_LENGTH); // 400
 
 ### 2.6 CNAB240 Validators
 
-**Status**: ⏳ Pending
+**Status**: ✅ Complete
 
 **Location**: `src/validators/cnab240/`
 
-- [ ] `FileHeaderValidator.ts`
-- [ ] `FileTrailerValidator.ts`
-- [ ] `BatchHeaderValidator.ts`
-- [ ] `BatchTrailerValidator.ts`
-- [ ] `SegmentValidator.ts` - Validate segments
-- [ ] `Cnab240Validator.ts` - Validate complete file
-
-  ```typescript
-  export class Cnab240Validator {
-    validate(file: Cnab240File): ValidationResult {
-      const errors: string[] = [];
-
-      // Validate structure
-      if (!file.fileHeader) errors.push('Missing file header');
-      if (!file.fileTrailer) errors.push('Missing file trailer');
-      if (!file.batches || file.batches.length === 0) {
-        errors.push('No batches');
-      }
-
-      // Validate each batch
-      file.batches.forEach((batch, index) => {
-        if (!batch.header) errors.push(`Batch ${index}: missing header`);
-        if (!batch.trailer) errors.push(`Batch ${index}: missing trailer`);
-
-        // Validate segment sequence
-        batch.details.forEach((detail, detailIndex) => {
-          if (!this.validateSegmentSequence(detail.segments)) {
-            errors.push(`Batch ${index}, Detail ${detailIndex}: invalid segment sequence`);
-          }
-        });
-
-        // Validate counts
-        const expectedDetailCount = batch.details.reduce((sum, d) => sum + d.segments.length, 0);
-        if (batch.trailer.detailCount !== expectedDetailCount) {
-          errors.push(`Batch ${index}: detail count mismatch`);
-        }
-      });
-
-      // Validate file trailer counts
-      const totalBatches = file.batches.length;
-      if (file.fileTrailer.batchCount !== totalBatches) {
-        errors.push('Batch count mismatch in file trailer');
-      }
-
-      return { isValid: errors.length === 0, errors };
-    }
-  }
-  ```
+- ✅ `Cnab240Validator.ts` - Validate complete file (structure, sequence, counts)
+- ✅ Unit tests: `tests/unit/validators/cnab240.test.ts`
 
 **Acceptance Criteria**:
 
@@ -694,18 +672,19 @@ console.log(CNAB400.LINE_LENGTH); // 400
 
 **Location**: `src/schemas/cnab240/`
 
-- [ ] `FileHeaderSchema.ts`
-- [ ] `FileTrailerSchema.ts`
-- [ ] `BatchHeaderSchema.ts`
-- [ ] `BatchTrailerSchema.ts`
-- [ ] `SegmentPSchema.ts`
-- [ ] `SegmentQSchema.ts`
-- [ ] `SegmentRSchema.ts`
-- [ ] `SegmentSSchema.ts`
-- [ ] `SegmentTSchema.ts`
-- [ ] `SegmentUSchema.ts`
-- [ ] `BatchSchema.ts`
-- [ ] `Cnab240FileSchema.ts`
+- ✅ `FileHeaderSchema.ts`
+- ✅ `FileTrailerSchema.ts`
+- ✅ `BatchHeaderSchema.ts`
+- ✅ `BatchTrailerSchema.ts`
+- ✅ `SegmentPSchema.ts`
+- ✅ `SegmentQSchema.ts`
+- ✅ `SegmentRSchema.ts`
+- ⏳ `SegmentSSchema.ts` (deferred)
+- ⏳ `SegmentTSchema.ts` (deferred)
+- ⏳ `SegmentUSchema.ts` (deferred)
+- ✅ `BatchSchema.ts`
+- ✅ `Cnab240FileSchema.ts`
+- ✅ Unit tests: `tests/unit/schemas/cnab240.test.ts`
 
 **Acceptance Criteria**:
 
@@ -714,15 +693,18 @@ console.log(CNAB400.LINE_LENGTH); // 400
 - Type inference works
 - Unit tests
 
+**Status**: ✅ Complete (P/Q/R + file/batch schemas)
+
 ### 2.8 CNAB240 Integration Tests
 
 **Location**: `tests/integration/cnab240/`
 
 - [ ] `cnab240-parse.test.ts`
-- [ ] `cnab240-generate.test.ts`
-- [ ] `cnab240-round-trip.test.ts`
-- [ ] `cnab240-validation.test.ts`
-- [ ] `cnab240-error-handling.test.ts`
+- ✅ `cnab240-parser.test.ts` (existing)
+- ✅ `cnab240-generator.test.ts`
+- ✅ `cnab240-round-trip.test.ts`
+- ✅ `cnab240-validation.test.ts`
+- ✅ `cnab240-error-handling.test.ts`
 
 **Fixtures**: `tests/fixtures/cnab240/`
 
@@ -738,6 +720,8 @@ console.log(CNAB400.LINE_LENGTH); // 400
 - Coverage ≥ 80%
 - Real-world files parse correctly
 - Round-trip preserves data
+
+**Status**: ✅ Complete
 
 ---
 
