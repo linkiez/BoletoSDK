@@ -27,7 +27,7 @@
 
 **Overall Statistics**:
 
-- **Total Tests**: 684 (682 passing, 2 skipped)
+- **Total Tests**: 689 (687 passing, 2 skipped)
 - **Code Coverage**: >80%
 - **Documentation**: ~1800 lines (README + USAGE-GUIDE + API-REFERENCE)
 - **Production Ready**: CNAB400 fully operational with real files
@@ -54,6 +54,7 @@
 - ✅ Added unit tests for CNAB auto-detection (CnabParserFactory)
 - ✅ Added unit tests for parseDateShort utility
 - ✅ Added unit tests for CNAB240 Segment P/Q parsers
+- ✅ Added unit tests for CNAB400 parser
 
 **Next Steps**: Phase 3.1 - Unit Test Coverage
 
@@ -743,6 +744,7 @@ console.log(CNAB400.LINE_LENGTH); // 400
 - ✅ Add unit tests for CNAB parser auto-detection
 - ✅ Add unit tests for parseDateShort utility
 - ✅ Add unit tests for CNAB240 Segment P/Q parsers
+- ✅ Add unit tests for CNAB400 parser
 - [ ] Test edge cases
 - [ ] Test error handling
 - [ ] Run coverage report: `npm run test:coverage`
