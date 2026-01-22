@@ -1,8 +1,15 @@
 /**
- * CNAB 240 schemas barrel
- * Add exports here as files are created
- * Example: export * from './HeaderArquivoSchema';
+ * CNAB240 schemas barrel
  */
 
-// Placeholder to make this a valid module
-export const CNAB240_SCHEMA_PLACEHOLDER = true;
+export * from './BatchHeaderSchema';
+export * from './BatchSchema';
+export * from './BatchTrailerSchema';
+export * from './Cnab240FileSchema';
+export * from './DetailRecordSchema';
+export * from './FileHeaderSchema';
+export * from './FileTrailerSchema';
+export * from './SegmentPSchema';
+export * from './SegmentQSchema';
+export * from './SegmentRSchema';
+export * from './shared';
