@@ -290,12 +290,6 @@ export class SegmentPGenerator {
       formatField(segment.protestCode || '3', POS.PROTEST_CODE.start, POS.PROTEST_CODE.end, 'text'),
     );
 
-    // Positions 221-223: Protest code and days
-    fields.set(
-      'protestCode',
-      formatField(segment.protestCode || '3', POS.PROTEST_CODE.start, POS.PROTEST_CODE.end, 'text'),
-    );
-
     // Positions 222-223: Days for protest
     fields.set(
       'protestDays',
