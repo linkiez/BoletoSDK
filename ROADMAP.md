@@ -71,6 +71,7 @@
 - ✅ Added integration test .doc.md documentation
 - ✅ Added generator documentation (CNAB240/400 + factory)
 - ✅ Added parser documentation (CNAB240/400 + factory)
+- ✅ Added utilities documentation (formatters, parsers, generators, validators)
 
 **Next Steps**: Phase 3.3 - Documentation
 
