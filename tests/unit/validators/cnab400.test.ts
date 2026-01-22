@@ -202,5 +202,52 @@ describe('CNAB400 Validators', () => {
       expect(result.isValid).toBe(true);
       expect(result.errors).toHaveLength(0);
     });
+
+    it('should validate return file schema', () => {
+      const returnFile = {
+        header: {
+          recordType: '0',
+          operationType: '2',
+          operationLiteral: 'RETORNO',
+          serviceCode: '01',
+          serviceLiteral: 'COBRANCA',
+          agency: '1234',
+          zeros: '00',
+          account: '12345',
+          accountDigit: '6',
+          companyName: 'TEST COMPANY',
+          bankCode: '341',
+          bankName: 'BANCO ITAU SA',
+          generationDate: new Date('2026-01-01'),
+          sequenceNumber: 1,
+          creationDate: new Date('2026-01-01'),
+        },
+        details: [
+          {
+            recordType: '1',
+            companyRegistrationType: '02',
+            companyRegistrationNumber: '12345678000195',
+            agency: '1234',
+            account: '12345',
+            accountDigit: '6',
+            ourNumber: '12345678',
+            dueDate: new Date('2026-02-01'),
+            amount: 100.5,
+            payerName: 'John Doe',
+            sequentialNumber: 2,
+            occurrenceCode: '01',
+          },
+        ],
+        trailer: {
+          recordType: '9',
+          totalRecords: 3,
+          sequentialNumber: 3,
+        },
+      } as unknown as Cnab400File;
+
+      const result = validateCnab400File(returnFile);
+      expect(result.isValid).toBe(true);
+      expect(result.errors).toHaveLength(0);
+    });
   });
 });
