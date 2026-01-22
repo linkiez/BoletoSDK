@@ -10,7 +10,7 @@
 
 ## Current Status 🚀
 
-**Active Phase**: ⏳ Phase 2.8 - CNAB240 Integration Tests
+**Active Phase**: ⏳ Phase 3.1 - Unit Test Coverage
 
 **Completed Phases**:
 
@@ -27,7 +27,7 @@
 
 **Overall Statistics**:
 
-- **Total Tests**: 633 (631 passing, 2 skipped)
+- **Total Tests**: 669 (667 passing, 2 skipped)
 - **Code Coverage**: >80%
 - **Documentation**: ~1800 lines (README + USAGE-GUIDE + API-REFERENCE)
 - **Production Ready**: CNAB400 fully operational with real files
@@ -51,8 +51,9 @@
 - ✅ Implemented CNAB240 validators with structure and sequence validation
 - ✅ Implemented CNAB240 Zod schemas with unit tests
 - ✅ Implemented CNAB400 Zod schemas with unit tests
+- ✅ Added unit tests for CNAB auto-detection (CnabParserFactory)
 
-**Next Steps**: Phase 2.8 - CNAB240 Integration Tests
+**Next Steps**: Phase 3.1 - Unit Test Coverage
 
 ---
 
@@ -737,6 +738,7 @@ console.log(CNAB400.LINE_LENGTH); // 400
 
 - [ ] Review all units (formatters, validators, parsers, generators)
 - [ ] Add missing unit tests
+- ✅ Add unit tests for CNAB parser auto-detection
 - [ ] Test edge cases
 - [ ] Test error handling
 - [ ] Run coverage report: `npm run test:coverage`
