@@ -74,6 +74,9 @@
 - ✅ Added utilities documentation (formatters, parsers, generators, validators)
 - ✅ Added index documentation (errors, constants, enums, types)
 - ✅ Completed .doc.md coverage for core components
+- ✅ Added initial HTML template scaffolding (BoletoTemplate, GenericTemplate, TemplateRenderer)
+- ✅ Added HtmlTemplateBuilder and ItauTemplate for shared HTML layout
+- ✅ Added BradescoTemplate and BBTemplate using shared HTML layout
 
 **Next Steps**: Phase 3.5 - Boleto HTML/PDF Generation
 
@@ -857,22 +860,22 @@ console.log(CNAB400.LINE_LENGTH); // 400
 
 **Location**: `src/templates/`
 
-- [ ] `BoletoTemplate.ts` - Base template interface
-- [ ] `ItauTemplate.ts` - Itaú bank slip HTML template
-- [ ] `BradescoTemplate.ts` - Bradesco bank slip HTML template
-- [ ] `BBTemplate.ts` - Banco do Brasil bank slip template
-- [ ] `GenericTemplate.ts` - Generic bank slip template (fallback)
-- [ ] `TemplateRenderer.ts` - Template rendering engine
+- [x] `BoletoTemplate.ts` - Base template interface
+- [x] `ItauTemplate.ts` - Itaú bank slip HTML template
+- [x] `BradescoTemplate.ts` - Bradesco bank slip HTML template
+- [x] `BBTemplate.ts` - Banco do Brasil bank slip template
+- [x] `GenericTemplate.ts` - Generic bank slip template (fallback)
+- [x] `TemplateRenderer.ts` - Template rendering engine
 
 **Features**:
 
-- [ ] Responsive HTML design
-- [ ] Print-optimized CSS
-- [ ] Customizable bank logos
-- [ ] Barcode rendering (SVG/Canvas)
+- [x] Responsive HTML design
+- [x] Print-optimized CSS
+- [x] Customizable bank logos
+- [x] Barcode rendering (SVG)
 - [ ] QR Code support (PIX integration)
 - [ ] Multiple layout options (simple, detailed, with instructions)
-- [ ] Localization support (pt-BR)
+- [x] Localization support (pt-BR)
 
 **Template Structure**:
 
