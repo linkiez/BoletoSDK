@@ -8,7 +8,7 @@ Builds a complete HTML document for boleto rendering using a shared layout.
 
 - Compose a printable HTML document
 - Standardize layout and CSS across templates
-- Render core boleto sections (parties, payment, instructions, barcode)
+- Render core boleto sections (parties, payment, instructions, barcode, PIX)
 - Provide responsive and print-optimized styling
 - Default labels and messages in pt-BR
 
@@ -48,6 +48,7 @@ flowchart TD
 - Missing instructions/additional info render as placeholder text
 - Optional bank logo is rendered only when provided
 - Uses pt-BR labels by default (override via options)
+- PIX section renders only when `data.payment.pix` is provided
 
 ## Examples
 

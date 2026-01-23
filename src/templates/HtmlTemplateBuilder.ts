@@ -7,6 +7,7 @@ export interface BoletoHtmlTemplateOptions {
   bankLabel?: string;
   bankCodeLabel?: string;
   showBankName?: boolean;
+  layout?: 'simple' | 'instructions' | 'detailed';
 }
 
 export function buildBoletoHtml(
@@ -19,6 +20,10 @@ export function buildBoletoHtml(
   const bankCodeLabel = options.bankCodeLabel ?? 'Código do banco';
   const showBankName = options.showBankName ?? true;
 
+  const layout = options.layout ?? 'detailed';
+  const showInstructions = layout !== 'simple';
+  const showAdditionalInfo = layout === 'detailed';
+
   const bankName = showBankName ? ` - ${data.bank.name}` : '';
   const logoHtml = data.bank.logo
     ? `<img class="bank-logo" src="${data.bank.logo}" alt="Logo do banco" />`
@@ -26,6 +31,27 @@ export function buildBoletoHtml(
 
   const instructionsHtml = buildList(data.instructions);
   const additionalInfoHtml = buildKeyValueList(data.additionalInfo);
+  const pixSectionHtml = buildPixSection(data.payment.pix);
+  const instructionsSectionHtml = showInstructions
+    ? `
+    <section class="section">
+      <div class="section-title">Instruções</div>
+      <div class="field instructions">
+        ${instructionsHtml || '<span class="value">Sem instruções</span>'}
+      </div>
+    </section>
+    `
+    : '';
+  const additionalInfoSectionHtml = showAdditionalInfo
+    ? `
+    <section class="section">
+      <div class="section-title">Informações adicionais</div>
+      <div class="field">
+        ${additionalInfoHtml || '<span class="value">Sem informações adicionais</span>'}
+      </div>
+    </section>
+    `
+    : '';
 
   return `<!DOCTYPE html>
 <html lang="pt-BR">
@@ -50,6 +76,10 @@ export function buildBoletoHtml(
     .label { display: block; font-size: 11px; text-transform: uppercase; font-weight: 700; margin-bottom: 6px; }
     .value { font-size: 14px; }
     .barcode { margin-top: 12px; padding: 12px; border: 1px solid #111; display: flex; flex-direction: column; gap: 6px; }
+    .pix-section { display: grid; grid-template-columns: 160px 1fr; gap: 16px; align-items: center; }
+    .pix-qr { display: flex; justify-content: center; align-items: center; padding: 8px; border: 1px solid #111; background: #fff; }
+    .pix-qr svg { max-width: 140px; height: auto; }
+    .pix-payload { font-family: 'Courier New', monospace; font-size: 11px; word-break: break-all; }
     .barcode-text { font-family: 'Courier New', monospace; font-size: 12px; }
     .instructions { min-height: 80px; }
     .list { margin: 0; padding-left: 16px; }
@@ -58,6 +88,7 @@ export function buildBoletoHtml(
       .boleto-page { padding: 16px; }
       .boleto-header { grid-template-columns: 1fr; }
       .digitable-line { text-align: left; }
+      .pix-section { grid-template-columns: 1fr; }
     }
     @media print {
       body { background: #fff; }
@@ -117,19 +148,9 @@ export function buildBoletoHtml(
       </div>
     </section>
 
-    <section class="section">
-      <div class="section-title">Instruções</div>
-      <div class="field instructions">
-        ${instructionsHtml || '<span class="value">Sem instruções</span>'}
-      </div>
-    </section>
+    ${instructionsSectionHtml}
 
-    <section class="section">
-      <div class="section-title">Informações adicionais</div>
-      <div class="field">
-        ${additionalInfoHtml || '<span class="value">Sem informações adicionais</span>'}
-      </div>
-    </section>
+    ${additionalInfoSectionHtml}
 
     <section class="section">
       <div class="section-title">Código de barras</div>
@@ -137,6 +158,8 @@ export function buildBoletoHtml(
         <span class="barcode-text">${data.payment.barcode}</span>
       </div>
     </section>
+
+    ${pixSectionHtml}
 
     <p class="footer-note">${heading}</p>
   </div>
@@ -163,6 +186,31 @@ function buildKeyValueList(items?: Record<string, string>): string {
     .join('');
 
   return `<ul class="list">${listItems}</ul>`;
+}
+
+function buildPixSection(pix?: { payload: string; qrCodeSvg?: string }): string {
+  if (!pix) {
+    return '';
+  }
+
+  const qrCodeHtml = pix.qrCodeSvg
+    ? `<div class="pix-qr" aria-label="QR Code PIX">${pix.qrCodeSvg}</div>`
+    : '';
+
+  const payloadHtml = `<div class="pix-payload">${pix.payload}</div>`;
+
+  return `
+    <section class="section">
+      <div class="section-title">PIX</div>
+      <div class="pix-section">
+        ${qrCodeHtml}
+        <div>
+          <div class="label">Chave PIX</div>
+          ${payloadHtml}
+        </div>
+      </div>
+    </section>
+  `;
 }
 
 function formatDateIso(value: Date): string {

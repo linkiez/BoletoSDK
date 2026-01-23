@@ -16,6 +16,10 @@ export interface BoletoTemplateData {
     dueDate: Date;
     barcode: string;
     digitableLine: string;
+    pix?: {
+      payload: string;
+      qrCodeSvg?: string;
+    };
   };
   bank: {
     code: string;

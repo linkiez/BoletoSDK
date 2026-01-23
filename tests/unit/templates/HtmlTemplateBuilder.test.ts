@@ -46,4 +46,115 @@ describe('buildBoletoHtml', () => {
     expect(html).toContain('Linha digitável');
     expect(html).toContain('Pagar antes do vencimento');
   });
+
+  it('should render PIX section when payload is provided', () => {
+    const data: BoletoTemplateData = {
+      beneficiary: {
+        name: 'ACME Corp',
+        document: '12345678000195',
+        address: 'Main Avenue, 1000',
+      },
+      payer: {
+        name: 'John Doe',
+        document: '12345678901',
+        address: 'Sunset Street, 10',
+      },
+      payment: {
+        documentNumber: 'DOC-001',
+        ourNumber: '12345678',
+        amount: 150.5,
+        dueDate: new Date('2026-02-10'),
+        barcode: '34100000000000000000000000000000000000000000',
+        digitableLine: '34190.00000 00000.000000 00000.000000 0 00000000000000',
+        pix: {
+          payload: '00020101021226830014br.gov.bcb.pix01091234567890260203ABC',
+          qrCodeSvg: '<svg aria-label="PIX" />',
+        },
+      },
+      bank: {
+        code: '341',
+        name: 'ITAU UNIBANCO SA',
+      },
+    };
+
+    const html = buildBoletoHtml(data);
+
+    expect(html).toContain('PIX');
+    expect(html).toContain('Chave PIX');
+    expect(html).toContain('br.gov.bcb.pix');
+    expect(html).toContain('<svg aria-label="PIX" />');
+  });
+
+  it('should hide instructions and additional info in simple layout', () => {
+    const data: BoletoTemplateData = {
+      beneficiary: {
+        name: 'ACME Corp',
+        document: '12345678000195',
+        address: 'Main Avenue, 1000',
+      },
+      payer: {
+        name: 'John Doe',
+        document: '12345678901',
+        address: 'Sunset Street, 10',
+      },
+      payment: {
+        documentNumber: 'DOC-001',
+        ourNumber: '12345678',
+        amount: 150.5,
+        dueDate: new Date('2026-02-10'),
+        barcode: '34100000000000000000000000000000000000000000',
+        digitableLine: '34190.00000 00000.000000 00000.000000 0 00000000000000',
+      },
+      bank: {
+        code: '341',
+        name: 'ITAU UNIBANCO SA',
+      },
+      instructions: ['Pagar antes do vencimento'],
+      additionalInfo: {
+        Referencia: 'FAT-001',
+      },
+    };
+
+    const html = buildBoletoHtml(data, { layout: 'simple' });
+
+    expect(html).not.toContain('Instruções');
+    expect(html).not.toContain('Informações adicionais');
+  });
+
+  it('should show instructions only in instructions layout', () => {
+    const data: BoletoTemplateData = {
+      beneficiary: {
+        name: 'ACME Corp',
+        document: '12345678000195',
+        address: 'Main Avenue, 1000',
+      },
+      payer: {
+        name: 'John Doe',
+        document: '12345678901',
+        address: 'Sunset Street, 10',
+      },
+      payment: {
+        documentNumber: 'DOC-001',
+        ourNumber: '12345678',
+        amount: 150.5,
+        dueDate: new Date('2026-02-10'),
+        barcode: '34100000000000000000000000000000000000000000',
+        digitableLine: '34190.00000 00000.000000 00000.000000 0 00000000000000',
+      },
+      bank: {
+        code: '341',
+        name: 'ITAU UNIBANCO SA',
+      },
+      instructions: ['Pagar antes do vencimento'],
+      additionalInfo: {
+        Referencia: 'FAT-001',
+      },
+    };
+
+    const html = buildBoletoHtml(data, { layout: 'instructions' });
+
+    expect(html).toContain('Instruções');
+    expect(html).toContain('Pagar antes do vencimento');
+    expect(html).not.toContain('Informações adicionais');
+  });
 });

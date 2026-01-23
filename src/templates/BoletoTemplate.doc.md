@@ -17,7 +17,15 @@ Defines the data contract and interface for boleto HTML templates.
 ## API / Signature
 
 ```ts
-export interface BoletoTemplateData { /* ... */ }
+export interface BoletoTemplateData {
+  payment: {
+    // ...
+    pix?: {
+      payload: string;
+      qrCodeSvg?: string;
+    };
+  };
+}
 export interface BoletoTemplate {
   render(data: BoletoTemplateData): string;
 }
