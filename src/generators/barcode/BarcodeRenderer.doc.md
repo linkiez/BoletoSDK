@@ -2,17 +2,18 @@
 
 ## Overview
 
-Renders Interleaved 2 of 5 (I2of5) barcodes as SVG.
+Renders Interleaved 2 of 5 (I2of5) barcodes as SVG or PNG.
 
 ## Responsibilities
 
 - Encode numeric barcode strings using I2of5 patterns
 - Render bars as SVG rectangles with configurable sizing
+- Render bars as PNG buffers for email/PDF use
 
 ## Inputs and outputs
 
 - Input: numeric barcode string, optional rendering options
-- Output: SVG string
+- Output: SVG string or PNG buffer
 
 ## API / Signature
 
@@ -25,6 +26,7 @@ export interface I2of5SvgOptions {
 }
 
 export function renderI2of5Svg(code: string, options?: I2of5SvgOptions): string;
+export function renderI2of5Png(code: string, options?: I2of5SvgOptions): Buffer;
 ```
 
 ## Main flow
@@ -34,7 +36,9 @@ flowchart TD
   A[Numeric code] --> B[Normalize code]
   B --> C[Encode I2of5]
   C --> D[Render SVG]
-  D --> E[SVG string]
+  C --> E[Render PNG]
+  D --> F[SVG string]
+  E --> G[PNG buffer]
 ```
 
 ## Error handling and edge cases
@@ -46,6 +50,7 @@ flowchart TD
 
 ```ts
 const svg = renderI2of5Svg('34100000000000000000000000000000000000000000');
+const png = renderI2of5Png('34100000000000000000000000000000000000000000');
 ```
 
 ## Dependencies and integrations
