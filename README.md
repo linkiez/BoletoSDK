@@ -105,7 +105,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) and [TESTING.md](TESTING.md) for setup, w
 
 ## 📜 License
 
-MIT. See [LICENSE](LICENSE).
+APACHE. See [LICENSE](LICENSE).
 
 ## 🔗 Links
 
