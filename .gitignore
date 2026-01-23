@@ -44,4 +44,9 @@ yarn-error.log*
 *.temp
 .cache/
 
+# Local artifacts
+.scannerwork/
+preview/
+debug.json
+
 **/BUSINESS_RULES_SOURCES.md

@@ -1081,21 +1081,19 @@ const email = generateBoletoEmail({
 **Location**: `tests/generators/`
 
 - [ ] `barcode.test.ts` - Barcode generation tests
-  - [ ] Check digit validation
-  - [ ] Digitable line formatting
-  - [ ] SVG/PNG rendering
-- [ ] `html.test.ts` - HTML template tests
-  - [ ] Template rendering
-  - [ ] Data binding
-  - [ ] Responsive layout
-- [ ] `pdf.test.ts` - PDF generation tests
-  - [ ] PDF structure validation
-  - [ ] Multiple boletos per page
-  - [ ] File size optimization
-- [ ] `qrcode.test.ts` - QR code tests
-  - [ ] PIX payload generation
-  - [ ] QR code rendering
-  - [ ] Data validation
+  - [x] Check digit validation
+  - [x] Digitable line formatting
+  - [x] SVG/PNG rendering
+- [x] `html.test.ts` - HTML template tests
+  - [x] Template rendering
+  - [x] Data binding
+  - [x] Responsive layout
+- [x] `pdf.test.ts` - PDF generation tests
+  - [x] PDF structure validation
+- [x] `qrcode.test.ts` - QR code tests
+  - [x] PIX payload generation
+  - [x] QR code rendering
+  - [x] Data validation
 
 **Integration Tests**:
 
@@ -1463,6 +1461,6 @@ const email = generateBoletoEmail({
 
 ---
 
-**Last Updated**: 2026-01-21
+**Last Updated**: 2026-01-23
 **Version**: 2.0
 **Status**: Phase 1 Complete, Phase 2 Pending
