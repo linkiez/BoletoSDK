@@ -21,6 +21,7 @@ export * from './cnab240';
 export * from './cnab400';
 export * from './CnabGeneratorFactory';
 export * from './qrcode';
+export * from './pdf';
 ```
 
 ## Main flow
@@ -32,6 +33,7 @@ flowchart TD
   A --> D[cnab400]
   A --> E[CnabGeneratorFactory]
   A --> F[qrcode]
+  A --> G[pdf]
 ```
 
 ## Error handling and edge cases
@@ -41,7 +43,12 @@ flowchart TD
 ## Examples
 
 ```ts
-import { generateBarcode, generatePixQRCode, renderI2of5Svg } from '@linkiez/boleto-sdk';
+import {
+  generateBarcode,
+  generateBoletoPdfBuffer,
+  generatePixQRCode,
+  renderI2of5Svg,
+} from '@linkiez/boleto-sdk';
 ```
 
 ## Dependencies and integrations

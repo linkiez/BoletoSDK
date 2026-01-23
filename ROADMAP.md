@@ -4,7 +4,7 @@
 
 **Development Flow**: BASE → CNAB400 → CNAB240
 
-**Last Updated**: 2026-01-22
+**Last Updated**: 2026-01-23
 
 ---
 
@@ -27,13 +27,13 @@
 
 **Overall Statistics**:
 
-- **Total Tests**: 794 (792 passing, 2 skipped)
+- **Total Tests**: 821 (821 passing)
 - **Code Coverage**: >80%
 - **Documentation**: ~1800 lines (README + USAGE-GUIDE + API-REFERENCE)
 - **Production Ready**: CNAB400 fully operational with real files
 - **CNAB240**: Complete parsers + generators + constants + validators + schemas (File/Batch/Segments P/Q/R)
 
-**Recent Accomplishments (2026-01-22)**:
+**Recent Accomplishments (2026-01-23)**:
 
 - ✅ Implemented CNAB400 constants for consistency (68 tests)
 - ✅ Created LAYOUT_VERSION constants (400-char format, file types, service codes)
@@ -77,6 +77,7 @@
 - ✅ Added initial HTML template scaffolding (BoletoTemplate, GenericTemplate, TemplateRenderer)
 - ✅ Added HtmlTemplateBuilder and ItauTemplate for shared HTML layout
 - ✅ Added BradescoTemplate and BBTemplate using shared HTML layout
+- ✅ Added HTML layout options (simple, instructions, detailed) with tests
 
 **Next Steps**: Phase 3.5 - Boleto HTML/PDF Generation
 
@@ -873,8 +874,8 @@ console.log(CNAB400.LINE_LENGTH); // 400
 - [x] Print-optimized CSS
 - [x] Customizable bank logos
 - [x] Barcode rendering (SVG)
-- [ ] QR Code support (PIX integration)
-- [ ] Multiple layout options (simple, detailed, with instructions)
+- [x] QR Code support (PIX integration)
+- [x] Multiple layout options (simple, detailed, with instructions)
 - [x] Localization support (pt-BR)
 
 **Template Structure**:
@@ -898,6 +899,10 @@ interface BoletoTemplateData {
     dueDate: Date;
     barcode: string;
     digitableLine: string;
+    pix?: {
+      payload: string;
+      qrCodeSvg?: string;
+    };
   };
   bank: {
     code: string;
@@ -922,8 +927,8 @@ interface BoletoTemplateData {
 
 - [x] Interleaved 2 of 5 (I2of5) - Standard bank slip barcode
 - [x] SVG output for web display
-- [ ] PNG output for email/PDF
-- [ ] Configurable dimensions (width, height, quiet zones)
+- [x] PNG output for email/PDF
+- [x] Configurable dimensions (width, height, quiet zones)
 
 **Example**:
 
@@ -949,7 +954,7 @@ const barcode = generateBarcode({
 
 **Dependencies**: Consider using `pdfkit` or `puppeteer`
 
-- [ ] `BoletoPdfGenerator.ts` - Main PDF generator
+- [x] `BoletoPdfGenerator.ts` - Main PDF generator
 - [ ] `PdfTemplate.ts` - PDF template configuration
 - [ ] `PdfRenderer.ts` - Render HTML to PDF (Puppeteer approach)
 - [ ] `DirectPdfGenerator.ts` - Direct PDF generation (PDFKit approach)
