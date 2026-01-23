@@ -31,6 +31,8 @@ module.exports = {
     '^@constants/(.*)$': '<rootDir>/src/constants/$1',
     '^@utils$': '<rootDir>/src/utils',
     '^@utils/(.*)$': '<rootDir>/src/utils/$1',
+    '^@templates$': '<rootDir>/src/templates',
+    '^@templates/(.*)$': '<rootDir>/src/templates/$1',
     '^@parsers$': '<rootDir>/src/parsers',
     '^@parsers/(.*)$': '<rootDir>/src/parsers/$1',
     '^@generators$': '<rootDir>/src/generators',

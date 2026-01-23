@@ -28,6 +28,8 @@
       "@constants/*": ["src/constants/*"],
       "@utils": ["src/utils"],
       "@utils/*": ["src/utils/*"],
+      "@templates": ["src/templates"],
+      "@templates/*": ["src/templates/*"],
       "@parsers": ["src/parsers"],
       "@parsers/*": ["src/parsers/*"],
       "@generators": ["src/generators"],

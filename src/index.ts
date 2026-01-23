@@ -27,3 +27,6 @@ export * from './errors';
 
 // Constants
 export * from './constants';
+
+// Templates
+export * from './templates';
