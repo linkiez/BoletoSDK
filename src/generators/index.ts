@@ -3,3 +3,4 @@ export * from './barcode';
 export * from './cnab240';
 export * from './cnab400';
 export * from './CnabGeneratorFactory';
+export * from './qrcode';
