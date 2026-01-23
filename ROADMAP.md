@@ -913,15 +913,15 @@ interface BoletoTemplateData {
 
 **Location**: `src/generators/barcode/`
 
-- [ ] `BarcodeGenerator.ts` - Generate barcode from CNAB data
-- [ ] `DigitableLineGenerator.ts` - Generate typeable barcode line
-- [ ] `BarcodeRenderer.ts` - Render barcode as SVG/PNG
-- [ ] `BarcodeValidator.ts` - Validate barcode check digits
+- [x] `BarcodeGenerator.ts` - Generate barcode from CNAB data
+- [x] `DigitableLineGenerator.ts` - Generate typeable barcode line
+- [x] `BarcodeRenderer.ts` - Render barcode as SVG/PNG
+- [x] `BarcodeValidator.ts` - Validate barcode check digits
 
 **Barcode Types**:
 
-- [ ] Interleaved 2 of 5 (I2of5) - Standard bank slip barcode
-- [ ] SVG output for web display
+- [x] Interleaved 2 of 5 (I2of5) - Standard bank slip barcode
+- [x] SVG output for web display
 - [ ] PNG output for email/PDF
 - [ ] Configurable dimensions (width, height, quiet zones)
 
@@ -954,21 +954,12 @@ const barcode = generateBarcode({
 - [ ] `PdfRenderer.ts` - Render HTML to PDF (Puppeteer approach)
 - [ ] `DirectPdfGenerator.ts` - Direct PDF generation (PDFKit approach)
 
-**Approaches**:
+**Approache**:
 
-#### Option A: HTML to PDF (Puppeteer)
-
-- Pros: Reuse HTML templates, easier styling
-- Cons: Requires headless browser (heavier dependency)
-
-#### Option B: Direct PDF (PDFKit)
+#### Direct PDF (PDFKit)
 
 - Pros: Lightweight, no browser needed
 - Cons: Manual positioning, more complex layout
-
-#### Recommended Approach
-
-Start with Option A for faster development, add Option B later for performance.
 
 **Features**:
 
@@ -1006,9 +997,9 @@ const buffer = await pdf.toBuffer();
 
 **Location**: `src/generators/qrcode/`
 
-- [ ] `QRCodeGenerator.ts` - Generate PIX QR codes
-- [ ] `PixPayloadGenerator.ts` - Generate PIX static payload
-- [ ] `QRCodeRenderer.ts` - Render QR code as SVG/PNG
+- [x] `QRCodeGenerator.ts` - Generate PIX QR codes
+- [x] `PixPayloadGenerator.ts` - Generate PIX static payload
+- [x] `QRCodeRenderer.ts` - Render QR code as SVG/PNG
 
 **PIX QR Code Data**:
 
