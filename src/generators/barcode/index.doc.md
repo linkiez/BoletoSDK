@@ -2,11 +2,11 @@
 
 ## Overview
 
-Exports barcode rendering utilities.
+Exports barcode generation, rendering, and validation utilities.
 
 ## Responsibilities
 
-- Provide public exports for barcode generators/renderers
+- Provide public exports for barcode generators, renderers, and validators
 
 ## Inputs and outputs
 
@@ -16,14 +16,22 @@ Exports barcode rendering utilities.
 ## API / Signature
 
 ```ts
+export * from './BarcodeGenerator';
 export * from './BarcodeRenderer';
+export * from './BarcodeUtils';
+export * from './BarcodeValidator';
+export * from './DigitableLineGenerator';
 ```
 
 ## Main flow
 
 ```mermaid
 flowchart TD
-  A[barcode/index.ts] --> B[BarcodeRenderer]
+  A[barcode/index.ts] --> B[BarcodeGenerator]
+  A --> C[DigitableLineGenerator]
+  A --> D[BarcodeValidator]
+  A --> E[BarcodeRenderer]
+  A --> F[BarcodeUtils]
 ```
 
 ## Error handling and edge cases
@@ -33,7 +41,7 @@ flowchart TD
 ## Examples
 
 ```ts
-import { renderI2of5Svg } from '@linkiez/boleto-sdk';
+import { generateBarcode, renderI2of5Svg } from '@linkiez/boleto-sdk';
 ```
 
 ## Dependencies and integrations
