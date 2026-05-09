@@ -10,7 +10,7 @@
 
 ## Current Status 🚀
 
-**Active Phase**: ⏳ Phase 4 - Release
+**Active Phase**: ✅ Phase 4 - Release (95% Complete) | 🚀 Phase 5 - Post-Release Prep
 
 **Completed Phases**:
 
@@ -25,14 +25,15 @@
 - ✅ **Phase 2.6**: CNAB240 Validators
 - ✅ **Phase 2.7**: CNAB240 Schemas
 - ✅ **Phase 3.5**: Boleto HTML/PDF Generation
+- ✅ **Phase 4**: Release Workflow (GitHub Release + Main Merge)
 
 **Overall Statistics**:
 
 - **Total Tests**: 907 (905 passing, 2 skipped)
-- **Code Coverage**: >80%
-- **Documentation**: ~1800 lines (README + USAGE-GUIDE + API-REFERENCE)
-- **Production Ready**: CNAB400 fully operational with real files
-- **CNAB240**: Complete parsers + generators + constants + validators + schemas (File/Batch/Segments P/Q/R)
+- **Code Coverage**: 95.69% statements
+- **Documentation**: ~2000+ lines (API-REFERENCE, GUIDES, CONTRIBUTING, TESTING)
+- **Production Ready**: CNAB400 + CNAB240 fully operational with real files
+- **Release Status**: v1.0.0 tagged, GitHub released, main branch merged | npm publish ready
 
 **Recent Accomplishments (2026-05-09)**:
 
@@ -87,8 +88,17 @@
 - ✅ Fixed CNAB400 CRLF stability across parser factory and fixture-based tests
 - ✅ Updated API and generation docs with PIX payload-only and stream error examples
 - ✅ Revalidated full coverage run (95.69% statements; all suites passing)
+- ✅ **PHASE 4 RELEASE COMPLETION:**
+  - ✅ Created v1.0.0 tag and pushed to origin
+  - ✅ Published GitHub Release at https://github.com/linkiez/BoletoSDK/releases/tag/v1.0.0
+  - ✅ Merged release/1.0.0 branch to main and pushed
+  - ✅ Compiled distribution (dist/) with all assets
+  - ✅ Updated package.json with v1.0.0 metadata
+  - ✅ Configured npm publishing (.npmignore, exports map, entry points)
+  - ✅ Created RELEASE-v1.0.0-SUMMARY.md with complete workflow summary
+  - ✅ Created PUBLISH-INSTRUCTIONS.md with npm publication guide
 
-**Next Steps**: Phase 4 - Release
+**Next Steps**: Phase 5 - Post-Release Operations (npm publish + verification)
 
 ---
 
@@ -1142,21 +1152,23 @@ const email = generateBoletoEmail({
 
 **Duration**: ~1 week
 
+**Status**: ✅ **95% COMPLETE** (GitHub release + main merge complete; npm publish pending authentication)
+
 ### 4.1 Pre-Release Checklist
 
 - [x] All tests passing (unit + integration)
-- [x] Code coverage meets targets
-- [x] Documentation complete
+- [x] Code coverage meets targets (95.69%)
+- [x] Documentation complete (2000+ lines)
 - [x] No critical/major bugs
 - [x] Performance benchmarks acceptable
-- [x] Security audit passed
+- [x] Security audit passed (production-focused)
 - [x] License file present
 - [x] CHANGELOG.md updated
 
 ### 4.2 Package Configuration
 
 - [x] Update `package.json` metadata
-  - [x] name
+  - [x] name (@linkiez/boleto-sdk)
   - [x] version (1.0.0)
   - [x] description
   - [x] keywords
@@ -1176,15 +1188,26 @@ const email = generateBoletoEmail({
 - [x] Create release branch (`release/1.0.0`)
 - [x] Tag version (`v1.0.0`)
 - [x] Write release notes
-- [ ] Publish GitHub release
-- [ ] Merge to main branch
+- [x] Publish GitHub release ✅ **COMPLETED 2026-05-09**
+  - URL: https://github.com/linkiez/BoletoSDK/releases/tag/v1.0.0
+  - Release notes from doc/RELEASE-NOTES-1.0.0.md
+- [x] Merge to main branch ✅ **COMPLETED 2026-05-09**
+  - Merged release/1.0.0 → main
+  - 47 files changed, 1163 insertions(+), 529 deletions(-)
+  - Pushed to origin/main
 
 ### 4.4 npm Publishing
 
-- [ ] Publish to npm: `npm publish`
+- [ ] Publish to npm: `npm publish` ⏳ **PENDING USER AUTHENTICATION**
+  - See [PUBLISH-INSTRUCTIONS.md](./PUBLISH-INSTRUCTIONS.md) for authentication steps
+  - Requires npm token or npm login credentials
+  - Command ready: `npm publish --ignore-scripts`
 - [ ] Verify package on npm registry
-- [ ] Test installation: `npm install boleto-sdk`
+  - `npm view @linkiez/boleto-sdk@1.0.0`
+- [ ] Test installation: `npm install @linkiez/boleto-sdk@1.0.0`
 - [ ] Verify package contents
+  - dist/, README.md, LICENSE included
+  - src/, tests/, scripts/ excluded
 
 ### 4.5 Announcement
 
@@ -1195,10 +1218,48 @@ const email = generateBoletoEmail({
 
 **Acceptance Criteria**:
 
-- Package published to npm
-- GitHub release created
-- Documentation accessible
-- Installation works correctly
+- [x] Package built and ready for publication
+- [x] GitHub release created with documentation
+- [x] Main branch integrated and pushed
+- [ ] Package published to npm (pending authentication)
+- [ ] Installation works correctly (will verify after npm publish)
+
+---
+
+## Phase 5: Post-Release Operations ⏳
+
+**Objective**: Complete npm publication, verify installation, and prepare roadmap for v1.1.0
+
+**Duration**: ~1 day
+
+### 5.1 npm Publication
+
+- [ ] User authenticates to npm registry
+- [ ] Execute: `npm publish --ignore-scripts`
+- [ ] Verify package appears at: https://npmjs.com/package/@linkiez/boleto-sdk
+- [ ] Check published version: `npm view @linkiez/boleto-sdk`
+
+### 5.2 Verification & Testing
+
+- [ ] Test installation in clean environment
+- [ ] Verify entry points work
+- [ ] Test basic import and usage
+- [ ] Generate sample boleto to verify full functionality
+
+### 5.3 Documentation & Communication
+
+- [ ] Update README with npm installation badge
+- [ ] Create GitHub release announcement (if not already done)
+- [ ] Document any npm-specific usage
+- [ ] Add installation badges (npm, GitHub)
+
+### 5.4 Prepare for v1.1.0
+
+- [ ] Review community feedback
+- [ ] Prioritize bank adapter implementation
+- [ ] Plan Itaú adapter (v1.1.0)
+
+
 
 ---
 
@@ -1206,20 +1267,22 @@ const email = generateBoletoEmail({
 
 ### Future Enhancements
 
-#### v1.1.0 - Bank-Specific Adapters (Itaú)
+#### v1.1.0 - Bank-Specific Adapters (Itaú) ⏳ **PRIORITY 1**
 
-**Objective**: Add comprehensive Itaú bank support with complete validation.
+**Objective**: Add comprehensive Itaú bank support with complete validation and field interpretation.
 
-**Duration**: ~2 weeks
+**Duration**: ~2-3 weeks
+
+**Business Value**: Enables production deployment with Itaú, Brazil's largest bank
 
 ##### Itaú Adapter Implementation
 
 **Location**: `src/adapters/itau/`
 
-- [ ] `ItauAdapter.ts` - Main adapter class implementing `IBankAdapter`
+- [ ] `ItauAdapter.ts` - Main adapter class implementing `IBankAdapter` interface
 - [ ] `ItauOurNumberCalculator.ts` - Our number format and check digit (modulo 10)
 - [ ] `ItauWalletValidator.ts` - Wallet codes (109, 112, 115, 180) validation
-- [ ] `ItauOccurrenceMapper.ts` - Map Itaú-specific occurrence codes
+- [ ] `ItauOccurrenceMapper.ts` - Map Itaú-specific occurrence codes to generic types
 - [ ] `ItauInstructionMapper.ts` - Map Itaú-specific instruction codes
 - [ ] `ItauFieldParser.ts` - Parse Itaú-specific fields in "bank use" areas
 - [ ] `ItauValidator.ts` - Business rules specific to Itaú
@@ -1233,16 +1296,18 @@ const email = generateBoletoEmail({
 
 **Tests**: `tests/adapters/itau/`
 
-- [ ] Unit tests for check digit calculation
+- [ ] Unit tests for check digit calculation (modulo 10)
 - [ ] Unit tests for wallet validation
 - [ ] Integration tests with real Itaú CNAB files
 - [ ] Round-trip tests with Itaú adapter
+- [ ] 50+ tests minimum
 
 **Documentation**:
 
 - [ ] Update README with Itaú adapter usage
 - [ ] Create `docs/ADAPTERS.md` with adapter guide
 - [ ] Update `doc/BANK_DIFFERENCES.md` with Itaú details
+- [ ] Add Itaú-specific examples to `doc/EXAMPLES.md`
 
 **Acceptance Criteria**:
 
@@ -1250,12 +1315,23 @@ const email = generateBoletoEmail({
 - Parse Itaú CNAB240 files with full field interpretation
 - Generate valid Itaú files with correct check digits
 - Validate Itaú-specific business rules
-- All Itaú occurrence/instruction codes mapped
+- All Itaú occurrence/instruction codes mapped and tested
 - Test coverage ≥ 90%
+- Round-trip tests validate data preservation
 
-#### v1.2.0 - Bank Adapters (Bradesco)
+**API Preview**:
 
-**Objective**: Add Bradesco bank support.
+```typescript
+import { createItauAdapter } from '@linkiez/boleto-sdk';
+
+const itau = createItauAdapter();
+const ourNumber = itau.calculateOurNumber('123456', { checkDigit: true });
+const validated = itau.validateWallet('109', boletoData);
+```
+
+#### v1.2.0 - Bank Adapters (Bradesco) ⏳ **PRIORITY 2**
+
+**Objective**: Add Bradesco bank support (2nd largest Brazilian bank).
 
 **Duration**: ~2 weeks
 
@@ -1272,16 +1348,16 @@ const email = generateBoletoEmail({
 
 **Key Features**:
 
-- [ ] Wallet variation support (019, etc.)
-- [ ] Company code field handling
-- [ ] Modulo 11 check digit with 'P' for remainder 1
-- [ ] Extended instruction codes
+- Wallet variation support (019, etc.)
+- Company code field handling
+- Modulo 11 check digit with 'P' for remainder 1
+- Extended instruction codes
 
 **Acceptance Criteria**: Same as Itaú adapter
 
-#### v1.3.0 - Bank Adapters (Banco do Brasil)
+#### v1.3.0 - Bank Adapters (Banco do Brasil) ⏳ **PRIORITY 3**
 
-**Objective**: Add Banco do Brasil support.
+**Objective**: Add Banco do Brasil support (3rd largest Brazilian bank).
 
 **Duration**: ~2 weeks
 
@@ -1298,14 +1374,14 @@ const email = generateBoletoEmail({
 
 **Key Features**:
 
-- [ ] Agreement number integration with our number
-- [ ] Wallet variation (019, 027) support
-- [ ] No check digit in file (but calculated for display)
-- [ ] Strict agreement validation
+- Agreement number integration with our number
+- Wallet variation (019, 027) support
+- No check digit in file (but calculated for display)
+- Strict agreement validation
 
 **Acceptance Criteria**: Same as previous adapters
 
-#### v1.4.0 - Bank Adapters (Caixa)
+#### v1.4.0 - Bank Adapters (Caixa) ⏳ **PRIORITY 4**
 
 **Objective**: Add Caixa Econômica Federal support.
 
@@ -1324,14 +1400,14 @@ const email = generateBoletoEmail({
 
 **Key Features**:
 
-- [ ] Alpha wallet codes (CR, SR, CS)
-- [ ] SIGCB integration for wallet CS
-- [ ] Modality code handling
-- [ ] Identification code (agreement) validation
+- Alpha wallet codes (CR, SR, CS)
+- SIGCB integration for wallet CS
+- Modality code handling
+- Identification code (agreement) validation
 
 **Acceptance Criteria**: Same as previous adapters
 
-#### v1.5.0 - Bank Adapters (Santander)
+#### v1.5.0 - Bank Adapters (Santander) ⏳ **PRIORITY 5**
 
 **Objective**: Add Santander support.
 
@@ -1349,34 +1425,31 @@ const email = generateBoletoEmail({
 
 **Key Features**:
 
-- [ ] Split our number format (7 fixed + 6 sequential)
-- [ ] IoF code for insurance slips
-- [ ] Origin code handling
+- Split our number format (7 fixed + 6 sequential)
+- IoF code for insurance slips
+- Origin code handling
 
 **Acceptance Criteria**: Same as previous adapters
 
-#### v1.6.0 - Additional Features
+#### v1.6.0 - Community Adapters
 
-- [x] Barcode image generation (SVG, PNG)
-- [x] QR Code generation (PIX integration)
-- [x] PDF generation for bank slips
-- [x] Email integration utilities
-- [x] Webhook notification support
+**Objective**: Support additional banks based on community requests.
 
-#### v1.7.0 - Advanced Features
+**Banks**: Sicredi, C6, Nubank, Banco Inter, Banco Safra, others
 
-- [ ] Batch processing utilities
-- [ ] File validation CLI tool
-- [ ] Real-time file streaming parser
-- [ ] Database integration helpers
-- [ ] Retry mechanism for failed operations
+**Approach**: Community contributions welcome with review process
 
-#### v2.0.0 - Major Enhancements
+#### v2.0.0 - Advanced Features
 
-- [ ] Community bank adapters (15+ banks)
-- [ ] Support for CNAB444 (if applicable)
-- [ ] Advanced analytics
-- [ ] Machine learning for validation
+- [ ] Real-time file streaming parser for large files
+- [ ] Database integration helpers (ORM support)
+- [ ] Batch processing utilities with queuing
+- [ ] Webhook notification system
+- [ ] Advanced analytics and reporting
+- [ ] CLI tool for file validation and conversion
+- [ ] Graphical payment interface components
+
+
 
 ---
 
@@ -1421,14 +1494,18 @@ const email = generateBoletoEmail({
 
 ## Timeline Summary
 
-| Phase                            | Duration     | Status           | Deliverables                                          |
-| -------------------------------- | ------------ | ---------------- | ----------------------------------------------------- |
-| **Phase 0: Base Infrastructure** | 2 weeks      | ✅ Complete      | Common types, utils, errors, base schemas (152 tests) |
-| **Phase 1: CNAB400**             | 4 weeks      | ✅ Complete      | Complete CNAB400 parsing/generation (96 tests)        |
-| **Phase 2: CNAB240**             | 6 weeks      | ⏳ Pending       | Complete CNAB240 parsing/generation                   |
-| **Phase 3: Testing & Docs**      | 2 weeks      | 🔄 In Progress   | ≥90% coverage, complete documentation                 |
-| **Phase 4: Release**             | 1 week       | ⏳ Pending       | v1.0.0 published to npm                               |
-| **Total**                        | **15 weeks** | **60% Complete** | Production-ready SDK                                  |
+| Phase                              | Duration     | Status              | Deliverables                                              |
+| ---------------------------------- | ------------ | ------------------- | --------------------------------------------------------- |
+| **Phase 0: Base Infrastructure**   | 2 weeks      | ✅ Complete         | Common types, utils, errors, base schemas (152 tests)     |
+| **Phase 1: CNAB400**               | 4 weeks      | ✅ Complete         | Complete CNAB400 parsing/generation (96 tests)            |
+| **Phase 2: CNAB240**               | 6 weeks      | ✅ Complete         | Complete CNAB240 parsing/generation (148+ tests)          |
+| **Phase 3: Testing & Docs**        | 2 weeks      | ✅ Complete         | ≥90% coverage, complete documentation                     |
+| **Phase 3.5: Boleto HTML/PDF**     | 3 weeks      | ✅ Complete         | HTML/PDF generation, barcode, PIX integration             |
+| **Phase 4: Release**               | 1 week       | ✅ 95% Complete     | v1.0.0 GitHub release + main merge (npm pending)          |
+| **Phase 5: Post-Release Ops**      | 1 day        | ⏳ Pending          | npm publish + verification                                |
+| **Phase 6: v1.1.0 (Itaú Adapter)** | 2-3 weeks    | 📋 Planned          | Comprehensive Itaú bank support                           |
+| **Total to v1.0**                  | **16 weeks** | **95% Complete**    | Production-ready SDK + GitHub release                     |
+| **Total to v1.1**                  | **18-19 wks**| **In Pipeline**     | SDK with bank-specific adapters                           |
 
 ---
 
@@ -1441,19 +1518,23 @@ const email = generateBoletoEmail({
 - ✅ Generates valid CNAB400 files
 - ✅ Generates valid CNAB240 files
 - ✅ Round-trip tests pass (parse → generate → parse)
-- ✅ Code coverage ≥ 90%
-- ✅ All integration tests pass
+- ✅ Code coverage ≥ 90% (actual: 95.69%)
+- ✅ All integration tests pass (905 tests passing)
 - ✅ No critical security vulnerabilities
 - ✅ Performance: Parse 10,000 line file in < 1 second
+- ✅ HTML/PDF generation for boletos
+- ✅ Barcode generation (I2of5, SVG/PNG)
+- ✅ QR code generation (PIX support)
+- ✅ Email integration utilities
 
 ### Quality
 
-- ✅ SonarQube quality gate passes
 - ✅ ESLint passes with zero errors
 - ✅ TypeScript compiles with zero errors
-- ✅ All documentation complete
+- ✅ All documentation complete (2000+ lines)
 - ✅ All public APIs have JSDoc
 - ✅ Examples work as documented
+- ✅ Pre-push hooks validate before commits
 
 ### Business
 
@@ -1462,10 +1543,18 @@ const email = generateBoletoEmail({
 - ✅ Supports both file formats (CNAB400 and CNAB240)
 - ✅ Easy to integrate (simple API)
 - ✅ Well-documented for developers
-- ✅ Published to npm registry
+- ⏳ Published to npm registry (awaiting authentication)
+
+### Release Delivery
+
+- ✅ GitHub release created: https://github.com/linkiez/BoletoSDK/releases/tag/v1.0.0
+- ✅ Release notes comprehensive and accessible
+- ✅ Main branch updated and pushed
+- ✅ Package ready for npm publication
+- ⏳ npm publication (requires user npm credentials)
 
 ---
 
-**Last Updated**: 2026-05-09
-**Version**: 2.0
-**Status**: Phase 4 In Progress
+**Last Updated**: 2026-05-09 (Post-Release)
+**Version**: 2.1
+**Status**: Phase 4 95% Complete | Phase 5 Ready to Start
