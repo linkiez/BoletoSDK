@@ -8,6 +8,7 @@ import { parseDetailRecord } from '../../../../src/parsers/cnab400/DetailRecordP
 describe('CNAB400 DetailRecordParser', () => {
   const getDetailLine = (): string =>
     readFileSync(join(__dirname, '../../../fixtures/cnab400/itau-remessa-sample1.ret'), 'utf-8')
+      .replaceAll('\r', '')
       .split('\n')
       .filter((line) => line.length > 0)[1];
 

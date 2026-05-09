@@ -1,5 +1,6 @@
-import { buildBoletoHtml } from '@templates';
+import { buildBoletoHtml, buildBoletoHtmlWithPixQrCode } from '@templates';
 import type { BoletoTemplateData } from '@templates/BoletoTemplate';
+import { generatePixPayload } from '@generators';
 
 describe('buildBoletoHtml', () => {
   it('should render HTML with core sections and data', () => {
@@ -85,6 +86,53 @@ describe('buildBoletoHtml', () => {
     expect(html).toContain('BoletoPixPayload');
     expect(html).toContain('br.gov.bcb.pix');
     expect(html).toContain('<svg aria-label="PIX" />');
+  });
+
+  it('should render PIX SVG automatically when only payload is provided', async () => {
+    const pixPayload = generatePixPayload({
+      key: '12345678900',
+      amount: 10,
+      merchantName: 'ACME STORE',
+      merchantCity: 'SAO PAULO',
+      transactionId: 'INV001',
+    });
+
+    const data: BoletoTemplateData = {
+      beneficiary: {
+        name: 'ACME Corp',
+        document: '12345678000195',
+        address: 'Main Avenue, 1000',
+      },
+      payer: {
+        name: 'John Doe',
+        document: '12345678901',
+        address: 'Sunset Street, 10',
+      },
+      payment: {
+        documentNumber: 'DOC-001',
+        ourNumber: '12345678',
+        amount: 150.5,
+        dueDate: new Date('2026-02-10'),
+        barcode: '34100000000000000000000000000000000000000000',
+        digitableLine: '34190.00000 00000.000000 00000.000000 0 00000000000000',
+        pix: {
+          payload: pixPayload,
+        },
+      },
+      bank: {
+        code: '341',
+        name: 'ITAU UNIBANCO SA',
+      },
+    };
+
+    const html = await buildBoletoHtmlWithPixQrCode(data, undefined, {
+      renderPixQrCodeSvg: jest.fn(async (payload: string) => `<svg data-payload="${payload}" />`),
+    });
+
+    expect(html).toContain('PIX');
+    expect(html).toContain('BoletoPixPayload');
+    expect(html).toContain('data-payload');
+    expect(html).toContain(pixPayload);
   });
 
   it('should hide instructions and additional info in simple layout', () => {

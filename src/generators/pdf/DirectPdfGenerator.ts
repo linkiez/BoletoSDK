@@ -1,9 +1,7 @@
 import type { BoletoTemplateData } from '@templates/BoletoTemplate';
 import PDFDocument from 'pdfkit';
-import { createReadStream, createWriteStream, statSync, unlink } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
-import { randomUUID } from 'node:crypto';
+import { statSync } from 'node:fs';
+import { PassThrough } from 'node:stream';
 import type { Readable } from 'node:stream';
 import {
   renderBoletoToPdf,
@@ -83,33 +81,26 @@ export async function generateDirectPdfStreams(
   }
 
   const resolvedOptions = resolvePdfTemplateOptions(options);
-  const tempOutputPath = join(tmpdir(), `boletosdk-${randomUUID()}.pdf`);
-  const output = createWriteStream(tempOutputPath);
+  const output = new PassThrough();
   const pdf = createPdfDocument(resolvedOptions);
-  const rendererDependencies = resolveRendererDependencies(
-    pdf,
-    resolvedOptions,
-    dependencies,
-  );
-
-  const completion = new Promise<void>((resolve, reject) => {
-    output.on('finish', resolve);
-    output.on('error', reject);
-    pdf.on('error', reject);
+  const rendererDependencies = resolveRendererDependencies(pdf, resolvedOptions, dependencies);
+  pdf.on('error', (error: Error) => {
+    output.destroy(error);
   });
 
   pdf.pipe(output);
-  await renderDataListToPdf(pdf, dataList, resolvedOptions, rendererDependencies);
-  pdf.end();
 
-  await completion;
+  void (async (): Promise<void> => {
+    try {
+      await renderDataListToPdf(pdf, dataList, resolvedOptions, rendererDependencies);
+      pdf.end();
+    } catch (error) {
+      const emittedError = error instanceof Error ? error : new Error(String(error));
+      output.destroy(emittedError);
+    }
+  })();
 
-  const stream = createReadStream(tempOutputPath);
-  stream.on('close', () => {
-    unlink(tempOutputPath, () => undefined);
-  });
-
-  return stream;
+  return output;
 }
 
 async function renderDataListToPdf(
@@ -236,7 +227,8 @@ async function streamToBuffer(stream: Readable): Promise<Buffer> {
 function addSectionSpacing(pdf: PDFKit.PDFDocument, sectionSpacing: number): void {
   const safeSpacing = sectionSpacing > 0 ? sectionSpacing : 16;
   pdf.moveDown();
-  pdf.moveTo(pdf.page.margins.left, pdf.y)
+  pdf
+    .moveTo(pdf.page.margins.left, pdf.y)
     .lineTo(pdf.page.width - pdf.page.margins.right, pdf.y)
     .strokeColor('#CFCFCF')
     .lineWidth(0.5)

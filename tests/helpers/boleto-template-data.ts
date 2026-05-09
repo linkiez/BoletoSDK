@@ -5,7 +5,11 @@ import type { Cnab400File } from '../../src/types/cnab400';
 
 const DEFAULT_FREE_FIELD = '1234567890123456789012345';
 
-function createSafeBarcodeData(bankCode: string, dueDate: Date, amount: number): {
+function createSafeBarcodeData(
+  bankCode: string,
+  dueDate: Date,
+  amount: number,
+): {
   barcode: string;
   digitableLine: string;
 } {
@@ -88,11 +92,7 @@ export function mapCnab240ToBoletoTemplateData(cnab: Cnab240File): BoletoTemplat
 
   const segmentP = firstDetail.segmentP;
   const segmentQ = firstDetail.segmentQ;
-  const barcodeData = createSafeBarcodeData(
-    segmentP.bankCode,
-    segmentP.dueDate,
-    segmentP.amount,
-  );
+  const barcodeData = createSafeBarcodeData(segmentP.bankCode, segmentP.dueDate, segmentP.amount);
 
   return {
     beneficiary: {

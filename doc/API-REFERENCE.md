@@ -740,6 +740,38 @@ const html = buildBoletoHtml(boletoData, {
 });
 ```
 
+### `buildBoletoHtmlWithPixQrCode()`
+
+Render boleto HTML and automatically generate PIX QR SVG when `payment.pix.payload` is present without `qrCodeSvg`.
+
+**Signature**:
+
+```typescript
+function buildBoletoHtmlWithPixQrCode(
+  data: BoletoTemplateData,
+  options?: BoletoHtmlTemplateOptions,
+  dependencies?: {
+    renderPixQrCodeSvg?: (payload: string) => Promise<string>;
+  },
+): Promise<string>
+```
+
+**Example**:
+
+```typescript
+import { buildBoletoHtmlWithPixQrCode } from '@linkiez/boleto-sdk';
+
+const html = await buildBoletoHtmlWithPixQrCode({
+  ...boletoData,
+  payment: {
+    ...boletoData.payment,
+    pix: {
+      payload: '000201...',
+    },
+  },
+});
+```
+
 ### `generateBoletoPdfBuffer()`
 
 Generate a single boleto as a PDF buffer.
@@ -779,6 +811,12 @@ Generate a batch of boletos as a readable PDF stream.
 ```typescript
 function generateBoletosPdfStream(dataList: BoletoTemplateData[], options?: BoletoPdfOptions): Promise<Readable>
 ```
+
+**Notes**:
+
+- Uses true in-memory streaming for large batches.
+- Propagates rendering failures through stream `error` events.
+- Supports PIX payload-only input when `includePixQr` is enabled.
 
 ### `generatePixQRCode()`
 
@@ -820,7 +858,7 @@ This API reference covered:
 - ✅ Parser functions (`parseCnab400`)
 - ✅ Generator functions (`generateCnab400`)
 - ✅ Validator functions (`validateCnab400File`)
-- ✅ Boleto generation functions (`generateBarcode`, `buildBoletoHtml`, `generateBoletoPdfBuffer`, `generateBoletoPdfStream`, `generateBoletosPdfBuffer`, `generateBoletosPdfStream`, `generatePixQRCode`, `generateBoletoEmail`)
+- ✅ Boleto generation functions (`generateBarcode`, `buildBoletoHtml`, `buildBoletoHtmlWithPixQrCode`, `generateBoletoPdfBuffer`, `generateBoletoPdfStream`, `generateBoletosPdfBuffer`, `generateBoletosPdfStream`, `generatePixQRCode`, `generateBoletoEmail`)
 - ✅ Type definitions (interfaces and types)
 - ✅ Error classes (ParseError, ValidationError, GenerationError)
 - ✅ Utility functions (date formatting, padding, validation)
@@ -833,4 +871,4 @@ For usage examples, see:
 
 ---
 
-**Last Updated**: 2026-01-21
+**Last Updated**: 2026-05-09

@@ -43,6 +43,7 @@ describe('Barrel exports', () => {
     join(__dirname, '../../fixtures/cnab400/itau-remessa-sample1.ret'),
     'utf-8',
   )
+    .replaceAll('\r', '')
     .split('\n')
     .filter((line) => line.length > 0);
 
@@ -50,6 +51,7 @@ describe('Barrel exports', () => {
     join(__dirname, '../../fixtures/cnab400/itau-retorno-sample1.ret'),
     'utf-8',
   )
+    .replaceAll('\r', '')
     .split('\n')
     .filter((line) => line.length > 0);
 

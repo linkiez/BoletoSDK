@@ -87,6 +87,22 @@ const html = buildBoletoHtml(boletoData, {
 });
 ```
 
+When you only have a PIX payload (without pre-rendered SVG), use `buildBoletoHtmlWithPixQrCode()`.
+
+```typescript
+import { buildBoletoHtmlWithPixQrCode } from '@linkiez/boleto-sdk';
+
+const html = await buildBoletoHtmlWithPixQrCode({
+  ...boletoData,
+  payment: {
+    ...boletoData.payment,
+    pix: {
+      payload: '000201...',
+    },
+  },
+});
+```
+
 Supported layout modes:
 
 - `simple` - compact rendering with minimal instructions
@@ -125,6 +141,18 @@ Common options include:
 - `margins`, `bleed`, `sectionSpacing`, `fonts` - layout and typography tuning
 
 Use the stream variants when you want to pipe the output directly to storage, HTTP responses, or further processing.
+
+If rendering fails during streaming, the returned stream emits `error` and consumers should handle it.
+
+```typescript
+import { generateBoletosPdfStream } from '@linkiez/boleto-sdk';
+
+const stream = await generateBoletosPdfStream(batch, { includePixQr: true });
+
+stream.on('error', (error) => {
+  console.error('PDF generation failed:', error.message);
+});
+```
 
 ## PIX QR Code Generation
 

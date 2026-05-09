@@ -1,0 +1,15 @@
+src/
+tests/
+scripts/
+coverage/
+doc/
+.github/
+
+jest.config.js
+sonar-project.properties
+tsconfig.json
+.eslintrc*
+.prettierrc*
+
+*.log
+*.tsbuildinfo

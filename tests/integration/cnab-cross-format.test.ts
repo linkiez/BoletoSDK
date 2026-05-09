@@ -24,7 +24,7 @@ describe('CNAB Cross-Format - Integration', () => {
 
   it('should parse CNAB400 fixture and regenerate with 400-char lines', () => {
     const fixturePath = join(fixturesPath, 'itau-remessa-sample1.ret');
-    const content = readFileSync(fixturePath, 'utf-8');
+    const content = readFileSync(fixturePath, 'utf-8').replaceAll('\r', '');
     const parsed = parseCnab(content);
     const regenerated = generateCnab(parsed);
 

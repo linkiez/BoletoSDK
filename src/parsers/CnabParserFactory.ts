@@ -31,7 +31,8 @@ export function parseCnab(content: string): Cnab240File | Cnab400File | Cnab400R
     throw new CnabError('File content cannot be empty');
   }
 
-  const lines = content.split('\n').filter((line) => line.length > 0);
+  const normalizedContent = content.replaceAll('\r', '');
+  const lines = normalizedContent.split('\n').filter((line) => line.length > 0);
 
   if (lines.length === 0) {
     throw new CnabError('File contains no valid lines');
@@ -41,11 +42,11 @@ export function parseCnab(content: string): Cnab240File | Cnab400File | Cnab400R
   const firstLineLength = lines[0].length;
 
   if (firstLineLength === 240) {
-    return parseCnab240(content);
+    return parseCnab240(normalizedContent);
   }
 
   if (firstLineLength === 400) {
-    return parseCnab400(content);
+    return parseCnab400(normalizedContent);
   }
 
   throw new CnabError(`Invalid CNAB format: line length ${firstLineLength} (expected 240 or 400)`);

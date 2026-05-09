@@ -33,6 +33,16 @@ export function buildBoletoHtml(
   data: BoletoTemplateData,
   options?: BoletoHtmlTemplateOptions,
 ): string;
+
+export interface BoletoHtmlPixDependencies {
+  renderPixQrCodeSvg?: typeof renderPixQrCodeSvg;
+}
+
+export async function buildBoletoHtmlWithPixQrCode(
+  data: BoletoTemplateData,
+  options?: BoletoHtmlTemplateOptions,
+  dependencies?: BoletoHtmlPixDependencies,
+): Promise<string>;
 ```
 
 ## Main flow
@@ -51,6 +61,7 @@ flowchart TD
 - Uses pt-BR labels by default (override via options)
 - Bank code check digit is resolved from `BankRegistry` (with fallback in `additionalInfo.bankCheckDigit`)
 - PIX section renders only when `data.payment.pix` is provided
+- `buildBoletoHtmlWithPixQrCode` renders `qrCodeSvg` automatically when only a PIX payload is provided
 - Dynamic values are HTML-escaped before rendering
 - `layout: 'simple'` hides instruction content
 - `layout: 'instructions'` renders instructions without extra additional-info entries
@@ -63,9 +74,13 @@ const html = buildBoletoHtml(data, {
   heading: 'Boleto Itaú',
   bankCodeLabel: 'Código do banco',
 });
+
+const htmlWithPix = await buildBoletoHtmlWithPixQrCode(data);
 ```
 
 ## Dependencies and integrations
 
 - `formatMoney` from `src/utils/formatters`
+- `renderPixQrCodeSvg` from `src/generators/qrcode/QRCodeRenderer`
+- `validatePixPayload` from `src/generators/qrcode/PixPayloadValidator`
 - Used by `GenericTemplate`, `ItauTemplate`, `BradescoTemplate`, and `BBTemplate`

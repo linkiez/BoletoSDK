@@ -2,6 +2,7 @@ import type { BoletoTemplateData } from '@templates/BoletoTemplate';
 import { renderI2of5Png } from '@generators/barcode/BarcodeRenderer';
 import { formatMoney } from '@utils/formatters';
 import type PDFDocument from 'pdfkit';
+import { validatePixPayload } from '../qrcode/PixPayloadValidator';
 import { renderPixQrCodePng } from '../qrcode/QRCodeRenderer';
 import { derivePdfLayoutFlags, type ResolvedPdfTemplateOptions } from './PdfTemplate';
 
@@ -20,7 +21,13 @@ type QrImageRenderer = (
 
 type BarcodeImageRenderer = (
   code: string,
-  options?: { width?: number; height?: number; narrowWidth?: number; wideWidth?: number; quietZone?: number },
+  options?: {
+    width?: number;
+    height?: number;
+    narrowWidth?: number;
+    wideWidth?: number;
+    quietZone?: number;
+  },
 ) => Buffer;
 
 export interface PdfRendererDependencies {
@@ -115,6 +122,8 @@ export async function renderBoletoToPdf(
   setMonoFont(document, fonts);
   document.fontSize(9).text(data.payment.pix.payload);
 
+  validatePixPayload(data.payment.pix.payload);
+
   const qrRenderer = dependencies.renderPixQrCodePng ?? renderPixQrCodePng;
   const qrPng = await qrRenderer(data.payment.pix.payload, {
     width: PIX_QR_SIZE,
@@ -131,23 +140,14 @@ function formatDateIso(value: Date): string {
   return value.toISOString().slice(0, 10);
 }
 
-function setRegularFont(
-  document: PDFKit.PDFDocument,
-  fonts: PdfRendererFonts | undefined,
-): void {
+function setRegularFont(document: PDFKit.PDFDocument, fonts: PdfRendererFonts | undefined): void {
   document.font(fonts?.regular ?? 'Helvetica');
 }
 
-function setBoldFont(
-  document: PDFKit.PDFDocument,
-  fonts: PdfRendererFonts | undefined,
-): void {
+function setBoldFont(document: PDFKit.PDFDocument, fonts: PdfRendererFonts | undefined): void {
   document.font(fonts?.bold ?? 'Helvetica-Bold');
 }
 
-function setMonoFont(
-  document: PDFKit.PDFDocument,
-  fonts: PdfRendererFonts | undefined,
-): void {
+function setMonoFont(document: PDFKit.PDFDocument, fonts: PdfRendererFonts | undefined): void {
   document.font(fonts?.mono ?? 'Courier');
 }

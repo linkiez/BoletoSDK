@@ -4,13 +4,13 @@
 
 **Development Flow**: BASE → CNAB400 → CNAB240
 
-**Last Updated**: 2026-01-23
+**Last Updated**: 2026-05-09
 
 ---
 
 ## Current Status 🚀
 
-**Active Phase**: ⏳ Phase 3.5 - Boleto HTML/PDF Generation
+**Active Phase**: ⏳ Phase 4 - Release
 
 **Completed Phases**:
 
@@ -24,16 +24,17 @@
 - ✅ **Phase 2.5**: CNAB240 Constants (78 tests)
 - ✅ **Phase 2.6**: CNAB240 Validators
 - ✅ **Phase 2.7**: CNAB240 Schemas
+- ✅ **Phase 3.5**: Boleto HTML/PDF Generation
 
 **Overall Statistics**:
 
-- **Total Tests**: 821 (821 passing)
+- **Total Tests**: 907 (905 passing, 2 skipped)
 - **Code Coverage**: >80%
 - **Documentation**: ~1800 lines (README + USAGE-GUIDE + API-REFERENCE)
 - **Production Ready**: CNAB400 fully operational with real files
 - **CNAB240**: Complete parsers + generators + constants + validators + schemas (File/Batch/Segments P/Q/R)
 
-**Recent Accomplishments (2026-01-23)**:
+**Recent Accomplishments (2026-05-09)**:
 
 - ✅ Implemented CNAB400 constants for consistency (68 tests)
 - ✅ Created LAYOUT_VERSION constants (400-char format, file types, service codes)
@@ -78,8 +79,16 @@
 - ✅ Added HtmlTemplateBuilder and ItauTemplate for shared HTML layout
 - ✅ Added BradescoTemplate and BBTemplate using shared HTML layout
 - ✅ Added HTML layout options (simple, instructions, detailed) with tests
+- ✅ Added PIX-aware HTML rendering helper for payload-only inputs
+- ✅ Added PIX-aware TemplateRenderer async API for HTML output
+- ✅ Added PIX payload validation to QR, HTML, and PDF rendering paths
+- ✅ Added PDF contract support for PIX payload-only inputs
+- ✅ Added stream error propagation coverage for direct PDF streaming
+- ✅ Fixed CNAB400 CRLF stability across parser factory and fixture-based tests
+- ✅ Updated API and generation docs with PIX payload-only and stream error examples
+- ✅ Revalidated full coverage run (95.69% statements; all suites passing)
 
-**Next Steps**: Phase 3.5 - Boleto HTML/PDF Generation
+**Next Steps**: Phase 4 - Release
 
 ---
 
@@ -849,7 +858,7 @@ console.log(CNAB400.LINE_LENGTH); // 400
 
 ---
 
-## Phase 3.5: Boleto HTML/PDF Generation ⏳
+## Phase 3.5: Boleto HTML/PDF Generation ✅
 
 **Objective**: Generate bank slip documents in HTML and PDF formats for printing and digital delivery.
 
@@ -1113,17 +1122,17 @@ const email = generateBoletoEmail({
 
 **Acceptance Criteria**:
 
-- [ ] Generate valid HTML boleto from CNAB data
-- [ ] Generate valid PDF boleto from CNAB data
+- [x] Generate valid HTML boleto from CNAB data
+- [x] Generate valid PDF boleto from CNAB data
 - [x] Barcode renders correctly (I2of5)
 - [x] Digitable line matches barcode
-- [ ] QR code contains valid PIX payload
-- [ ] PDF opens in all major viewers
-- [ ] HTML displays correctly in all major browsers
-- [ ] Print layout works correctly
-- [ ] Performance: Generate 100 PDFs in < 5 seconds
-- [ ] Test coverage ≥ 80%
-- [ ] Documentation complete with examples
+- [x] QR code contains valid PIX payload
+- [x] PDF opens in all major viewers
+- [x] HTML displays correctly in all major browsers
+- [x] Print layout works correctly
+- [x] Performance: Generate 100 PDFs in < 5 seconds
+- [x] Test coverage ≥ 80%
+- [x] Documentation complete with examples
 
 ---
 
@@ -1135,38 +1144,38 @@ const email = generateBoletoEmail({
 
 ### 4.1 Pre-Release Checklist
 
-- [ ] All tests passing (unit + integration)
-- [ ] Code coverage meets targets
-- [ ] Documentation complete
-- [ ] No critical/major bugs
-- [ ] Performance benchmarks acceptable
-- [ ] Security audit passed
-- [ ] License file present
-- [ ] CHANGELOG.md updated
+- [x] All tests passing (unit + integration)
+- [x] Code coverage meets targets
+- [x] Documentation complete
+- [x] No critical/major bugs
+- [x] Performance benchmarks acceptable
+- [x] Security audit passed
+- [x] License file present
+- [x] CHANGELOG.md updated
 
 ### 4.2 Package Configuration
 
-- [ ] Update `package.json` metadata
-  - [ ] name
-  - [ ] version (1.0.0)
-  - [ ] description
-  - [ ] keywords
-  - [ ] author
-  - [ ] license
-  - [ ] repository
-  - [ ] bugs
-  - [ ] homepage
-- [ ] Configure npm publishing
-  - [ ] `.npmignore` configured
-  - [ ] Entry points correct (`main`, `types`)
-  - [ ] Exports configured
-- [ ] Test package locally with `npm pack`
+- [x] Update `package.json` metadata
+  - [x] name
+  - [x] version (1.0.0)
+  - [x] description
+  - [x] keywords
+  - [x] author
+  - [x] license
+  - [x] repository
+  - [x] bugs
+  - [x] homepage
+- [x] Configure npm publishing
+  - [x] `.npmignore` configured
+  - [x] Entry points correct (`main`, `types`)
+  - [x] Exports configured
+- [x] Test package locally with `npm pack`
 
 ### 4.3 GitHub Release
 
-- [ ] Create release branch (`release/1.0.0`)
-- [ ] Tag version (`v1.0.0`)
-- [ ] Write release notes
+- [x] Create release branch (`release/1.0.0`)
+- [x] Tag version (`v1.0.0`)
+- [x] Write release notes
 - [ ] Publish GitHub release
 - [ ] Merge to main branch
 
@@ -1457,6 +1466,6 @@ const email = generateBoletoEmail({
 
 ---
 
-**Last Updated**: 2026-01-23
+**Last Updated**: 2026-05-09
 **Version**: 2.0
-**Status**: Phase 1 Complete, Phase 2 Pending
+**Status**: Phase 4 In Progress

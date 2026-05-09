@@ -16,7 +16,10 @@ describe('CNAB400 REMESSA - Integration Tests', () => {
   let parsedRemessa: Cnab400File;
 
   beforeAll(() => {
-    remessaContent = readFileSync(join(fixturesPath, 'itau-remessa-sample1.ret'), 'utf-8');
+    remessaContent = readFileSync(
+      join(fixturesPath, 'itau-remessa-sample1.ret'),
+      'utf-8',
+    ).replaceAll('\r', '');
     parsedRemessa = parseCnab400(remessaContent) as Cnab400File;
   });
 

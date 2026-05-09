@@ -1,4 +1,5 @@
 import { renderBoletoToPdf } from '@generators/pdf/PdfRenderer';
+import { generatePixPayload } from '@generators/qrcode/PixPayloadGenerator';
 import { resolvePdfTemplateOptions } from '@generators/pdf/PdfTemplate';
 import type { BoletoTemplateData } from '@templates/BoletoTemplate';
 import PDFDocument from 'pdfkit';
@@ -118,6 +119,32 @@ describe('renderBoletoToPdf - barcode rendering', () => {
     expect(imageSpy).toHaveBeenCalledWith(
       expect.any(Buffer),
       expect.objectContaining({ width: 200, height: 30 }),
+    );
+  });
+
+  it('should validate PIX payload before rendering QR code', async () => {
+    const document = new PDFDocument({ autoFirstPage: true, compress: false });
+    const validPixPayload = generatePixPayload({
+      key: '12345678900',
+      amount: 10,
+      merchantName: 'ACME STORE',
+      merchantCity: 'SAO PAULO',
+      transactionId: 'INV001',
+    });
+    const dataWithPix: BoletoTemplateData = {
+      ...createData(),
+      payment: {
+        ...createData().payment,
+        pix: {
+          payload: `${validPixPayload.slice(0, -4)}FFFF`,
+        },
+      },
+    };
+
+    const options = resolvePdfTemplateOptions({ includePixQr: true });
+
+    await expect(renderAndCollect(document, dataWithPix, options)).rejects.toThrow(
+      'PIX payload CRC is invalid',
     );
   });
 });

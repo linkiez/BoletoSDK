@@ -118,14 +118,8 @@ export function resolvePdfTemplateOptions(
     includePixQr: options.includePixQr ?? DEFAULT_TEMPLATE_OPTIONS.includePixQr,
     includeBarcode: options.includeBarcode ?? DEFAULT_TEMPLATE_OPTIONS.includeBarcode,
     barcode: {
-      width: normalizeDimension(
-        options.barcode?.width,
-        DEFAULT_TEMPLATE_OPTIONS.barcode.width,
-      ),
-      height: normalizeDimension(
-        options.barcode?.height,
-        DEFAULT_TEMPLATE_OPTIONS.barcode.height,
-      ),
+      width: normalizeDimension(options.barcode?.width, DEFAULT_TEMPLATE_OPTIONS.barcode.width),
+      height: normalizeDimension(options.barcode?.height, DEFAULT_TEMPLATE_OPTIONS.barcode.height),
     },
     pageSize: options.pageSize ?? DEFAULT_TEMPLATE_OPTIONS.pageSize,
     layout: options.layout ?? DEFAULT_TEMPLATE_OPTIONS.layout,
@@ -172,10 +166,7 @@ function normalizePositiveInteger(value: number | undefined, fallback: number): 
   return normalized > 0 ? normalized : fallback;
 }
 
-function normalizeNonNegativeNumber(
-  value: number | undefined,
-  fallback: number,
-): number {
+function normalizeNonNegativeNumber(value: number | undefined, fallback: number): number {
   if (typeof value !== 'number' || !Number.isFinite(value)) {
     return fallback;
   }

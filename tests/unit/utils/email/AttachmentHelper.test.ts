@@ -1,7 +1,4 @@
-import {
-  createPdfAttachment,
-  createHtmlAttachment,
-} from '@utils/email/AttachmentHelper';
+import { createPdfAttachment, createHtmlAttachment } from '@utils/email/AttachmentHelper';
 
 describe('createPdfAttachment', () => {
   it('should return an attachment with application/pdf content type', () => {

@@ -9,6 +9,7 @@ import {
   generateBoletosPdfBuffer,
   generateBoletosPdfStream,
 } from '@generators/pdf/BoletoPdfGenerator';
+import { generatePixPayload } from '@generators/qrcode/PixPayloadGenerator';
 import type { BoletoTemplateData } from '@templates/BoletoTemplate';
 import type { Readable } from 'node:stream';
 
@@ -107,12 +108,9 @@ describe('generateDirectPdfBuffers', () => {
   });
 
   it('should generate a valid PDF for multiple boletos', async () => {
-    const buffer = await generateDirectPdfBuffers(
-      [createData('DOC-001'), createData('DOC-002')],
-      {
-        boletosPerPage: 2,
-      },
-    );
+    const buffer = await generateDirectPdfBuffers([createData('DOC-001'), createData('DOC-002')], {
+      boletosPerPage: 2,
+    });
 
     expect(buffer.subarray(0, 4).toString('ascii')).toBe('%PDF');
     expect(buffer.length).toBeGreaterThan(0);
@@ -121,25 +119,49 @@ describe('generateDirectPdfBuffers', () => {
 
 describe('generateDirectPdfStreams', () => {
   it('should stream a valid PDF for multiple boletos', async () => {
-    const stream = await generateDirectPdfStreams([
-      createData('DOC-301'),
-      createData('DOC-302'),
-    ]);
+    const stream = await generateDirectPdfStreams([createData('DOC-301'), createData('DOC-302')]);
     const buffer = await streamToBuffer(stream);
 
     expect(buffer.subarray(0, 4).toString('ascii')).toBe('%PDF');
     expect(buffer.length).toBeGreaterThan(0);
   });
+
+  it('should propagate stream errors when rendering fails', async () => {
+    const data: BoletoTemplateData = {
+      ...createData('DOC-303'),
+      payment: {
+        ...createData('DOC-303').payment,
+        pix: {
+          payload: generatePixPayload({
+            key: '12345678900',
+            amount: 10,
+            merchantName: 'ACME STORE',
+            merchantCity: 'SAO PAULO',
+            transactionId: 'INV001',
+          }),
+        },
+      },
+    };
+
+    const stream = await generateDirectPdfStreams(
+      [data],
+      { includePixQr: true },
+      {
+        renderPixQrCodePng: async () => {
+          throw new Error('QR render failed');
+        },
+      },
+    );
+
+    await expect(streamToBuffer(stream)).rejects.toThrow('QR render failed');
+  });
 });
 
 describe('generateBoletosPdfBuffer', () => {
   it('should expose batch generation through the public PDF API', async () => {
-    const buffer = await generateBoletosPdfBuffer(
-      [createData('DOC-101'), createData('DOC-102')],
-      {
-        boletosPerPage: 1,
-      },
-    );
+    const buffer = await generateBoletosPdfBuffer([createData('DOC-101'), createData('DOC-102')], {
+      boletosPerPage: 1,
+    });
 
     expect(buffer.subarray(0, 4).toString('ascii')).toBe('%PDF');
   });
@@ -154,10 +176,7 @@ describe('public stream PDF API', () => {
   });
 
   it('should expose batch stream generation through public PDF API', async () => {
-    const stream = await generateBoletosPdfStream([
-      createData('DOC-501'),
-      createData('DOC-502'),
-    ]);
+    const stream = await generateBoletosPdfStream([createData('DOC-501'), createData('DOC-502')]);
     const buffer = await streamToBuffer(stream);
 
     expect(buffer.subarray(0, 4).toString('ascii')).toBe('%PDF');

@@ -1,3 +1,5 @@
+import { validatePixPayload } from '@generators/qrcode/PixPayloadValidator';
+import { renderPixQrCodeSvg } from '@generators/qrcode/QRCodeRenderer';
 import { formatMoney } from '@utils/formatters';
 import { getBankCodeWithCheckDigit } from '@constants/bancos';
 import type { BoletoTemplateData } from './BoletoTemplate';
@@ -9,6 +11,10 @@ export interface BoletoHtmlTemplateOptions {
   bankCodeLabel?: string;
   showBankName?: boolean;
   layout?: 'simple' | 'instructions' | 'detailed';
+}
+
+export interface BoletoHtmlPixDependencies {
+  renderPixQrCodeSvg?: typeof renderPixQrCodeSvg;
 }
 
 export function buildBoletoHtml(
@@ -57,18 +63,14 @@ export function buildBoletoHtml(
   const payerCityLine = getAdditionalInfo(data.additionalInfo, 'cidadeUfCepSacado', '-');
   const guarantorName = getAdditionalInfo(data.additionalInfo, 'sacadorAvalista', '-');
   const barcodeImage = getAdditionalInfo(data.additionalInfo, 'barcodeImage', '');
-  const instructionList = showInstructions
-    ? buildInstructionList(data.instructions)
-    : '';
+  const instructionList = showInstructions ? buildInstructionList(data.instructions) : '';
   const instructionBody = showInstructions
     ? buildInstructionBody(data.instructions, data.additionalInfo, showAdditionalInfo)
     : '&nbsp;';
   const instructionTitle = showInstructions ? 'Instruções' : '&nbsp;';
 
   const fallbackDigit = getAdditionalInfo(data.additionalInfo, 'bankCheckDigit', '0');
-  const bankCodeWithDigit = escapeHtml(
-    getBankCodeWithCheckDigit(data.bank.code, fallbackDigit),
-  );
+  const bankCodeWithDigit = escapeHtml(getBankCodeWithCheckDigit(data.bank.code, fallbackDigit));
   const digitableLine = escapeHtml(data.payment.digitableLine);
   const dueDate = escapeHtml(formatDateBr(data.payment.dueDate));
   const beneficiaryName = escapeHtml(data.beneficiary.name);
@@ -151,58 +153,58 @@ export function buildBoletoHtml(
       ${instructionList}
       <tr><td colspan="11" class="BoletoPontilhado">&nbsp;</td></tr>
       ${buildSlipSection({
-    logoHtml,
-    bankCodeWithDigit,
-    digitableLine,
-    localPayment: escapeHtml(localPayment),
-    dueDate,
-    beneficiaryName,
-    agencyCode: escapeHtml(agencyCode),
-    documentDate: escapeHtml(documentDate),
-    documentNumber,
-    specie: escapeHtml(specie),
-    accept: escapeHtml(accept),
-    processingDate: escapeHtml(processingDate),
-    ourNumber,
-    wallet: escapeHtml(wallet),
-    amount,
-    instructionTitle,
-    instructionBody,
-    payerName,
-    payerDocument,
-    payerAddressLine: escapeHtml(payerAddressLine),
-    payerCityLine: escapeHtml(payerCityLine),
-    guarantorName: escapeHtml(guarantorName),
-    rightFooter: `${escapeHtml(heading)} - Recibo do Sacado - Autenticação Mecânica`,
-    bottomContent: '&nbsp;',
-  })}
+        logoHtml,
+        bankCodeWithDigit,
+        digitableLine,
+        localPayment: escapeHtml(localPayment),
+        dueDate,
+        beneficiaryName,
+        agencyCode: escapeHtml(agencyCode),
+        documentDate: escapeHtml(documentDate),
+        documentNumber,
+        specie: escapeHtml(specie),
+        accept: escapeHtml(accept),
+        processingDate: escapeHtml(processingDate),
+        ourNumber,
+        wallet: escapeHtml(wallet),
+        amount,
+        instructionTitle,
+        instructionBody,
+        payerName,
+        payerDocument,
+        payerAddressLine: escapeHtml(payerAddressLine),
+        payerCityLine: escapeHtml(payerCityLine),
+        guarantorName: escapeHtml(guarantorName),
+        rightFooter: `${escapeHtml(heading)} - Recibo do Sacado - Autenticação Mecânica`,
+        bottomContent: '&nbsp;',
+      })}
       <tr><td colspan="11" class="BoletoPontilhado">&nbsp;</td></tr>
       ${buildSlipSection({
-    logoHtml,
-    bankCodeWithDigit,
-    digitableLine,
-    localPayment: escapeHtml(localPayment),
-    dueDate,
-    beneficiaryName,
-    agencyCode: escapeHtml(agencyCode),
-    documentDate: escapeHtml(documentDate),
-    documentNumber,
-    specie: escapeHtml(specie),
-    accept: escapeHtml(accept),
-    processingDate: escapeHtml(processingDate),
-    ourNumber,
-    wallet: escapeHtml(wallet),
-    amount,
-    instructionTitle,
-    instructionBody,
-    payerName,
-    payerDocument,
-    payerAddressLine: escapeHtml(payerAddressLine),
-    payerCityLine: escapeHtml(payerCityLine),
-    guarantorName: escapeHtml(guarantorName),
-    rightFooter: `${escapeHtml(heading)} - Ficha de Compensação - Autenticação Mecânica`,
-    bottomContent: buildBarcodeBlock(barcodeImage, barcodeValue),
-  })}
+        logoHtml,
+        bankCodeWithDigit,
+        digitableLine,
+        localPayment: escapeHtml(localPayment),
+        dueDate,
+        beneficiaryName,
+        agencyCode: escapeHtml(agencyCode),
+        documentDate: escapeHtml(documentDate),
+        documentNumber,
+        specie: escapeHtml(specie),
+        accept: escapeHtml(accept),
+        processingDate: escapeHtml(processingDate),
+        ourNumber,
+        wallet: escapeHtml(wallet),
+        amount,
+        instructionTitle,
+        instructionBody,
+        payerName,
+        payerDocument,
+        payerAddressLine: escapeHtml(payerAddressLine),
+        payerCityLine: escapeHtml(payerCityLine),
+        guarantorName: escapeHtml(guarantorName),
+        rightFooter: `${escapeHtml(heading)} - Ficha de Compensação - Autenticação Mecânica`,
+        bottomContent: buildBarcodeBlock(barcodeImage, barcodeValue),
+      })}
       ${pixPanel}
       <tr><td colspan="11" class="BoletoPontilhado">&nbsp;</td></tr>
       <tr>
@@ -214,6 +216,36 @@ export function buildBoletoHtml(
   </p>
 </body>
 </html>`;
+}
+
+export async function buildBoletoHtmlWithPixQrCode(
+  data: BoletoTemplateData,
+  options: BoletoHtmlTemplateOptions = {},
+  dependencies: BoletoHtmlPixDependencies = {},
+): Promise<string> {
+  const pix = data.payment.pix;
+  if (!pix || pix.qrCodeSvg) {
+    return buildBoletoHtml(data, options);
+  }
+
+  validatePixPayload(pix.payload);
+
+  const renderer = dependencies.renderPixQrCodeSvg ?? renderPixQrCodeSvg;
+  const qrCodeSvg = await renderer(pix.payload);
+
+  return buildBoletoHtml(
+    {
+      ...data,
+      payment: {
+        ...data.payment,
+        pix: {
+          ...pix,
+          qrCodeSvg,
+        },
+      },
+    },
+    options,
+  );
 }
 
 function buildInstructionList(items?: string[]): string {
@@ -382,9 +414,7 @@ function buildPixPanel(pix?: { payload: string; qrCodeSvg?: string }): string {
     return '';
   }
 
-  const qrCode = pix.qrCodeSvg
-    ? `<div style="margin-bottom: 0.12cm">${pix.qrCodeSvg}</div>`
-    : '';
+  const qrCode = pix.qrCodeSvg ? `<div style="margin-bottom: 0.12cm">${pix.qrCodeSvg}</div>` : '';
 
   return `
     <tr>

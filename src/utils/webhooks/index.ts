@@ -1,8 +1,5 @@
 export { createWebhookSignature, isValidWebhookUrl } from './WebhookValidator';
-export {
-  createWebhookNotificationPayload,
-  sendWebhookNotification,
-} from './WebhookNotification';
+export { createWebhookNotificationPayload, sendWebhookNotification } from './WebhookNotification';
 export type {
   WebhookNotificationEvent,
   WebhookNotificationOptions,

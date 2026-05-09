@@ -28,6 +28,16 @@ describe('Cnab400Parser', () => {
     expect(parsed.details.length).toBeGreaterThan(0);
   });
 
+  it('should parse file content with CRLF line endings', () => {
+    const content = getFixture('itau-remessa-sample1.ret').replaceAll('\n', '\r\n');
+
+    const parsed = parseCnab400(content);
+
+    expect(parsed.header).toBeDefined();
+    expect(parsed.details.length).toBeGreaterThan(0);
+    expect(parsed.trailer).toBeDefined();
+  });
+
   it('should throw for empty content', () => {
     expect(() => parseCnab400('')).toThrow(ParseError);
     expect(() => parseCnab400('   ')).toThrow('File content cannot be empty');

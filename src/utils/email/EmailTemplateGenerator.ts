@@ -77,11 +77,7 @@ export function generateBoletoEmail(options: BoletoEmailOptions): EmailTemplate 
   return { to: options.to, subject, body, attachments };
 }
 
-function buildEmailBody(
-  boleto: BoletoTemplateData,
-  dueDate: string,
-  amount: string,
-): string {
+function buildEmailBody(boleto: BoletoTemplateData, dueDate: string, amount: string): string {
   return `<!DOCTYPE html>
 <html lang="pt-BR">
 <head><meta charset="UTF-8" /><title>Boleto Bancário</title></head>

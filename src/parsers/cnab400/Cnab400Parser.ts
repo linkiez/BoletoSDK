@@ -38,8 +38,11 @@ export function parseCnab400(content: string): Cnab400File | Cnab400ReturnFile {
     throw new ParseError('File content cannot be empty');
   }
 
+  // Normalize CRLF to LF before validating fixed-width lines.
+  const normalizedContent = content.replaceAll('\r', '');
+
   // Split lines but keep empty ones for validation
-  const allLines = content.split('\n');
+  const allLines = normalizedContent.split('\n');
   const lines = allLines.filter((line) => line.length > 0);
 
   // First validate we have content

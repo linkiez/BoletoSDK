@@ -39,9 +39,7 @@ describe('sendWebhookNotification', () => {
       text: jest.fn().mockResolvedValue('accepted'),
     };
 
-    const fetchSpy = jest
-      .spyOn(globalThis, 'fetch')
-      .mockResolvedValue(response as never);
+    const fetchSpy = jest.spyOn(globalThis, 'fetch').mockResolvedValue(response as never);
 
     const result = await sendWebhookNotification({
       url: 'https://example.com/webhook',

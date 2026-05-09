@@ -34,10 +34,7 @@ export function createPdfAttachment(filename: string, content: Buffer): EmailAtt
  * @example
  * const attachment = createHtmlAttachment('boleto.html', htmlString);
  */
-export function createHtmlAttachment(
-  filename: string,
-  htmlContent: string,
-): EmailAttachment {
+export function createHtmlAttachment(filename: string, htmlContent: string): EmailAttachment {
   return {
     filename,
     content: Buffer.from(htmlContent, 'utf-8'),

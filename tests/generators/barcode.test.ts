@@ -14,7 +14,8 @@ describe('Barcode generation roadmap coverage', () => {
     amount: 150.5,
     freeField: '1234567890123456789012345',
   };
-  const generateBarcodeResult = () => generateBarcode(barcodeInput, { baseDate: dueDate });
+  const generateBarcodeResult = (): ReturnType<typeof generateBarcode> =>
+    generateBarcode(barcodeInput, { baseDate: dueDate });
 
   it('should generate a valid I2of5 barcode', () => {
     const { barcode } = generateBarcodeResult();

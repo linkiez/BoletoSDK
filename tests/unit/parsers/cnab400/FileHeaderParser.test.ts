@@ -7,7 +7,9 @@ import { parseFileHeader } from '../../../../src/parsers/cnab400/FileHeaderParse
 
 describe('CNAB400 FileHeaderParser', () => {
   const getFixtureLine = (name: string): string =>
-    readFileSync(join(__dirname, '../../../fixtures/cnab400', name), 'utf-8').split('\n')[0];
+    readFileSync(join(__dirname, '../../../fixtures/cnab400', name), 'utf-8')
+      .replaceAll('\r', '')
+      .split('\n')[0];
 
   it('should parse remittance header', () => {
     const line = getFixtureLine('itau-remessa-sample1.ret');

@@ -10,6 +10,7 @@ Backwards-compatible public entrypoint for boleto PDF generation.
 - Delegate actual PDF creation to `DirectPdfGenerator`.
 - Expose batch generation through `generateBoletosPdfBuffer`.
 - Expose stream-based generation APIs for large boleto batches.
+- Support PIX payload-only input; QR rendering is handled by the PDF renderer when `includePixQr` is enabled.
 
 ## Inputs and outputs
 
@@ -77,6 +78,8 @@ sequenceDiagram
 ## Error handling and edge cases
 
 - Propagates generation errors from `DirectPdfGenerator`.
+- Validates PIX payloads when PIX rendering is enabled.
+- `payment.pix.qrCodeSvg` is optional; the PDF renderer can generate the QR image from `payment.pix.payload`.
 
 ## Examples
 
@@ -89,6 +92,9 @@ const buffer = await generateBoletoPdfBuffer(data, {
   layout: 'detailed',
   compress: false,
 });
+
+// PIX payload-only input is supported:
+// data.payment.pix = { payload: '000201...' }
 ```
 
 ## Dependencies and integrations

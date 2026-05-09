@@ -1,4 +1,4 @@
-import { generateBoletoPdfBuffer } from '@generators';
+import { generateBoletoPdfBuffer, generatePixPayload } from '@generators';
 import type { BoletoTemplateData } from '@templates/BoletoTemplate';
 
 describe('generateBoletoPdfBuffer', () => {
@@ -40,6 +40,14 @@ describe('generateBoletoPdfBuffer', () => {
   });
 
   it('should include PIX QR code when provided', async () => {
+    const pixPayload = generatePixPayload({
+      key: '12345678900',
+      amount: 10,
+      merchantName: 'ACME STORE',
+      merchantCity: 'SAO PAULO',
+      transactionId: 'INV001',
+    });
+
     const data: BoletoTemplateData = {
       beneficiary: {
         name: 'ACME Corp',
@@ -59,8 +67,7 @@ describe('generateBoletoPdfBuffer', () => {
         barcode: '34100000000000000000000000000000000000000000',
         digitableLine: '34190.00000 00000.000000 00000.000000 0 00000000000000',
         pix: {
-          payload: '00020101021226830014br.gov.bcb.pix01091234567890260203ABC',
-          qrCodeSvg: '<svg aria-label="PIX" />',
+          payload: pixPayload,
         },
       },
       bank: {

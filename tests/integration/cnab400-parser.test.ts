@@ -17,7 +17,7 @@ describe('CNAB400 Parser - Integration Tests', () => {
     let fileContent: string;
 
     beforeAll(() => {
-      fileContent = readFileSync(fixturePath, 'utf-8');
+      fileContent = readFileSync(fixturePath, 'utf-8').replaceAll('\r', '');
     });
 
     it('should have 400-character lines', () => {

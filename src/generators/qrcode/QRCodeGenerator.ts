@@ -1,4 +1,5 @@
 import { generatePixPayload, PixPayloadData } from './PixPayloadGenerator';
+import { validatePixPayload } from './PixPayloadValidator';
 
 export interface PixQRCodeOptions {
   renderer?: (payload: string) => string;
@@ -14,6 +15,7 @@ export function generatePixQRCode(
   options: PixQRCodeOptions = {},
 ): PixQRCodeResult {
   const payload = generatePixPayload(data);
+  validatePixPayload(payload);
 
   return {
     payload,

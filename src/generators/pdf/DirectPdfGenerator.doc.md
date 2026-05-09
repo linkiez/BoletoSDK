@@ -12,6 +12,8 @@ Orchestrates boleto PDF generation directly with PDFKit, supporting both buffer 
 - Delegate section rendering to `PdfRenderer`.
 - Return PDF as `Buffer` or `Readable` stream.
 - Handle multi-boleto pagination in batch generation.
+- Stream PDF output in-memory without temporary files.
+- Propagate rendering and PDF engine failures through stream `error` events.
 
 ## Inputs and outputs
 
@@ -52,19 +54,21 @@ export async function generateDirectPdfStreams(
 flowchart TD
   A[BoletoTemplateData list + options] --> B[resolvePdfTemplateOptions]
   B --> C[create PDFDocument]
-  C --> D[render each boleto]
+  C --> P[pipe to PassThrough]
+  P --> D[render each boleto]
   D --> E{page boundary}
   E -->|yes| F[addPage]
   E -->|no| G[add section spacing]
   F --> H[pdf.end]
   G --> H
-  H --> I[Buffer.concat(chunks)]
+  H --> I[consumer reads stream chunks]
 ```
 
 ## Error handling and edge cases
 
 - Rejects promise if PDFKit emits `error`.
 - Propagates rendering errors from `PdfRenderer`.
+- Emits stream `error` when PDF rendering fails in async generation.
 - Throws when boleto list is empty in batch generation.
 - Throws when an embedded font path is invalid or not a regular file.
 

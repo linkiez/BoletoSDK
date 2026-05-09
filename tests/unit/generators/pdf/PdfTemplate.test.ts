@@ -1,7 +1,4 @@
-import {
-  derivePdfLayoutFlags,
-  resolvePdfTemplateOptions,
-} from '@generators/pdf/PdfTemplate';
+import { derivePdfLayoutFlags, resolvePdfTemplateOptions } from '@generators/pdf/PdfTemplate';
 
 describe('resolvePdfTemplateOptions', () => {
   it('should apply default values when options are omitted', () => {

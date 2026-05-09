@@ -48,6 +48,7 @@ sequenceDiagram
 
 - Propagates QR renderer errors to caller.
 - Omits PIX rendering when payload is not available.
+- Validates PIX payload before rendering the QR image.
 - Omits optional sections according to layout mode.
 
 ## Examples
