@@ -955,9 +955,9 @@ const barcode = generateBarcode({
 **Dependencies**: Consider using `pdfkit` or `puppeteer`
 
 - [x] `BoletoPdfGenerator.ts` - Main PDF generator
-- [ ] `PdfTemplate.ts` - PDF template configuration
-- [ ] `PdfRenderer.ts` - Render HTML to PDF (Puppeteer approach)
-- [ ] `DirectPdfGenerator.ts` - Direct PDF generation (PDFKit approach)
+- [x] `PdfTemplate.ts` - PDF template configuration
+- [x] `PdfRenderer.ts` - PDF content renderer for Direct PDF flow
+- [x] `DirectPdfGenerator.ts` - Direct PDF generation (PDFKit approach)
 
 **Approache**:
 
@@ -968,13 +968,13 @@ const barcode = generateBarcode({
 
 **Features**:
 
-- [ ] A4 page size (210mm x 297mm)
-- [ ] Multiple boletos per page (configurable)
-- [ ] Print margins and bleed areas
-- [ ] High-quality barcode rendering
-- [ ] Embedded fonts for better compatibility
+- [x] A4 page size (210mm x 297mm)
+- [x] Multiple boletos per page (configurable)
+- [x] Print margins and bleed areas
+- [x] High-quality barcode rendering
+- [x] Embedded fonts for better compatibility
 - [ ] PDF metadata (title, author, creation date)
-- [ ] Stream-based generation for large batches
+- [x] Stream-based generation for large batches
 
 **Example**:
 
