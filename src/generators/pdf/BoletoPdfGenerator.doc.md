@@ -2,20 +2,19 @@
 
 ## Overview
 
-Generates a minimal PDF representation of a boleto using PDFKit.
+Backwards-compatible public entrypoint for boleto PDF generation.
 
 ## Responsibilities
 
-- Render core boleto fields into a PDF
-- Render instructions and additional info based on layout
-- Render labels in pt-BR
-- Optionally embed PIX QR code image
-- Return PDF as a `Buffer`
+- Preserve the existing `generateBoletoPdfBuffer` API contract.
+- Delegate actual PDF creation to `DirectPdfGenerator`.
+- Expose batch generation through `generateBoletosPdfBuffer`.
+- Expose stream-based generation APIs for large boleto batches.
 
 ## Inputs and outputs
 
 - Input: `BoletoTemplateData`, `BoletoPdfOptions`
-- Output: `Promise<Buffer>`
+- Output: `Promise<Buffer>` or `Promise<Readable>`
 
 ## API / Signature
 
@@ -27,12 +26,36 @@ export interface BoletoPdfOptions {
   pageSize?: string | [number, number];
   layout?: 'simple' | 'instructions' | 'detailed';
   compress?: boolean;
+  boletosPerPage?: number;
+  sectionSpacing?: number;
+  margins?: number | { top?: number; right?: number; bottom?: number; left?: number };
+  bleed?: number;
+  fonts?: {
+    regularPath?: string;
+    boldPath?: string;
+    monoPath?: string;
+  };
 }
 
 export async function generateBoletoPdfBuffer(
   data: BoletoTemplateData,
   options?: BoletoPdfOptions
 ): Promise<Buffer>;
+
+export async function generateBoletoPdfStream(
+  data: BoletoTemplateData,
+  options?: BoletoPdfOptions
+): Promise<Readable>;
+
+export async function generateBoletosPdfBuffer(
+  dataList: BoletoTemplateData[],
+  options?: BoletoPdfOptions,
+): Promise<Buffer>;
+
+export async function generateBoletosPdfStream(
+  dataList: BoletoTemplateData[],
+  options?: BoletoPdfOptions,
+): Promise<Readable>;
 ```
 
 ## Main flow
@@ -40,21 +63,20 @@ export async function generateBoletoPdfBuffer(
 ```mermaid
 sequenceDiagram
   participant Caller as Caller
-  participant PDF as BoletoPdfGenerator
-  participant QR as QRCodeRenderer
+  participant Entry as BoletoPdfGenerator
+  participant Direct as DirectPdfGenerator
 
-  Caller->>PDF: generateBoletoPdfBuffer(data, options)
-  PDF-->>Caller: PDF buffer
-  opt includePixQr
-    PDF->>QR: renderPixQrCodePng(payload)
-  end
+  Caller->>Entry: generateBoletoPdfBuffer(data, options)
+  Entry->>Direct: generateDirectPdfBuffer(data, options)
+  Direct-->>Caller: PDF buffer
+  Caller->>Entry: generateBoletosPdfBuffer(list, options)
+  Entry->>Direct: generateDirectPdfBuffers(list, options)
+  Direct-->>Caller: Batch PDF buffer
 ```
 
 ## Error handling and edge cases
 
-- Propagates PDFKit or QR rendering errors
-- PIX QR code is rendered only when `includePixQr` is true and payload is present
-- Instructions and additional info are rendered according to the `layout` option
+- Propagates generation errors from `DirectPdfGenerator`.
 
 ## Examples
 

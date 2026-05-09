@@ -17,6 +17,9 @@ Exports PDF generation utilities.
 
 ```ts
 export * from './BoletoPdfGenerator';
+export * from './DirectPdfGenerator';
+export * from './PdfRenderer';
+export * from './PdfTemplate';
 ```
 
 ## Main flow
@@ -24,6 +27,9 @@ export * from './BoletoPdfGenerator';
 ```mermaid
 flowchart TD
   A[pdf/index.ts] --> B[BoletoPdfGenerator]
+  A --> C[DirectPdfGenerator]
+  A --> D[PdfRenderer]
+  A --> E[PdfTemplate]
 ```
 
 ## Error handling and edge cases
