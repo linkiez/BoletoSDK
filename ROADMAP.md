@@ -1093,8 +1093,8 @@ const email = generateBoletoEmail({
 
 **Integration Tests**:
 
-- [ ] Generate HTML from CNAB400 data
-- [ ] Generate PDF from CNAB240 data
+- [x] Generate HTML from CNAB400 data
+- [x] Generate PDF from CNAB240 data
 - [ ] Round-trip: CNAB → HTML → Visual verification
 - [ ] Batch generation (1000+ boletos)
 - [ ] Performance benchmarks
