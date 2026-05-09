@@ -973,7 +973,7 @@ const barcode = generateBarcode({
 - [x] Print margins and bleed areas
 - [x] High-quality barcode rendering
 - [x] Embedded fonts for better compatibility
-- [ ] PDF metadata (title, author, creation date)
+- [x] PDF metadata (title, author, subject, keywords, creator, creation date)
 - [x] Stream-based generation for large batches
 
 **Example**:
@@ -990,10 +990,6 @@ const pdf = await generateBoletoPdf({
     includeInstructions: true,
   },
 });
-  - [x] High-quality barcode rendering
-  - [x] Embedded fonts for better compatibility
-  - [x] PDF metadata (title, author, subject, keywords, creator, creation date)
-  - [x] Stream-based generation for large batches
 // Or get as buffer
 const buffer = await pdf.toBuffer();
 ```
@@ -1352,10 +1348,10 @@ const email = generateBoletoEmail({
 
 #### v1.6.0 - Additional Features
 
-- [ ] Barcode image generation (SVG, PNG)
-- [ ] QR Code generation (PIX integration)
-- [ ] PDF generation for bank slips
-- [ ] Email integration utilities
+- [x] Barcode image generation (SVG, PNG)
+- [x] QR Code generation (PIX integration)
+- [x] PDF generation for bank slips
+- [x] Email integration utilities
 - [ ] Webhook notification support
 
 #### v1.7.0 - Advanced Features
