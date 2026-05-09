@@ -11,6 +11,7 @@
   ],
   "scripts": {
     "build": "tsc",
+    "benchmark:pdf-batch": "ts-node scripts/benchmark-pdf-batch.ts",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
