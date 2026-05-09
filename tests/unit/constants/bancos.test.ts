@@ -1,4 +1,11 @@
-import { BankInfo, BANKS, getBankInfo, getBankName, isValidBankCode } from '@constants/bancos';
+import {
+  BankInfo,
+  BANKS,
+  getBankCodeWithCheckDigit,
+  getBankInfo,
+  getBankName,
+  isValidBankCode,
+} from '@constants/bancos';
 import { BankCode } from '@enums/common';
 
 describe('Bank Constants', () => {
@@ -15,6 +22,7 @@ describe('Bank Constants', () => {
     it('should have correct Itaú information', () => {
       const itau = BANKS[BankCode.ITAU];
       expect(itau.code).toBe('341');
+      expect(itau.checkDigit).toBe('7');
       expect(itau.name).toBe('Itaú Unibanco S.A.');
       expect(itau.shortName).toBe('Itaú');
       expect(itau.ispb).toBe('60701190');
@@ -23,6 +31,7 @@ describe('Bank Constants', () => {
     it('should have correct Bradesco information', () => {
       const bradesco = BANKS[BankCode.BRADESCO];
       expect(bradesco.code).toBe('237');
+      expect(bradesco.checkDigit).toBe('2');
       expect(bradesco.name).toBe('Banco Bradesco S.A.');
       expect(bradesco.shortName).toBe('Bradesco');
       expect(bradesco.ispb).toBe('60746948');
@@ -31,10 +40,12 @@ describe('Bank Constants', () => {
     it('should have all required fields for each bank', () => {
       Object.values(BANKS).forEach((bank: BankInfo) => {
         expect(bank.code).toBeDefined();
+        expect(bank.checkDigit).toBeDefined();
         expect(bank.name).toBeDefined();
         expect(bank.shortName).toBeDefined();
         expect(bank.ispb).toBeDefined();
         expect(typeof bank.code).toBe('string');
+        expect(typeof bank.checkDigit).toBe('string');
         expect(typeof bank.name).toBe('string');
         expect(typeof bank.shortName).toBe('string');
         expect(typeof bank.ispb).toBe('string');
@@ -108,6 +119,19 @@ describe('Bank Constants', () => {
       Object.values(BankCode).forEach((code) => {
         expect(isValidBankCode(code)).toBe(true);
       });
+    });
+  });
+
+  describe('getBankCodeWithCheckDigit', () => {
+    it('should return configured check digit for known bank codes', () => {
+      expect(getBankCodeWithCheckDigit('341')).toBe('341-7');
+      expect(getBankCodeWithCheckDigit('237')).toBe('237-2');
+      expect(getBankCodeWithCheckDigit('104')).toBe('104-0');
+    });
+
+    it('should use fallback check digit for unknown code', () => {
+      expect(getBankCodeWithCheckDigit('999')).toBe('999-0');
+      expect(getBankCodeWithCheckDigit('999', '8')).toBe('999-8');
     });
   });
 });
