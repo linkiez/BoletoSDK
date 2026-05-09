@@ -10,6 +10,7 @@ Complete reference for all public APIs in BoletoSDK.
 4. [Type Definitions](#type-definitions)
 5. [Error Classes](#error-classes)
 6. [Utility Functions](#utility-functions)
+7. [Boleto Generation Functions](#boleto-generation-functions)
 
 ---
 
@@ -677,6 +678,141 @@ console.log(validateTaxId('123'));             // false (invalid length)
 
 ---
 
+## Boleto Generation Functions
+
+### `generateBarcode()`
+
+Generate a boleto barcode and digitable line from bank, due date, amount, and free field data.
+
+**Signature**:
+
+```typescript
+function generateBarcode(input: BarcodeGenerationInput, options?: BarcodeGenerationOptions): BarcodeResult
+```
+
+**Parameters**:
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `input.bankCode` | `string` | Three-digit bank code. |
+| `input.currencyCode` | `string` | Currency code, defaults to Brazilian Real. |
+| `input.dueDate` | `Date` | Boleto due date. |
+| `input.amount` | `number` | Boleto amount in BRL. |
+| `input.freeField` | `string` | Bank-specific 25-digit free field. |
+| `options.baseDate` | `Date` | Optional base date for due date factor calculation. |
+
+**Returns**: `BarcodeResult` with `barcode` and `digitableLine`.
+
+**Example**:
+
+```typescript
+import { generateBarcode } from '@linkiez/boleto-sdk';
+
+const result = generateBarcode({
+  bankCode: '341',
+  currencyCode: '9',
+  dueDate: new Date('2026-02-28'),
+  amount: 150.5,
+  freeField: '1234567890123456789012345',
+});
+```
+
+### `buildBoletoHtml()`
+
+Render a print-friendly boleto HTML document.
+
+**Signature**:
+
+```typescript
+function buildBoletoHtml(data: BoletoTemplateData, options?: BoletoHtmlTemplateOptions): string
+```
+
+**Returns**: `string` - Full boleto HTML document.
+
+**Example**:
+
+```typescript
+import { buildBoletoHtml } from '@linkiez/boleto-sdk';
+
+const html = buildBoletoHtml(boletoData, {
+  title: 'Boleto Bancário',
+  layout: 'detailed',
+});
+```
+
+### `generateBoletoPdfBuffer()`
+
+Generate a single boleto as a PDF buffer.
+
+**Signature**:
+
+```typescript
+function generateBoletoPdfBuffer(data: BoletoTemplateData, options?: BoletoPdfOptions): Promise<Buffer>
+```
+
+### `generateBoletoPdfStream()`
+
+Generate a single boleto as a readable PDF stream.
+
+**Signature**:
+
+```typescript
+function generateBoletoPdfStream(data: BoletoTemplateData, options?: BoletoPdfOptions): Promise<Readable>
+```
+
+### `generateBoletosPdfBuffer()`
+
+Generate a batch of boletos as a single PDF buffer.
+
+**Signature**:
+
+```typescript
+function generateBoletosPdfBuffer(dataList: BoletoTemplateData[], options?: BoletoPdfOptions): Promise<Buffer>
+```
+
+### `generateBoletosPdfStream()`
+
+Generate a batch of boletos as a readable PDF stream.
+
+**Signature**:
+
+```typescript
+function generateBoletosPdfStream(dataList: BoletoTemplateData[], options?: BoletoPdfOptions): Promise<Readable>
+```
+
+### `generatePixQRCode()`
+
+Generate a PIX payload and optional QR code string.
+
+**Signature**:
+
+```typescript
+function generatePixQRCode(data: PixPayloadData, options?: PixQRCodeOptions): PixQRCodeResult
+```
+
+### `generateBoletoEmail()`
+
+Generate an email template with boleto content and optional PDF or HTML attachments.
+
+**Signature**:
+
+```typescript
+function generateBoletoEmail(options: BoletoEmailOptions): EmailTemplate
+```
+
+**Example**:
+
+```typescript
+import { generateBoletoEmail } from '@linkiez/boleto-sdk';
+
+const email = generateBoletoEmail({
+  to: 'customer@example.com',
+  boleto: boletoData,
+  pdfBuffer,
+  htmlContent,
+});
+```
+
 ## Summary
 
 This API reference covered:
@@ -684,6 +820,7 @@ This API reference covered:
 - ✅ Parser functions (`parseCnab400`)
 - ✅ Generator functions (`generateCnab400`)
 - ✅ Validator functions (`validateCnab400File`)
+- ✅ Boleto generation functions (`generateBarcode`, `buildBoletoHtml`, `generateBoletoPdfBuffer`, `generateBoletoPdfStream`, `generateBoletosPdfBuffer`, `generateBoletosPdfStream`, `generatePixQRCode`, `generateBoletoEmail`)
 - ✅ Type definitions (interfaces and types)
 - ✅ Error classes (ParseError, ValidationError, GenerationError)
 - ✅ Utility functions (date formatting, padding, validation)
@@ -691,6 +828,7 @@ This API reference covered:
 For usage examples, see:
 
 - [CNAB400 Usage Guide](./CNAB400-USAGE-GUIDE.md)
+- [Boleto Generation Guide](./BOLETO-GENERATION.md)
 - [README Examples](../README.md#cnab400-complete-guide)
 
 ---

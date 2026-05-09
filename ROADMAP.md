@@ -1101,15 +1101,15 @@ const email = generateBoletoEmail({
 
 ### 3.5.7 Documentation
 
-- [ ] `doc/BOLETO-GENERATION.md` - Complete generation guide
-  - [ ] HTML generation examples
-  - [ ] PDF generation examples
-  - [ ] Barcode usage
-  - [ ] QR code integration
-  - [ ] Email templates
-  - [ ] Customization guide
-- [ ] Update `README.md` with generation examples
-- [ ] Update `API-REFERENCE.md` with new APIs
+- [x] `doc/BOLETO-GENERATION.md` - Complete generation guide
+  - [x] HTML generation examples
+  - [x] PDF generation examples
+  - [x] Barcode usage
+  - [x] QR code integration
+  - [x] Email templates
+  - [x] Customization guide
+- [x] Update `README.md` with generation examples
+- [x] Update `API-REFERENCE.md` with new APIs
 
 **Acceptance Criteria**:
 

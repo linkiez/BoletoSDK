@@ -16,6 +16,60 @@ Parse, generate, and validate CNAB 240/400 files with consistent APIs.
 - Boleto assets: barcode, PIX QR, HTML/PDF (pt-BR labels)
 - Bank constants, layout validation, and robust tests
 
+## 🧾 Boleto Generation
+
+```typescript
+import {
+  buildBoletoHtml,
+  generateBarcode,
+  generateBoletoEmail,
+  generateBoletoPdfBuffer,
+  generatePixQRCode,
+} from '@linkiez/boleto-sdk';
+
+const barcode = generateBarcode({
+  bankCode: '341',
+  currencyCode: '9',
+  dueDate: new Date('2026-02-28'),
+  amount: 150.5,
+  freeField: '1234567890123456789012345',
+});
+
+const pix = generatePixQRCode({
+  key: '12345678000195',
+  amount: 150.5,
+  merchantName: 'ACME CORP',
+  merchantCity: 'SAO PAULO',
+  transactionId: 'INV001',
+});
+
+const boletoData = {
+  beneficiary: {
+    name: 'ACME CORP',
+    document: '12345678000195',
+    address: 'Avenida 1, 1000',
+  },
+  payer: {
+    name: 'Joao da Silva',
+    document: '12345678901',
+    address: 'Rua 2, 200',
+  },
+  payment: {
+    documentNumber: 'DOC-001',
+    ourNumber: '12345678',
+    amount: 150.5,
+    dueDate: new Date('2026-02-28'),
+    barcode: barcode.barcode,
+    digitableLine: barcode.digitableLine,
+    pix: { payload: pix.payload },
+  },
+  bank: { code: '341', name: 'ITAU UNIBANCO SA' },
+};
+
+const html = buildBoletoHtml(boletoData, { layout: 'detailed' });
+const pdf = await generateBoletoPdfBuffer(boletoData, { includePixQr: true });
+```
+
 ## 🚀 Quick Start
 
 ```bash
@@ -74,6 +128,7 @@ const pdf = await generateBoletoPdfBuffer({
 - [API Reference](doc/API-REFERENCE.md)
 - [CNAB240 Guide](doc/CNAB240_GUIDE.md)
 - [CNAB400 Usage Guide](doc/CNAB400-USAGE-GUIDE.md)
+- [Boleto Generation Guide](doc/BOLETO-GENERATION.md)
 - [Examples](doc/EXAMPLES.md)
 
 ### Specs and Validation
