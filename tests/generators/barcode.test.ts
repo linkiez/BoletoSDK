@@ -6,7 +6,6 @@ import {
 } from '../../src/generators/barcode';
 
 describe('Barcode generation roadmap coverage', () => {
-  const baseDate = new Date(Date.UTC(1997, 9, 7));
   const dueDate = new Date(Date.UTC(1997, 9, 7));
 
   it('should generate a valid I2of5 barcode and render SVG output', () => {
@@ -18,7 +17,7 @@ describe('Barcode generation roadmap coverage', () => {
         amount: 150.5,
         freeField: '1234567890123456789012345',
       },
-      { baseDate },
+      { baseDate: dueDate },
     );
 
     const svg = renderI2of5Svg(barcode, { height: 48 });
@@ -38,7 +37,7 @@ describe('Barcode generation roadmap coverage', () => {
         amount: 150.5,
         freeField: '1234567890123456789012345',
       },
-      { baseDate },
+      { baseDate: dueDate },
     );
 
     expect(validateBarcode(barcode)).toBe(true);
