@@ -36,15 +36,17 @@ describe('buildBoletoHtml', () => {
     });
 
     expect(html).toContain('<title>Boleto - Itaú</title>');
-    expect(html).toContain('Boleto Itaú');
-    expect(html).toContain('Código do banco: 341');
-    expect(html).toContain('Beneficiário');
+    expect(html).toContain('BoletoCodigoBanco');
+    expect(html).toContain('341-7');
+    expect(html).toContain('Cedente');
     expect(html).toContain('ACME Corp');
-    expect(html).toContain('Pagador');
+    expect(html).toContain('Sacado:');
     expect(html).toContain('John Doe');
     expect(html).toContain('data-barcode="34100000000000000000000000000000000000000000"');
-    expect(html).toContain('Linha digitável');
+    expect(html).toContain('34190.00000 00000.000000 00000.000000 0 00000000000000');
     expect(html).toContain('Pagar antes do vencimento');
+    expect(html).toContain('Recibo do Sacado - Autenticação Mecânica');
+    expect(html).toContain('Ficha de Compensação - Autenticação Mecânica');
   });
 
   it('should render PIX section when payload is provided', () => {
@@ -80,7 +82,7 @@ describe('buildBoletoHtml', () => {
     const html = buildBoletoHtml(data);
 
     expect(html).toContain('PIX');
-    expect(html).toContain('Chave PIX');
+    expect(html).toContain('BoletoPixPayload');
     expect(html).toContain('br.gov.bcb.pix');
     expect(html).toContain('<svg aria-label="PIX" />');
   });
@@ -118,7 +120,7 @@ describe('buildBoletoHtml', () => {
     const html = buildBoletoHtml(data, { layout: 'simple' });
 
     expect(html).not.toContain('Instruções');
-    expect(html).not.toContain('Informações adicionais');
+    expect(html).not.toContain('Referencia: FAT-001');
   });
 
   it('should show instructions only in instructions layout', () => {
@@ -155,6 +157,6 @@ describe('buildBoletoHtml', () => {
 
     expect(html).toContain('Instruções');
     expect(html).toContain('Pagar antes do vencimento');
-    expect(html).not.toContain('Informações adicionais');
+    expect(html).not.toContain('Referencia: FAT-001');
   });
 });

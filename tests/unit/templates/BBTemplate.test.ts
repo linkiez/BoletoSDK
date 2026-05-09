@@ -32,10 +32,10 @@ describe('BBTemplate', () => {
     const html = template.render(data);
 
     expect(html).toContain('Banco do Brasil');
-    expect(html).toContain('Código do banco: 001');
-    expect(html).toContain('Beneficiário');
+    expect(html).toContain('001-9');
+    expect(html).toContain('Cedente');
     expect(html).toContain('ACME Corp');
-    expect(html).toContain('Pagador');
+    expect(html).toContain('Sacado:');
     expect(html).toContain('John Doe');
   });
 });

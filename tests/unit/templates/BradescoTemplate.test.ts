@@ -32,10 +32,10 @@ describe('BradescoTemplate', () => {
     const html = template.render(data);
 
     expect(html).toContain('Bradesco');
-    expect(html).toContain('Código do banco: 237');
-    expect(html).toContain('Beneficiário');
+    expect(html).toContain('237-2');
+    expect(html).toContain('Cedente');
     expect(html).toContain('ACME Corp');
-    expect(html).toContain('Pagador');
+    expect(html).toContain('Sacado:');
     expect(html).toContain('John Doe');
   });
 });

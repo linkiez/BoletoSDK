@@ -32,10 +32,10 @@ describe('GenericTemplate', () => {
     const html = template.render(data);
 
     expect(html).toContain('Boleto');
-    expect(html).toContain('Beneficiário');
+    expect(html).toContain('Cedente');
     expect(html).toContain('ACME Corp');
-    expect(html).toContain('Pagador');
+    expect(html).toContain('Sacado:');
     expect(html).toContain('John Doe');
-    expect(html).toContain('Banco: 341');
+    expect(html).toContain('341-7');
   });
 });

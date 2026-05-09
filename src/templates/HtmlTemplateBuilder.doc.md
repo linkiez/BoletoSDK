@@ -2,13 +2,13 @@
 
 ## Overview
 
-Builds a complete HTML document for boleto rendering using a shared layout.
+Builds a complete HTML document for boleto rendering using a classic banking layout (recibo do sacado + ficha de compensação).
 
 ## Responsibilities
 
 - Compose a printable HTML document
-- Standardize layout and CSS across templates
-- Render core boleto sections (parties, payment, instructions, barcode, PIX)
+- Standardize the classic boleto table structure and CSS across templates
+- Render core boleto sections (cedente, sacado, payment fields, deductions block, barcode, PIX)
 - Provide responsive and print-optimized styling
 - Default labels and messages in pt-BR
 
@@ -26,6 +26,7 @@ export interface BoletoHtmlTemplateOptions {
   bankLabel?: string;
   bankCodeLabel?: string;
   showBankName?: boolean;
+  layout?: 'simple' | 'instructions' | 'detailed';
 }
 
 export function buildBoletoHtml(
@@ -45,10 +46,14 @@ flowchart TD
 
 ## Error handling and edge cases
 
-- Missing instructions/additional info render as placeholder text
+- Missing optional fields render with safe fallbacks (for example agency code, sacador/avalista)
 - Optional bank logo is rendered only when provided
 - Uses pt-BR labels by default (override via options)
+- Bank code check digit is resolved from `BankRegistry` (with fallback in `additionalInfo.bankCheckDigit`)
 - PIX section renders only when `data.payment.pix` is provided
+- Dynamic values are HTML-escaped before rendering
+- `layout: 'simple'` hides instruction content
+- `layout: 'instructions'` renders instructions without extra additional-info entries
 
 ## Examples
 
@@ -63,4 +68,4 @@ const html = buildBoletoHtml(data, {
 ## Dependencies and integrations
 
 - `formatMoney` from `src/utils/formatters`
-- Used by `GenericTemplate` and `ItauTemplate`
+- Used by `GenericTemplate`, `ItauTemplate`, `BradescoTemplate`, and `BBTemplate`

@@ -32,10 +32,10 @@ describe('ItauTemplate', () => {
     const html = template.render(data);
 
     expect(html).toContain('Itaú');
-    expect(html).toContain('Código do banco: 341');
-    expect(html).toContain('Beneficiário');
+    expect(html).toContain('341-7');
+    expect(html).toContain('Cedente');
     expect(html).toContain('ACME Corp');
-    expect(html).toContain('Pagador');
+    expect(html).toContain('Sacado:');
     expect(html).toContain('John Doe');
   });
 });
