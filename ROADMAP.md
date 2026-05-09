@@ -1076,7 +1076,7 @@ const email = generateBoletoEmail({
 
 **Location**: `tests/generators/`
 
-- [ ] `barcode.test.ts` - Barcode generation tests
+- [x] `barcode.test.ts` - Barcode generation tests
   - [x] Check digit validation
   - [x] Digitable line formatting
   - [x] SVG/PNG rendering
@@ -1115,8 +1115,8 @@ const email = generateBoletoEmail({
 
 - [ ] Generate valid HTML boleto from CNAB data
 - [ ] Generate valid PDF boleto from CNAB data
-- [ ] Barcode renders correctly (I2of5)
-- [ ] Digitable line matches barcode
+- [x] Barcode renders correctly (I2of5)
+- [x] Digitable line matches barcode
 - [ ] QR code contains valid PIX payload
 - [ ] PDF opens in all major viewers
 - [ ] HTML displays correctly in all major browsers
