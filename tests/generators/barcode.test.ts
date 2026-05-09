@@ -14,16 +14,17 @@ describe('Barcode generation roadmap coverage', () => {
     amount: 150.5,
     freeField: '1234567890123456789012345',
   };
+  const generateBarcodeResult = () => generateBarcode(barcodeInput, { baseDate: dueDate });
 
   it('should generate a valid I2of5 barcode', () => {
-    const { barcode } = generateBarcode(barcodeInput, { baseDate: dueDate });
+    const { barcode } = generateBarcodeResult();
 
     expect(barcode).toMatch(/^\d{44}$/);
     expect(validateBarcode(barcode)).toBe(true);
   });
 
   it('should render barcode as SVG output', () => {
-    const { barcode } = generateBarcode(barcodeInput, { baseDate: dueDate });
+    const { barcode } = generateBarcodeResult();
     const svg = renderI2of5Svg(barcode, { height: 48 });
 
     expect(svg).toContain('<svg');
@@ -31,7 +32,7 @@ describe('Barcode generation roadmap coverage', () => {
   });
 
   it('should generate a digitable line that matches the barcode', () => {
-    const { barcode, digitableLine } = generateBarcode(barcodeInput, { baseDate: dueDate });
+    const { barcode, digitableLine } = generateBarcodeResult();
 
     expect(validateBarcode(barcode)).toBe(true);
     expect(validateDigitableLine(digitableLine)).toBe(true);
