@@ -146,14 +146,26 @@ function createPdfDocument(options: ResolvedPdfTemplateOptions): PDFKit.PDFDocum
     left: options.margins.left + options.bleed,
   };
 
+  const info: Record<string, string | Date> = {
+    Title: options.title,
+    Author: options.author,
+    Creator: options.creator,
+    CreationDate: new Date(),
+  };
+
+  if (options.subject) {
+    info['Subject'] = options.subject;
+  }
+
+  if (options.keywords) {
+    info['Keywords'] = options.keywords;
+  }
+
   return new PDFDocument({
     size: options.pageSize,
     margins: pageMargins,
     compress: options.compress,
-    info: {
-      Title: options.title,
-      Author: options.author,
-    },
+    info,
   });
 }
 

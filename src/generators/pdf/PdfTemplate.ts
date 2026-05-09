@@ -23,6 +23,9 @@ export interface PdfBarcodeOptions {
 export interface PdfTemplateOptions {
   title?: string;
   author?: string;
+  subject?: string;
+  keywords?: string;
+  creator?: string;
   includePixQr?: boolean;
   /** Whether to render the barcode as an image (default: true). */
   includeBarcode?: boolean;
@@ -41,6 +44,9 @@ export interface PdfTemplateOptions {
 export interface ResolvedPdfTemplateOptions {
   title: string;
   author: string;
+  subject: string;
+  keywords: string;
+  creator: string;
   includePixQr: boolean;
   includeBarcode: boolean;
   barcode: Required<PdfBarcodeOptions>;
@@ -62,6 +68,9 @@ export interface PdfLayoutFlags {
 const DEFAULT_TEMPLATE_OPTIONS: ResolvedPdfTemplateOptions = {
   title: 'Boleto',
   author: 'BoletoSDK',
+  subject: '',
+  keywords: '',
+  creator: 'BoletoSDK',
   includePixQr: false,
   includeBarcode: true,
   barcode: { width: 350, height: 50 },
@@ -103,6 +112,9 @@ export function resolvePdfTemplateOptions(
   return {
     title: options.title ?? DEFAULT_TEMPLATE_OPTIONS.title,
     author: options.author ?? DEFAULT_TEMPLATE_OPTIONS.author,
+    subject: options.subject ?? DEFAULT_TEMPLATE_OPTIONS.subject,
+    keywords: options.keywords ?? DEFAULT_TEMPLATE_OPTIONS.keywords,
+    creator: options.creator ?? DEFAULT_TEMPLATE_OPTIONS.creator,
     includePixQr: options.includePixQr ?? DEFAULT_TEMPLATE_OPTIONS.includePixQr,
     includeBarcode: options.includeBarcode ?? DEFAULT_TEMPLATE_OPTIONS.includeBarcode,
     barcode: {

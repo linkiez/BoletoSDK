@@ -10,6 +10,9 @@ describe('resolvePdfTemplateOptions', () => {
     expect(options).toEqual({
       title: 'Boleto',
       author: 'BoletoSDK',
+      subject: '',
+      keywords: '',
+      creator: 'BoletoSDK',
       includePixQr: false,
       includeBarcode: true,
       barcode: { width: 350, height: 50 },
@@ -55,6 +58,9 @@ describe('resolvePdfTemplateOptions', () => {
     expect(options).toEqual({
       title: 'Boleto - Bradesco',
       author: 'ACME',
+      subject: '',
+      keywords: '',
+      creator: 'BoletoSDK',
       includePixQr: true,
       includeBarcode: true,
       barcode: { width: 350, height: 50 },
@@ -76,6 +82,26 @@ describe('resolvePdfTemplateOptions', () => {
         monoPath: undefined,
       },
     });
+  });
+
+  it('should default subject, keywords and creator when omitted', () => {
+    const options = resolvePdfTemplateOptions();
+
+    expect(options.subject).toBe('');
+    expect(options.keywords).toBe('');
+    expect(options.creator).toBe('BoletoSDK');
+  });
+
+  it('should preserve custom subject, keywords and creator', () => {
+    const options = resolvePdfTemplateOptions({
+      subject: 'Monthly invoice',
+      keywords: 'boleto,invoice,payment',
+      creator: 'MyApp v2',
+    });
+
+    expect(options.subject).toBe('Monthly invoice');
+    expect(options.keywords).toBe('boleto,invoice,payment');
+    expect(options.creator).toBe('MyApp v2');
   });
 
   it('should normalize invalid pagination values to defaults', () => {
