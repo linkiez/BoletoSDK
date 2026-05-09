@@ -1352,7 +1352,7 @@ const email = generateBoletoEmail({
 - [x] QR Code generation (PIX integration)
 - [x] PDF generation for bank slips
 - [x] Email integration utilities
-- [ ] Webhook notification support
+- [x] Webhook notification support
 
 #### v1.7.0 - Advanced Features
 
