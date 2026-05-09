@@ -990,10 +990,10 @@ const pdf = await generateBoletoPdf({
     includeInstructions: true,
   },
 });
-
-// Save to file
-await pdf.save('boletos.pdf');
-
+  - [x] High-quality barcode rendering
+  - [x] Embedded fonts for better compatibility
+  - [x] PDF metadata (title, author, subject, keywords, creator, creation date)
+  - [x] Stream-based generation for large batches
 // Or get as buffer
 const buffer = await pdf.toBuffer();
 ```
@@ -1040,9 +1040,9 @@ const qrCode = generatePixQRCode({
 
 **Location**: `src/utils/email/`
 
-- [ ] `EmailTemplateGenerator.ts` - Generate email with boleto attachment
-- [ ] `EmailValidator.ts` - Validate email addresses
-- [ ] `AttachmentHelper.ts` - Prepare PDF/HTML attachments
+- [x] `EmailTemplateGenerator.ts` - Generate email with boleto attachment
+- [x] `EmailValidator.ts` - Validate email addresses
+- [x] `AttachmentHelper.ts` - Prepare PDF/HTML attachments
 
 **Email Template**:
 
