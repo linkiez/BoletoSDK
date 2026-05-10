@@ -17,6 +17,7 @@ Aggregates bank adapters exposed by the SDK.
 ## API / Signature
 
 ```ts
+export * from './IBankAdapter';
 export * from './itau';
 ```
 
@@ -25,6 +26,7 @@ export * from './itau';
 ```mermaid
 flowchart TD
   A[adapters/index.ts] --> B[itau]
+  A --> C[IBankAdapter]
 ```
 
 ## Error handling and edge cases

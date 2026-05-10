@@ -1,4 +1,5 @@
 import {
+  getItauWalletConfig,
   ITAU_SUPPORTED_WALLETS,
   assertValidItauWallet,
   isValidItauWallet,
@@ -22,6 +23,28 @@ describe('ItauWalletValidator', () => {
 
   it('should reject non-numeric wallet codes', () => {
     expect(isValidItauWallet('A09')).toBe(false);
+  });
+
+  it('should resolve Itaú wallet config for supported wallet', () => {
+    expect(getItauWalletConfig('109')).toEqual({
+      code: '109',
+      description: 'Simple collection without registration',
+      cnab240PortfolioCode: '109',
+      cnab400WalletType: 'I',
+    });
+  });
+
+  it('should return undefined for unsupported wallet config lookup', () => {
+    expect(getItauWalletConfig('999')).toBeUndefined();
+  });
+
+  it('should resolve Itaú wallet config from reduced CNAB240 portfolio alias', () => {
+    expect(getItauWalletConfig('9')).toEqual({
+      code: '109',
+      description: 'Simple collection without registration',
+      cnab240PortfolioCode: '109',
+      cnab400WalletType: 'I',
+    });
   });
 
   it('should throw for invalid wallet code in assertion helper', () => {

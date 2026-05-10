@@ -2,23 +2,27 @@
 
 ## Overview
 
-Public Ita\u00fa adapter barrel for calculator, validator, and adapter facade.
+Public Itaú adapter barrel for calculator, field parser, instruction mapper, occurrence mapper, validator, and adapter facade.
 
 ## Responsibilities
 
-- Re-export Ita\u00fa adapter APIs from a single file.
+- Re-export Itaú adapter APIs from a single file.
 
 ## Inputs and outputs
 
 - Input: N/A
-- Output: Re-exported Ita\u00fa adapter symbols.
+- Output: Re-exported Itaú adapter symbols.
 
 ## API / Signature
 
 ```ts
 export * from './ItauAdapter';
+export * from './ItauFieldParser';
+export * from './ItauInstructionMapper';
+export * from './ItauOccurrenceMapper';
 export * from './ItauOurNumberCalculator';
 export * from './ItauWalletValidator';
+export * from './ItauValidator';
 ```
 
 ## Main flow
@@ -26,8 +30,12 @@ export * from './ItauWalletValidator';
 ```mermaid
 flowchart TD
   A[itau/index.ts] --> B[ItauAdapter]
-  A --> C[ItauOurNumberCalculator]
-  A --> D[ItauWalletValidator]
+  A --> C[ItauFieldParser]
+  A --> D[ItauInstructionMapper]
+  A --> E[ItauOccurrenceMapper]
+  A --> F[ItauValidator]
+  A --> G[ItauOurNumberCalculator]
+  A --> H[ItauWalletValidator]
 ```
 
 ## Error handling and edge cases
@@ -37,11 +45,22 @@ flowchart TD
 ## Examples
 
 ```ts
-import { createItauAdapter, isValidItauWallet } from '@linkiez/boleto-sdk';
+import {
+  createItauAdapter,
+  parseItauRemittanceFields,
+  validateItauRemittanceFields,
+  isValidItauWallet,
+  mapItauInstructionCode,
+  mapItauOccurrenceCode,
+} from '@linkiez/boleto-sdk';
 
 const adapter = createItauAdapter();
+const remittanceFields = parseItauRemittanceFields(remittanceLine);
+const validation = validateItauRemittanceFields(remittanceFields);
+const instruction = mapItauInstructionCode('01');
+const occurrence = mapItauOccurrenceCode('06');
 ```
 
 ## Dependencies and integrations
 
-- Exposes Ita\u00fa modules used by SDK consumers.
+- Exposes Itaú modules used by SDK consumers.

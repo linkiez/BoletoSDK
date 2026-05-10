@@ -25,7 +25,14 @@ import {
   parseReturnDetailRecord,
 } from '../../../src/parsers';
 import { AddressSchema, cnab240Schemas, cnab400Schemas } from '../../../src/schemas';
-import { ItauAdapter, createItauAdapter } from '../../../src';
+import {
+  ItauAdapter,
+  createItauAdapter,
+  mapItauInstructionCode,
+  mapItauOccurrenceCode,
+  parseItauRemittanceFields,
+  validateItauRemittanceFields,
+} from '../../../src';
 import {
   cnab240Validators,
   cnab400Validators,
@@ -65,9 +72,46 @@ describe('Barrel exports', () => {
 
   it('should expose Itaú adapter helpers from the package root', () => {
     const adapter = createItauAdapter();
+    const cnab240 = createMinimalCnab240File(true);
 
     expect(adapter).toBeInstanceOf(ItauAdapter);
+    expect(adapter.getWalletConfig('109')?.code).toBe('109');
     expect(adapter.buildOurNumber('12345678').formatted).toBe('123456782');
+    expect(adapter.buildCnab240Detail(cnab240.batches[0].details[0]).movementType).toBe('cnab240');
+    expect(adapter.buildCnab240Details(cnab240.batches[0].details)).toHaveLength(1);
+    expect(adapter.buildCnab240DetailsFromBatch(cnab240.batches[0])).toHaveLength(1);
+    expect(adapter.buildCnab240DetailsFromFile(cnab240)).toHaveLength(1);
+    expect(adapter.buildCnab240DetailsFromContent(createMinimalCnab240Content())).toHaveLength(1);
+    expect(mapItauOccurrenceCode('06')).toEqual({
+      code: '06',
+      category: 'settlement',
+      description: 'Payment liquidation',
+    });
+    expect(mapItauInstructionCode('01')).toEqual({
+      code: '01',
+      commonCode: '01',
+      description: 'Protest automatically after N days',
+    });
+    expect(parseItauRemittanceFields(remessaLines[1])).toEqual({
+      instructionCancellationCode: '0000',
+      bankUseOperation: undefined,
+      walletNumber: '109',
+      walletType: 'I',
+      occurrenceCode: '01',
+      daysCount: 0,
+    });
+    expect(
+      validateItauRemittanceFields({
+        instructionCancellationCode: '0000',
+        walletNumber: '109',
+        walletType: 'I',
+        occurrenceCode: '01',
+        daysCount: 0,
+      }),
+    ).toEqual({
+      isValid: true,
+      errors: [],
+    });
   });
 
   it('should expose schemas from index', () => {
