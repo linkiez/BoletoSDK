@@ -47,6 +47,8 @@ describe('ItauValidator', () => {
       validateItauReturnFields({
         walletNumber: '109',
         walletType: 'I',
+        ddaIndicator: '1',
+        creditDate: new Date(2021, 1, 19),
         bankOurNumber: '00004965',
         bankOurNumberDigit: '3',
         confirmedOurNumber: '00004965',
@@ -64,6 +66,8 @@ describe('ItauValidator', () => {
       validateItauReturnFields({
         walletNumber: '999',
         walletType: 'X',
+        ddaIndicator: 'X',
+        creditDate: new Date('invalid-date'),
         bankOurNumber: '00004965',
         bankOurNumberDigit: '3',
         confirmedOurNumber: '00004966',
@@ -75,10 +79,26 @@ describe('ItauValidator', () => {
       errors: [
         'Unsupported Itau wallet code: 999',
         'Invalid Itaú wallet type: X',
+        'Invalid Itaú DDA indicator: X',
+        'Invalid Itaú credit date',
         'Bank our-number does not match confirmed our-number',
         'Invalid Itaú canceled instruction code: 12',
         'Invalid Itaú liquidation code: AA',
       ],
+    });
+  });
+
+  it('should require credit date when liquidation code is present', () => {
+    expect(
+      validateItauReturnFields({
+        walletNumber: '109',
+        walletType: 'I',
+        canceledInstructionCode: '0000',
+        liquidationCode: '02',
+      }),
+    ).toEqual({
+      isValid: false,
+      errors: ['Itaú credit date is required when liquidation code is informed'],
     });
   });
 

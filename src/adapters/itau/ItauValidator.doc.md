@@ -46,6 +46,9 @@ flowchart TD
 - Rejects wallet numbers outside the supported Itaú set.
 - Rejects return fields whose confirmed our-number does not match the bank our-number.
 - Rejects malformed four-digit and two-digit control codes.
+- Rejects invalid DDA indicator values outside `0` and `1`.
+- Rejects malformed return credit dates.
+- Requires return credit date when liquidation code is informed.
 
 ## Examples
 

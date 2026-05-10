@@ -12,6 +12,7 @@ Defines Itaú adapter type contracts.
 - Declare typed Itaú CNAB400 remittance/return field extraction results.
 - Declare supported Itaú instruction codes and normalized mapping types.
 - Declare supported Itaú occurrence codes and normalized mapping types.
+- Declare supported Itaú liquidation codes and normalized mapping types.
 - Declare enriched Itaú CNAB400 remittance and return detail contracts.
 - Declare enriched Itaú CNAB240 detail contract.
 
@@ -58,6 +59,8 @@ export interface ItauRemittanceFields {
 export interface ItauReturnFields {
   walletNumber?: string;
   walletType?: string;
+  ddaIndicator?: string;
+  creditDate?: Date;
   bankOurNumber?: string;
   bankOurNumberDigit?: string;
   confirmedOurNumber?: string;
@@ -82,6 +85,8 @@ export interface ItauCnab400ReturnDetail {
   fields: ItauReturnFields;
   wallet?: ItauWalletConfig;
   occurrence?: ItauOccurrenceMapping;
+  liquidation?: ItauLiquidationMapping;
+  rejection?: ItauRejectionMessageMapping;
   validation: { isValid: boolean; errors: string[] };
 }
 
@@ -113,6 +118,26 @@ export interface ItauOccurrenceMapping {
   category: ItauOccurrenceCategory;
   description: string;
 }
+
+export type ItauLiquidationCode = '01' | '02' | '03' | '04';
+
+export type ItauLiquidationCategory = 'bank' | 'clearing' | 'electronic' | 'other';
+
+export interface ItauLiquidationMapping {
+  code: ItauLiquidationCode;
+  category: ItauLiquidationCategory;
+  description: string;
+}
+
+export interface ItauRejectionMessageMapping {
+  raw: string;
+  category: 'code' | 'text';
+  code?: string;
+  source: ItauRejectionDescriptionSource;
+  description: string;
+}
+
+export type ItauRejectionDescriptionSource = 'catalog' | 'fallback' | 'free-text';
 ```
 
 ## Main flow

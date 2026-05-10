@@ -4,7 +4,7 @@ import {
   DETAIL_RECORD_RETORNO_POSITIONS,
 } from '../../constants/cnab400/RECORD_POSITIONS';
 import type { ItauRemittanceFields, ItauReturnFields } from '../../types/adapters';
-import { parseNumber } from '../../utils/parsers';
+import { parseDateShort, parseNumber } from '../../utils/parsers';
 
 function extractField(line: string, start: number, end: number): string {
   return line.substring(start - 1, end);
@@ -12,7 +12,7 @@ function extractField(line: string, start: number, end: number): string {
 
 function trimToUndefined(value: string): string | undefined {
   const trimmedValue = value.trim();
-  return trimmedValue ? trimmedValue : undefined;
+  return trimmedValue || undefined;
 }
 
 /**
@@ -90,6 +90,8 @@ export function parseItauReturnFields(line: string): ItauReturnFields {
     throw new Error(`Invalid Itaú return detail line length: ${line.length}`);
   }
 
+  const rawCreditDate = trimToUndefined(extractField(line, 296, 301));
+
   return {
     walletNumber: trimToUndefined(extractField(line, 83, 85)),
     walletType: trimToUndefined(
@@ -99,6 +101,9 @@ export function parseItauReturnFields(line: string): ItauReturnFields {
         DETAIL_RECORD_RETORNO_POSITIONS.PORTFOLIO_CODE.start,
       ),
     ),
+    ddaIndicator: trimToUndefined(extractField(line, 293, 293)),
+    creditDate:
+      rawCreditDate && rawCreditDate !== '000000' ? parseDateShort(rawCreditDate) : undefined,
     bankOurNumber: trimToUndefined(extractField(line, 86, 93)),
     bankOurNumberDigit: trimToUndefined(extractField(line, 94, 94)),
     confirmedOurNumber: trimToUndefined(extractField(line, 127, 134)),

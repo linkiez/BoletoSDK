@@ -85,6 +85,34 @@ describe('ItauAdapter', () => {
     });
   });
 
+  it('should map Itaú liquidation codes through the facade', () => {
+    expect(adapter.mapLiquidationCode('02')).toEqual({
+      code: '02',
+      category: 'clearing',
+      description: 'Liquidation channel 02 (clearing)',
+    });
+  });
+
+  it('should normalize Itaú rejection message through the facade', () => {
+    expect(adapter.mapRejectionMessage('12345678')).toEqual({
+      raw: '12345678',
+      category: 'code',
+      code: '12345678',
+      source: 'fallback',
+      description: 'Itaú rejection code from return message area: 12345678',
+    });
+  });
+
+  it('should normalize short Itaú rejection code through the facade', () => {
+    expect(adapter.mapRejectionMessage('1')).toEqual({
+      raw: '1',
+      category: 'code',
+      code: '00000001',
+      source: 'catalog',
+      description: 'Rejected due to invalid wallet code',
+    });
+  });
+
   it('should parse Itaú remittance-specific CNAB400 fields through the facade', () => {
     const line =
       '10213598863000154489700174506    0000                         000008240000000000000109                     I01000000082404052000000000346803410000001A060420980000000000000120000000000000000000000000000000000000000000000268104538000180SUDESTE PRE FABRICADOS LTDA             ESTRADA DE VASCONCELOS, 199             CHACARAS REU13388680NOVA ODESSA    SP                                  00000000 000002';
@@ -119,10 +147,12 @@ describe('ItauAdapter', () => {
       adapter.validateReturnFields({
         walletNumber: '109',
         walletType: 'I',
+        creditDate: new Date(2021, 1, 19),
         bankOurNumber: '00004965',
         bankOurNumberDigit: '3',
         confirmedOurNumber: '00004965',
         canceledInstructionCode: '0000',
+        liquidationCode: '02',
       }),
     ).toEqual({
       isValid: true,
@@ -152,13 +182,40 @@ describe('ItauAdapter', () => {
     expect(result.movementType).toBe('return');
     expect(result.detail.recordType).toBe('1');
     expect(result.fields.walletNumber).toBe('109');
+    expect(result.fields.ddaIndicator).toBeUndefined();
+    expect(result.fields.creditDate).toBeUndefined();
     expect(result.wallet?.code).toBe('109');
+    expect(result.liquidation).toBeUndefined();
+    expect(result.rejection).toBeUndefined();
     expect(result.occurrence).toEqual({
       code: '02',
       category: 'entry',
       description: 'Entry confirmed',
     });
     expect(result.validation.isValid).toBe(true);
+  });
+
+  it('should map return liquidation and rejection metadata when present', () => {
+    const baseLine =
+      '10213598863000154489700174506                                 00004965            109000049653             I02010221000000496500004965            19022100000000030003410277401000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000         000000000000000000000002B AUTOMACAO E USINAGEM LTDA                                          000002';
+
+    const withLiquidation = `${baseLine.slice(0, 392)}02${baseLine.slice(394)}`;
+    const withRejection = `${withLiquidation.slice(0, 377)}12345678${withLiquidation.slice(385)}`;
+
+    const result = adapter.buildReturnDetail(withRejection);
+
+    expect(result.liquidation).toEqual({
+      code: '02',
+      category: 'clearing',
+      description: 'Liquidation channel 02 (clearing)',
+    });
+    expect(result.rejection).toEqual({
+      raw: '12345678',
+      category: 'code',
+      code: '12345678',
+      source: 'fallback',
+      description: 'Itaú rejection code from return message area: 12345678',
+    });
   });
 
   it('should build enriched Itaú remittance details from full CNAB400 content', () => {
@@ -185,6 +242,8 @@ describe('ItauAdapter', () => {
     expect(results.length).toBeGreaterThan(0);
     expect(results[0].movementType).toBe('return');
     expect(results[0].occurrence).toBeDefined();
+    expect(results[0].liquidation).toBeUndefined();
+    expect(results[0].rejection).toBeUndefined();
     expect(results[0].validation.isValid).toBe(true);
   });
 

@@ -12,9 +12,13 @@ Implements the generic `IBankAdapter<ItauWalletConfig, ItauCnab400RemittanceDeta
 - Resolve wallet configuration metadata from wallet code.
 - Map Itaú remittance instruction codes.
 - Map Itaú return occurrence codes.
+- Map Itaú return liquidation codes.
+- Normalize Itaú return rejection messages.
+- Normalize short Itaú numeric rejection codes to canonical 8-digit form.
 - Parse Itaú-specific CNAB400 detail fields for remittance and return records.
 - Validate Itaú-specific CNAB400 remittance and return field sets.
 - Build enriched Itaú CNAB400 remittance and return detail payloads.
+- Map Itaú return liquidation and rejection metadata into normalized structures.
 - Build enriched Itaú CNAB400 detail arrays from full file content.
 - Resolve wallet configuration metadata in enriched CNAB400 payloads when wallet is supported.
 - Build enriched Itaú CNAB240 detail payloads from parsed segments.
@@ -46,6 +50,9 @@ export class ItauAdapter {
   getWalletConfig(walletCode: string): ItauWalletConfig | undefined;
   mapInstructionCode(instructionCode: string): ItauInstructionMapping;
   mapOccurrenceCode(occurrenceCode: string): ItauOccurrenceMapping;
+  mapLiquidationCode(liquidationCode: string): ItauLiquidationMapping;
+  mapRejectionMessage(rejectionMessage: string | undefined):
+    ItauRejectionMessageMapping | undefined;
   parseRemittanceFields(line: string): ItauRemittanceFields;
   parseReturnFields(line: string): ItauReturnFields;
   validateRemittanceFields(fields: ItauRemittanceFields): ValidationResult;
@@ -74,10 +81,11 @@ flowchart TD
   B --> C[ItauWalletValidator]
   B --> D[ItauInstructionMapper]
   B --> E[ItauOccurrenceMapper]
-  B --> F[ItauFieldParser]
-  B --> G[ItauValidator]
-  B --> H[ItauOurNumberCalculator]
-  B --> I[CNAB400 Parsers]
+  B --> F[ItauReturnMapper]
+  B --> G[ItauFieldParser]
+  B --> H[ItauValidator]
+  B --> I[ItauOurNumberCalculator]
+  B --> J[CNAB400 Parsers]
 ```
 
 ## Error handling and edge cases
@@ -98,6 +106,9 @@ adapter.assertSupportedWallet('109');
 const wallet = adapter.getWalletConfig('109');
 const instruction = adapter.mapInstructionCode('01');
 const occurrence = adapter.mapOccurrenceCode('06');
+const liquidation = adapter.mapLiquidationCode('02');
+const rejection = adapter.mapRejectionMessage('12345678');
+const shortRejection = adapter.mapRejectionMessage('1');
 const remittanceFields = adapter.parseRemittanceFields(remittanceLine);
 const validation = adapter.validateRemittanceFields(remittanceFields);
 const remittanceDetail = adapter.buildRemittanceDetail(remittanceLine);

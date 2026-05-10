@@ -22,6 +22,10 @@ function isSingleItauWalletType(value: string | undefined): boolean {
   return value === 'I';
 }
 
+function isValidDdaIndicator(value: string | undefined): boolean {
+  return value === undefined || value === '0' || value === '1';
+}
+
 /**
  * Validates Itaú-specific remittance fields.
  *
@@ -79,6 +83,17 @@ export function validateItauReturnFields(fields: ItauReturnFields): ValidationRe
     errors.push(`Invalid Itaú wallet type: ${fields.walletType ?? ''}`);
   }
 
+  if (!isValidDdaIndicator(fields.ddaIndicator)) {
+    errors.push(`Invalid Itaú DDA indicator: ${fields.ddaIndicator}`);
+  }
+
+  if (
+    fields.creditDate !== undefined &&
+    (!(fields.creditDate instanceof Date) || Number.isNaN(fields.creditDate.getTime()))
+  ) {
+    errors.push('Invalid Itaú credit date');
+  }
+
   if (fields.bankOurNumberDigit !== undefined && !/^\d$/.test(fields.bankOurNumberDigit)) {
     errors.push(`Invalid Itaú bank our-number digit: ${fields.bankOurNumberDigit}`);
   }
@@ -97,6 +112,10 @@ export function validateItauReturnFields(fields: ItauReturnFields): ValidationRe
 
   if (fields.liquidationCode !== undefined && !isTwoDigitCode(fields.liquidationCode)) {
     errors.push(`Invalid Itaú liquidation code: ${fields.liquidationCode}`);
+  }
+
+  if (fields.liquidationCode !== undefined && fields.creditDate === undefined) {
+    errors.push('Itaú credit date is required when liquidation code is informed');
   }
 
   return createValidationResult(errors);

@@ -94,6 +94,49 @@ export interface ItauOccurrenceMapping {
 }
 
 /**
+ * Supported Itaú liquidation channel codes from CNAB400 return files.
+ */
+export type ItauLiquidationCode = '01' | '02' | '03' | '04';
+
+/**
+ * Generic semantic categories for Itaú liquidation channel mappings.
+ */
+export type ItauLiquidationCategory = 'bank' | 'clearing' | 'electronic' | 'other';
+
+/**
+ * Normalized semantic representation of an Itaú liquidation code.
+ */
+export interface ItauLiquidationMapping {
+  /** Raw two-digit liquidation code returned by Itaú. */
+  code: ItauLiquidationCode;
+  /** Generic semantic bucket used by SDK consumers. */
+  category: ItauLiquidationCategory;
+  /** Human-readable meaning of the liquidation channel. */
+  description: string;
+}
+
+/**
+ * Source of rejection message interpretation metadata.
+ */
+export type ItauRejectionDescriptionSource = 'catalog' | 'fallback' | 'free-text';
+
+/**
+ * Normalized representation of Itaú return rejection message area.
+ */
+export interface ItauRejectionMessageMapping {
+  /** Raw message content from return rejection area. */
+  raw: string;
+  /** Distinguishes numeric code versus free-text message. */
+  category: 'code' | 'text';
+  /** Numeric rejection code when message area is code-based. */
+  code?: string;
+  /** Source used to produce the human-readable description. */
+  source: ItauRejectionDescriptionSource;
+  /** Human-readable interpretation metadata. */
+  description: string;
+}
+
+/**
  * Supported Itaú instruction codes from CNAB400 remittance files.
  */
 export type ItauInstructionCode =
@@ -152,6 +195,10 @@ export interface ItauReturnFields {
   walletNumber?: string;
   /** Single-character wallet type used by Itaú. */
   walletType?: string;
+  /** DDA participation indicator informed by the bank return layout. */
+  ddaIndicator?: string;
+  /** Credit date parsed from DDMMYY when provided in return layout. */
+  creditDate?: Date;
   /** Itaú our-number value echoed by the bank. */
   bankOurNumber?: string;
   /** Check digit for the bank our-number field. */
@@ -200,6 +247,10 @@ export interface ItauCnab400ReturnDetail {
   wallet?: ItauWalletConfig;
   /** Optional normalized occurrence mapping for return records. */
   occurrence?: ItauOccurrenceMapping;
+  /** Optional normalized liquidation channel mapping for return records. */
+  liquidation?: ItauLiquidationMapping;
+  /** Optional normalized rejection metadata for return records. */
+  rejection?: ItauRejectionMessageMapping;
   /** Validation result for Itaú return business rules. */
   validation: { isValid: boolean; errors: string[] };
 }

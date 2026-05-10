@@ -21,6 +21,7 @@ export * from './ItauFieldParser';
 export * from './ItauInstructionMapper';
 export * from './ItauOccurrenceMapper';
 export * from './ItauOurNumberCalculator';
+export * from './ItauReturnMapper';
 export * from './ItauWalletValidator';
 export * from './ItauValidator';
 ```
@@ -33,9 +34,10 @@ flowchart TD
   A --> C[ItauFieldParser]
   A --> D[ItauInstructionMapper]
   A --> E[ItauOccurrenceMapper]
-  A --> F[ItauValidator]
-  A --> G[ItauOurNumberCalculator]
-  A --> H[ItauWalletValidator]
+  A --> F[ItauReturnMapper]
+  A --> G[ItauValidator]
+  A --> H[ItauOurNumberCalculator]
+  A --> I[ItauWalletValidator]
 ```
 
 ## Error handling and edge cases
@@ -51,6 +53,7 @@ import {
   validateItauRemittanceFields,
   isValidItauWallet,
   mapItauInstructionCode,
+  mapItauLiquidationCode,
   mapItauOccurrenceCode,
 } from '@linkiez/boleto-sdk';
 
@@ -59,6 +62,7 @@ const remittanceFields = parseItauRemittanceFields(remittanceLine);
 const validation = validateItauRemittanceFields(remittanceFields);
 const instruction = mapItauInstructionCode('01');
 const occurrence = mapItauOccurrenceCode('06');
+const liquidation = mapItauLiquidationCode('02');
 ```
 
 ## Dependencies and integrations

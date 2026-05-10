@@ -29,6 +29,7 @@ import {
   ItauAdapter,
   createItauAdapter,
   mapItauInstructionCode,
+  mapItauLiquidationCode,
   mapItauOccurrenceCode,
   parseItauRemittanceFields,
   validateItauRemittanceFields,
@@ -92,6 +93,7 @@ describe('Barrel exports', () => {
       commonCode: '01',
       description: 'Protest automatically after N days',
     });
+    expect(mapItauLiquidationCode).toBeDefined();
     expect(parseItauRemittanceFields(remessaLines[1])).toEqual({
       instructionCancellationCode: '0000',
       bankUseOperation: undefined,

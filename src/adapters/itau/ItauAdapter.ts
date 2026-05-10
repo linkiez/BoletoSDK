@@ -3,8 +3,10 @@ import type {
   ItauCnab400RemittanceDetail,
   ItauCnab400ReturnDetail,
   ItauInstructionMapping,
+  ItauLiquidationMapping,
   ItauOccurrenceMapping,
   ItauOurNumberResult,
+  ItauRejectionMessageMapping,
   ItauRemittanceFields,
   ItauWalletConfig,
   ItauReturnFields,
@@ -20,6 +22,11 @@ import { parseItauRemittanceFields, parseItauReturnFields } from './ItauFieldPar
 import { isValidItauInstructionCode, mapItauInstructionCode } from './ItauInstructionMapper';
 import { buildItauOurNumber, formatItauOurNumber } from './ItauOurNumberCalculator';
 import { isValidItauOccurrenceCode, mapItauOccurrenceCode } from './ItauOccurrenceMapper';
+import {
+  isValidItauLiquidationCode,
+  mapItauLiquidationCode,
+  mapItauRejectionMessage,
+} from './ItauReturnMapper';
 import { validateItauRemittanceFields, validateItauReturnFields } from './ItauValidator';
 import {
   assertValidItauWallet,
@@ -125,6 +132,28 @@ export class ItauAdapter implements IBankAdapter<
   }
 
   /**
+   * Maps an Itaú return liquidation code to a normalized semantic category.
+   *
+   * @param liquidationCode - Two-digit Itaú liquidation code.
+   * @returns Normalized liquidation mapping.
+   */
+  public mapLiquidationCode(liquidationCode: string): ItauLiquidationMapping {
+    return mapItauLiquidationCode(liquidationCode);
+  }
+
+  /**
+   * Normalizes Itaú return rejection message metadata.
+   *
+   * @param rejectionMessage - Raw rejection message from return detail area.
+   * @returns Normalized rejection metadata when present.
+   */
+  public mapRejectionMessage(
+    rejectionMessage: string | undefined,
+  ): ItauRejectionMessageMapping | undefined {
+    return mapItauRejectionMessage(rejectionMessage);
+  }
+
+  /**
    * Maps an Itaú remittance instruction code to a normalized representation.
    *
    * @param instructionCode - Two-digit Itaú instruction code.
@@ -221,6 +250,13 @@ export class ItauAdapter implements IBankAdapter<
     const occurrence = isValidItauOccurrenceCode(detail.occurrenceCode)
       ? this.mapOccurrenceCode(detail.occurrenceCode)
       : undefined;
+    const liquidation: ItauLiquidationMapping | undefined =
+      fields.liquidationCode && isValidItauLiquidationCode(fields.liquidationCode)
+        ? this.mapLiquidationCode(fields.liquidationCode)
+        : undefined;
+    const rejection: ItauRejectionMessageMapping | undefined = this.mapRejectionMessage(
+      fields.rejectionMessage,
+    );
 
     return {
       movementType: 'return',
@@ -228,6 +264,8 @@ export class ItauAdapter implements IBankAdapter<
       fields,
       wallet,
       occurrence,
+      liquidation,
+      rejection,
       validation,
     };
   }

@@ -44,6 +44,7 @@ flowchart TD
 - Rejects lines that are not exactly 400 characters long.
 - Preserves fixed numeric codes such as canceled instruction codes even when they are zero-filled.
 - Converts blank informational areas into `undefined` to simplify downstream checks.
+- Throws when return credit date is present but not a valid DDMMYY value.
 
 ## Examples
 
@@ -61,6 +62,8 @@ const returnFields = parseItauReturnFields(returnLine);
 // {
 //   walletNumber: '109',
 //   walletType: 'I',
+//   ddaIndicator: undefined,
+//   creditDate: undefined,
 //   bankOurNumber: '00004965',
 //   bankOurNumberDigit: '3',
 //   confirmedOurNumber: '00004965',
