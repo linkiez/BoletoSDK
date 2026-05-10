@@ -22,3 +22,6 @@ export * from './common';
 
 // JSON types
 export * from './json';
+
+// Adapter types
+export * from './adapters';

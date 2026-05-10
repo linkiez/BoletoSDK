@@ -25,6 +25,7 @@ import {
   parseReturnDetailRecord,
 } from '../../../src/parsers';
 import { AddressSchema, cnab240Schemas, cnab400Schemas } from '../../../src/schemas';
+import { ItauAdapter, createItauAdapter } from '../../../src';
 import {
   cnab240Validators,
   cnab400Validators,
@@ -60,6 +61,13 @@ describe('Barrel exports', () => {
     expect(CNAB400.LINE_LENGTH).toBe(400);
     expect(Cnab240RecordType.FILE_HEADER).toBe('0');
     expect(Cnab400RecordType.HEADER).toBe('0');
+  });
+
+  it('should expose Itaú adapter helpers from the package root', () => {
+    const adapter = createItauAdapter();
+
+    expect(adapter).toBeInstanceOf(ItauAdapter);
+    expect(adapter.buildOurNumber('12345678').formatted).toBe('123456782');
   });
 
   it('should expose schemas from index', () => {

@@ -30,3 +30,6 @@ export * from './constants';
 
 // Templates
 export * from './templates';
+
+// Bank adapters
+export * from './adapters';

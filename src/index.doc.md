@@ -2,12 +2,13 @@
 
 ## Overview
 
-Public SDK entry point. Re-exports parsers, generators, validators, types, enums, utilities, errors, constants, and templates.
+Public SDK entry point. Re-exports parsers, generators, validators, types, enums, utilities, errors, constants, templates, and bank adapters.
 
 ## Responsibilities
 
 - Provide a single import surface for consumers
 - Aggregate public exports from internal modules
+- Expose bank adapter APIs through the main package surface
 
 ## Inputs and outputs
 
@@ -26,6 +27,7 @@ export * from './utils';
 export * from './errors';
 export * from './constants';
 export * from './templates';
+export * from './adapters';
 ```
 
 ## Main flow
@@ -41,6 +43,7 @@ flowchart TD
   A --> H[Errors]
   A --> I[Constants]
   A --> J[Templates]
+  A --> K[Adapters]
 ```
 
 ## Error handling and edge cases
@@ -50,7 +53,7 @@ flowchart TD
 ## Examples
 
 ```ts
-import { parseCnab, generateCnab, GenericTemplate } from '@linkiez/boleto-sdk';
+import { parseCnab, generateCnab, GenericTemplate, ItauAdapter } from '@linkiez/boleto-sdk';
 ```
 
 ## Dependencies and integrations
