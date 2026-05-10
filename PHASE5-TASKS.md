@@ -39,7 +39,7 @@ Phase 5 focuses on completing npm publication, verification, and setting up for 
   ```
   npm view @linkiez/boleto-sdk@1.0.0 version
   → 1.0.0 ✅
-  
+
   npm view @linkiez/boleto-sdk
   → Published 48 minutes ago by linkiez
   → Latest: 1.0.0
