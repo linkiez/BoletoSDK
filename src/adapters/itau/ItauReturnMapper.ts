@@ -3,6 +3,7 @@ import type {
   ItauLiquidationMapping,
   ItauRejectionMessageMapping,
 } from '../../types/adapters';
+import { ITAU_REJECTION_CODE_DESCRIPTION_MAP } from '../../constants/bancos';
 
 /**
  * Normalized liquidation channel mappings for Itaú return detail records.
@@ -19,15 +20,6 @@ export const ITAU_LIQUIDATION_CODE_MAP: Record<ItauLiquidationCode, ItauLiquidat
 };
 
 /**
- * Known Itaú rejection code descriptions extracted from return message area conventions.
- */
-export const ITAU_REJECTION_CODE_DESCRIPTION_MAP: Record<string, string> = {
-  '00000001': 'Rejected due to invalid wallet code',
-  '00000002': 'Rejected due to invalid payer document',
-  '00000003': 'Rejected due to invalid due date',
-};
-
-/**
  * Normalizes numeric Itaú rejection codes to the canonical 8-digit representation.
  */
 function normalizeItauRejectionCode(rejectionMessage: string): string {
@@ -39,15 +31,28 @@ function normalizeItauRejectionCode(rejectionMessage: string): string {
 }
 
 /**
+ * Normalizes Itaú liquidation code input by trimming surrounding whitespace.
+ */
+function normalizeItauLiquidationCodeInput(liquidationCode: string): string {
+  const normalizedCode = liquidationCode.trim();
+
+  if (/^\d$/.test(normalizedCode)) {
+    return normalizedCode.padStart(2, '0');
+  }
+
+  return normalizedCode;
+}
+
+/**
  * Checks whether a code is a supported Itaú liquidation channel code.
  *
  * @param liquidationCode - Two-digit liquidation code.
  * @returns True when the code is supported by the Itaú return mapper.
  */
-export function isValidItauLiquidationCode(
-  liquidationCode: string,
-): liquidationCode is ItauLiquidationCode {
-  return /^\d{2}$/.test(liquidationCode) && liquidationCode in ITAU_LIQUIDATION_CODE_MAP;
+export function isValidItauLiquidationCode(liquidationCode: string): boolean {
+  const normalizedCode = normalizeItauLiquidationCodeInput(liquidationCode);
+
+  return /^\d{2}$/.test(normalizedCode) && normalizedCode in ITAU_LIQUIDATION_CODE_MAP;
 }
 
 /**
@@ -58,11 +63,13 @@ export function isValidItauLiquidationCode(
  * @throws {Error} When the liquidation code is not supported.
  */
 export function mapItauLiquidationCode(liquidationCode: string): ItauLiquidationMapping {
-  if (!isValidItauLiquidationCode(liquidationCode)) {
+  const normalizedCode = normalizeItauLiquidationCodeInput(liquidationCode);
+
+  if (!isValidItauLiquidationCode(normalizedCode)) {
     throw new Error(`Unsupported Itau liquidation code: ${liquidationCode}`);
   }
 
-  return ITAU_LIQUIDATION_CODE_MAP[liquidationCode];
+  return ITAU_LIQUIDATION_CODE_MAP[normalizedCode as ItauLiquidationCode];
 }
 
 /**
@@ -78,8 +85,14 @@ export function mapItauRejectionMessage(
     return undefined;
   }
 
-  if (/^\d+$/.test(rejectionMessage)) {
-    const normalizedCode = normalizeItauRejectionCode(rejectionMessage);
+  const normalizedMessage = rejectionMessage.trim();
+
+  if (normalizedMessage.length === 0) {
+    return undefined;
+  }
+
+  if (/^\d+$/.test(normalizedMessage)) {
+    const normalizedCode = normalizeItauRejectionCode(normalizedMessage);
 
     if (/^0+$/.test(normalizedCode)) {
       return undefined;
@@ -88,7 +101,7 @@ export function mapItauRejectionMessage(
     const knownDescription = ITAU_REJECTION_CODE_DESCRIPTION_MAP[normalizedCode];
 
     return {
-      raw: rejectionMessage,
+      raw: normalizedMessage,
       category: 'code',
       code: normalizedCode,
       source: knownDescription ? 'catalog' : 'fallback',
@@ -98,7 +111,7 @@ export function mapItauRejectionMessage(
   }
 
   return {
-    raw: rejectionMessage,
+    raw: normalizedMessage,
     category: 'text',
     source: 'free-text',
     description: 'Itaú free-text rejection message from return message area',

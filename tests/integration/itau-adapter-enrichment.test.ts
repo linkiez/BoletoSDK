@@ -103,4 +103,23 @@ describe('ItauAdapter - Integration Enrichment', () => {
     });
     expect(details[0].validation.isValid).toBe(true);
   });
+
+  it('should normalize short unknown rejection code from return line to fallback mapping', () => {
+    const lines = retornoContent.split('\n').filter((line) => line.length > 0);
+    const withCreditDate = `${lines[1].slice(0, 295)}190221${lines[1].slice(301)}`;
+    const withShortUnknownRejection = `${withCreditDate.slice(0, 377)}     123${withCreditDate.slice(385)}`;
+    const syntheticContent = [lines[0], withShortUnknownRejection, ...lines.slice(2)].join('\n');
+
+    const details = adapter.buildReturnDetailsFromContent(syntheticContent);
+
+    expect(details.length).toBeGreaterThan(0);
+    expect(details[0].rejection).toEqual({
+      raw: '123',
+      category: 'code',
+      code: '00000123',
+      source: 'fallback',
+      description: 'Itaú rejection code from return message area: 00000123',
+    });
+    expect(details[0].validation.isValid).toBe(true);
+  });
 });

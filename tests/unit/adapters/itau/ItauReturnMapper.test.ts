@@ -1,10 +1,10 @@
 import {
   ITAU_LIQUIDATION_CODE_MAP,
-  ITAU_REJECTION_CODE_DESCRIPTION_MAP,
   isValidItauLiquidationCode,
   mapItauLiquidationCode,
   mapItauRejectionMessage,
 } from '../../../../src/adapters/itau/ItauReturnMapper';
+import { ITAU_REJECTION_CODE_DESCRIPTION_MAP } from '../../../../src/constants/bancos';
 
 describe('ItauReturnMapper', () => {
   it('should expose known Itaú liquidation mappings', () => {
@@ -15,6 +15,7 @@ describe('ItauReturnMapper', () => {
   it('should validate supported Itaú liquidation codes', () => {
     expect(isValidItauLiquidationCode('01')).toBe(true);
     expect(isValidItauLiquidationCode('04')).toBe(true);
+    expect(isValidItauLiquidationCode(' 04 ')).toBe(true);
   });
 
   it('should reject unsupported Itaú liquidation codes', () => {
@@ -30,12 +31,38 @@ describe('ItauReturnMapper', () => {
     });
   });
 
+  it('should trim supported liquidation code before mapping', () => {
+    expect(mapItauLiquidationCode(' 02 ')).toEqual({
+      code: '02',
+      category: 'clearing',
+      description: 'Liquidation channel 02 (clearing)',
+    });
+  });
+
+  it('should normalize single-digit liquidation code before mapping', () => {
+    expect(isValidItauLiquidationCode('2')).toBe(true);
+    expect(mapItauLiquidationCode('2')).toEqual({
+      code: '02',
+      category: 'clearing',
+      description: 'Liquidation channel 02 (clearing)',
+    });
+  });
+
+  it('should reject blank liquidation code', () => {
+    expect(isValidItauLiquidationCode('   ')).toBe(false);
+    expect(() => mapItauLiquidationCode('   ')).toThrow('Unsupported Itau liquidation code:');
+  });
+
   it('should throw for unsupported liquidation code', () => {
     expect(() => mapItauLiquidationCode('99')).toThrow('Unsupported Itau liquidation code: 99');
   });
 
   it('should return undefined for empty rejection message', () => {
     expect(mapItauRejectionMessage(undefined)).toBeUndefined();
+  });
+
+  it('should return undefined for blank rejection message', () => {
+    expect(mapItauRejectionMessage('   ')).toBeUndefined();
   });
 
   it('should map numeric rejection message to code category', () => {
@@ -46,6 +73,18 @@ describe('ItauReturnMapper', () => {
       source: 'catalog',
       description: ITAU_REJECTION_CODE_DESCRIPTION_MAP['00000001'],
     });
+  });
+
+  it('should map all known numeric rejection messages to catalog source', () => {
+    for (const [code, description] of Object.entries(ITAU_REJECTION_CODE_DESCRIPTION_MAP)) {
+      expect(mapItauRejectionMessage(code)).toEqual({
+        raw: code,
+        category: 'code',
+        code,
+        source: 'catalog',
+        description,
+      });
+    }
   });
 
   it('should fallback to generic description for unknown numeric rejection code', () => {
@@ -60,6 +99,16 @@ describe('ItauReturnMapper', () => {
 
   it('should normalize short numeric rejection message and resolve known catalog code', () => {
     expect(mapItauRejectionMessage('1')).toEqual({
+      raw: '1',
+      category: 'code',
+      code: '00000001',
+      source: 'catalog',
+      description: ITAU_REJECTION_CODE_DESCRIPTION_MAP['00000001'],
+    });
+  });
+
+  it('should trim numeric rejection message before normalization', () => {
+    expect(mapItauRejectionMessage('   1   ')).toEqual({
       raw: '1',
       category: 'code',
       code: '00000001',
@@ -84,6 +133,15 @@ describe('ItauReturnMapper', () => {
 
   it('should map text rejection message to text category', () => {
     expect(mapItauRejectionMessage('TITLEERR')).toEqual({
+      raw: 'TITLEERR',
+      category: 'text',
+      source: 'free-text',
+      description: 'Itaú free-text rejection message from return message area',
+    });
+  });
+
+  it('should trim free-text rejection message', () => {
+    expect(mapItauRejectionMessage('  TITLEERR  ')).toEqual({
       raw: 'TITLEERR',
       category: 'text',
       source: 'free-text',

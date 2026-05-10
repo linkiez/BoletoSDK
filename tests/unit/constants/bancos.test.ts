@@ -4,6 +4,7 @@ import {
   getBankCodeWithCheckDigit,
   getBankInfo,
   getBankName,
+  ITAU_REJECTION_CODE_DESCRIPTION_MAP,
   isValidBankCode,
 } from '@constants/bancos';
 import { BankCode } from '@enums/common';
@@ -132,6 +133,17 @@ describe('Bank Constants', () => {
     it('should use fallback check digit for unknown code', () => {
       expect(getBankCodeWithCheckDigit('999')).toBe('999-0');
       expect(getBankCodeWithCheckDigit('999', '8')).toBe('999-8');
+    });
+  });
+
+  describe('ITAU_REJECTION_CODE_DESCRIPTION_MAP', () => {
+    it('should expose known Itaú rejection descriptions', () => {
+      expect(ITAU_REJECTION_CODE_DESCRIPTION_MAP['00000001']).toBe(
+        'Rejected due to invalid wallet code',
+      );
+      expect(ITAU_REJECTION_CODE_DESCRIPTION_MAP['00000010']).toBe(
+        'Rejected due to invalid beneficiary document',
+      );
     });
   });
 });

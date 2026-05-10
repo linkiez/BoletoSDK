@@ -93,6 +93,22 @@ describe('ItauAdapter', () => {
     });
   });
 
+  it('should trim Itaú liquidation code through the facade', () => {
+    expect(adapter.mapLiquidationCode(' 02 ')).toEqual({
+      code: '02',
+      category: 'clearing',
+      description: 'Liquidation channel 02 (clearing)',
+    });
+  });
+
+  it('should normalize single-digit Itaú liquidation code through the facade', () => {
+    expect(adapter.mapLiquidationCode('2')).toEqual({
+      code: '02',
+      category: 'clearing',
+      description: 'Liquidation channel 02 (clearing)',
+    });
+  });
+
   it('should normalize Itaú rejection message through the facade', () => {
     expect(adapter.mapRejectionMessage('12345678')).toEqual({
       raw: '12345678',
@@ -110,6 +126,16 @@ describe('ItauAdapter', () => {
       code: '00000001',
       source: 'catalog',
       description: 'Rejected due to invalid wallet code',
+    });
+  });
+
+  it('should trim Itaú rejection message through the facade', () => {
+    expect(adapter.mapRejectionMessage('   123   ')).toEqual({
+      raw: '123',
+      category: 'code',
+      code: '00000123',
+      source: 'fallback',
+      description: 'Itaú rejection code from return message area: 00000123',
     });
   });
 

@@ -26,6 +26,7 @@ import {
 } from '../../../src/parsers';
 import { AddressSchema, cnab240Schemas, cnab400Schemas } from '../../../src/schemas';
 import {
+  ITAU_REJECTION_CODE_DESCRIPTION_MAP,
   ItauAdapter,
   createItauAdapter,
   mapItauInstructionCode,
@@ -94,6 +95,9 @@ describe('Barrel exports', () => {
       description: 'Protest automatically after N days',
     });
     expect(mapItauLiquidationCode).toBeDefined();
+    expect(ITAU_REJECTION_CODE_DESCRIPTION_MAP['00000001']).toBe(
+      'Rejected due to invalid wallet code',
+    );
     expect(parseItauRemittanceFields(remessaLines[1])).toEqual({
       instructionCancellationCode: '0000',
       bankUseOperation: undefined,
