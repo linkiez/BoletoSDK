@@ -66,6 +66,7 @@
   },
   "devDependencies": {
     "@linkiez/boleto-sdk": "^1.0.0",
+    "@semantic-release/git": "^10.0.1",
     "@types/jest": "^29.5.11",
     "@types/node": "^20.11.0",
     "@types/pdfkit": "^0.17.4",
