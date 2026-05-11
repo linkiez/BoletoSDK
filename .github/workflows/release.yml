@@ -23,10 +23,11 @@ jobs:
           persist-credentials: false
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 'lts/*'
+          node-version: '22.14.0'
           registry-url: 'https://registry.npmjs.org'
+          package-manager-cache: false
 
       - name: Enable Corepack
         run: corepack enable
