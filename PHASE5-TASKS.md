@@ -216,7 +216,7 @@ Phase 5 focuses on completing npm publication, verification, and setting up for 
 - **What's Next**: v1.1.0 Itaú adapter development after npm publication
 - **File References**:
   - PUBLISH-INSTRUCTIONS.md - npm publication steps
-  - RELEASE-v1.0.0-SUMMARY.md - release completion summary
+  - CHANGELOG.md - consolidated release history
   - ROADMAP.md - full development roadmap
 
 ---

@@ -139,6 +139,8 @@ For complete examples, see [Adapters Guide](doc/ADAPTERS.md).
 
 ## 📚 Documentation
 
+- [Documentation Index](doc/README.md)
+
 ### Core
 
 - [API Reference](doc/API-REFERENCE.md)
@@ -154,7 +156,13 @@ For complete examples, see [Adapters Guide](doc/ADAPTERS.md).
 - [CNAB400 Positions Validation](doc/CNAB400_POSITIONS_VALIDATION.md)
 - [Segment Positions Validation](doc/SEGMENT_POSITIONS_VALIDATION.md)
 - [Business Rules](doc/BUSINESS_RULES.md)
-- [Business Rules Sources](doc/BUSINESS_RULES_SOURCES.md)
+
+### Bank-Specific CNAB400 References
+
+- [CNAB400 Itaú](doc/CNAB400-ITAU.md)
+- [CNAB400 Caixa](doc/CNAB400-CAIXA.md)
+- [CNAB400 Santander](doc/CNAB400-SANTANDER.md)
+- [CNAB400 C6 Bank](doc/CNAB400-C6BANK.md)
 
 ### Supporting Docs
 
@@ -162,7 +170,6 @@ For complete examples, see [Adapters Guide](doc/ADAPTERS.md).
 - [FAQ](doc/FAQ.md)
 - [Migration](doc/MIGRATION.md)
 - [SonarQube](doc/SONARQUBE.md)
-- [CNAB400 Bank Samples](doc)
 
 ### Project
 
@@ -177,7 +184,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) and [TESTING.md](TESTING.md) for setup, w
 
 ## 📜 License
 
-APACHE. See [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).
 
 ## 🔗 Links
 

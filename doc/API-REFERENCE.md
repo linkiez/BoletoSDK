@@ -867,7 +867,7 @@ For usage examples, see:
 
 - [CNAB400 Usage Guide](./CNAB400-USAGE-GUIDE.md)
 - [Boleto Generation Guide](./BOLETO-GENERATION.md)
-- [README Examples](../README.md#cnab400-complete-guide)
+- [Project README](../README.md)
 
 ---
 

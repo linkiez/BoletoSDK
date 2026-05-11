@@ -95,7 +95,6 @@
   - ✅ Compiled distribution (dist/) with all assets
   - ✅ Updated package.json with v1.0.0 metadata
   - ✅ Configured npm publishing (.npmignore, exports map, entry points)
-  - ✅ Created RELEASE-v1.0.0-SUMMARY.md with complete workflow summary
   - ✅ Created PUBLISH-INSTRUCTIONS.md with npm publication guide
 
 **Next Steps**: Phase 5.3 documentation/communication wrap-up + Phase 6 Itaú adapter consolidation

@@ -921,9 +921,9 @@ This guide covered:
 
 For more information:
 
-- [FEBRABAN CNAB400 Specification](../doc/CNAB400-FEBRABAN.md)
-- [Bank-Specific Layouts](../doc/BANK_DIFFERENCES.md)
-- [API Documentation](./API.md)
+- [Bank-Specific Layouts](./BANK_DIFFERENCES.md)
+- [CNAB400 Itaú Layout Notes](./CNAB400-ITAU.md)
+- [API Reference](./API-REFERENCE.md)
 
 ---
 
