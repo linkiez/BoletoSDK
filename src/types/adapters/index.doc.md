@@ -17,6 +17,7 @@ Aggregates type exports for bank adapters.
 
 ```ts
 export * from './itau';
+export * from './bradesco';
 ```
 
 ## Main flow
@@ -24,6 +25,7 @@ export * from './itau';
 ```mermaid
 flowchart TD
   A[types/adapters/index.ts] --> B[itau types]
+  A --> C[bradesco types]
 ```
 
 ## Error handling and edge cases
@@ -33,9 +35,9 @@ flowchart TD
 ## Examples
 
 ```ts
-import type { ItauWalletCode } from '@linkiez/boleto-sdk';
+import type { ItauWalletCode, BradescoWalletCode } from '@linkiez/boleto-sdk';
 ```
 
 ## Dependencies and integrations
 
-- Depends on `src/types/adapters/itau/index.ts`.
+- Depends on `src/types/adapters/itau/index.ts` and `src/types/adapters/bradesco/index.ts`.

@@ -5,6 +5,7 @@ This document provides practical examples for parsing and generating CNAB files.
 ## Parse CNAB with Auto-Detection
 
 ```typescript
+import { readFileSync } from 'node:fs';
 import { parseCnab } from '@linkiez/boleto-sdk';
 
 const content = readFileSync('file.cnab', 'utf-8');
@@ -103,4 +104,47 @@ console.log(parsed.fileHeader.bankCode);
 import { validateCnab240File } from '@linkiez/boleto-sdk';
 
 validateCnab240File(file);
+```
+
+## Itaú Adapter - Wallet and Our Number
+
+```typescript
+import { createItauAdapter } from '@linkiez/boleto-sdk';
+
+const adapter = createItauAdapter();
+
+adapter.assertSupportedWallet('109');
+
+const ourNumber = adapter.buildOurNumber('12345678');
+console.log(ourNumber.formatted); // 123456782
+```
+
+## Itaú Adapter - CNAB400 Enrichment
+
+```typescript
+import { readFileSync } from 'node:fs';
+import { createItauAdapter } from '@linkiez/boleto-sdk';
+
+const adapter = createItauAdapter();
+const remittance = readFileSync('tests/fixtures/cnab400/itau-remessa-sample1.ret', 'utf-8');
+const retorno = readFileSync('tests/fixtures/cnab400/itau-retorno-sample1.ret', 'utf-8');
+
+const remittanceDetails = adapter.buildRemittanceDetailsFromContent(remittance);
+const returnDetails = adapter.buildReturnDetailsFromContent(retorno);
+
+console.log(remittanceDetails[0]?.wallet?.code);
+console.log(returnDetails[0]?.occurrence?.description);
+```
+
+## Itaú Adapter - CNAB240 Enrichment
+
+```typescript
+import { readFileSync } from 'node:fs';
+import { createItauAdapter } from '@linkiez/boleto-sdk';
+
+const adapter = createItauAdapter();
+const cnab240Content = readFileSync('input.cnab240', 'utf-8');
+
+const details = adapter.buildCnab240DetailsFromContent(cnab240Content);
+console.log(details.length);
 ```

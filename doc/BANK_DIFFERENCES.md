@@ -498,95 +498,78 @@ const parsed = parseCnab(cnabContent);
 // Returns: generic structure, bank fields as strings
 ```
 
-**Phase 2: Bank Adapters** (Future - v1.1.0+)
+**Phase 2: Bank Adapters** (Current - v1.1.0 in progress)
 
 ```typescript
-// Bank-specific parsing and validation
-import { parseCnab } from '@linkiez/boleto-sdk';
-import { ItauAdapter, BradescoAdapter } from '@linkiez/boleto-sdk/adapters';
+// Bank-specific enrichment and validation helpers
+import { createItauAdapter } from '@linkiez/boleto-sdk';
 
-// With adapter
-const itauParsed = parseCnab(cnabContent, {
-  adapter: new ItauAdapter()
-});
-// Returns: Itaú-specific types with validation
+const adapter = createItauAdapter();
 
-// Generate with validation
-import { generateCnab } from '@linkiez/boleto-sdk';
+adapter.assertSupportedWallet('109');
 
-const itauCnab = generateCnab(data, '240', {
-  adapter: new ItauAdapter(),
-  validate: true // Applies Itaú-specific rules
-});
+const ourNumber = adapter.buildOurNumber('12345678');
+// { baseNumber: '12345678', checkDigit: 2, formatted: '123456782' }
+
+const remittanceDetails = adapter.buildRemittanceDetailsFromContent(cnab400RemittanceContent);
+const returnDetails = adapter.buildReturnDetailsFromContent(cnab400ReturnContent);
+const cnab240Details = adapter.buildCnab240DetailsFromContent(cnab240Content);
 ```
 
 ### Adapter Architecture
 
 ```typescript
-// Base adapter interface
-interface IBankAdapter {
-  readonly bankCode: string;
-  readonly bankName: string;
-
-  // Our number handling
-  formatOurNumber(value: string): string;
-  calculateOurNumberCheckDigit(value: string): string;
-  validateOurNumber(value: string): boolean;
-
-  // Wallet validation
-  validateWallet(wallet: string): boolean;
-  getWalletInfo(wallet: string): WalletInfo;
-
-  // Occurrence codes
-  translateOccurrenceCode(code: string): string;
-
-  // Instruction codes
-  translateInstructionCode(code: string): string;
-
-  // Field parsing (bank-specific areas)
-  parseDetailRecord(line: string, format: 'cnab240' | 'cnab400'): DetailRecord;
-
-  // Field generation
-  generateDetailRecord(data: DetailRecord, format: 'cnab240' | 'cnab400'): string;
-
-  // Validation
-  validate(file: CnabFile): ValidationResult;
+// Current SDK adapter interface
+interface IBankAdapter<
+  TWalletConfig,
+  TRemittanceDetail,
+  TReturnDetail,
+  TCnab240Detail
+> {
+  isSupportedWallet(walletCode: string): boolean;
+  assertSupportedWallet(walletCode: string): void;
+  getWalletConfig(walletCode: string): TWalletConfig | undefined;
+  buildRemittanceDetailsFromContent(content: string): TRemittanceDetail[];
+  buildReturnDetailsFromContent(content: string): TReturnDetail[];
+  buildCnab240DetailsFromContent(content: string): TCnab240Detail[];
 }
 
 // Example: Itaú Adapter
 class ItauAdapter implements IBankAdapter {
-  readonly bankCode = '341';
-  readonly bankName = 'Itaú Unibanco S.A.';
-
-  formatOurNumber(value: string): string {
-    const cleaned = value.replace(/\D/g, '');
-    const ourNumber = cleaned.substring(0, 8).padStart(8, '0');
-    const dac = this.calculateOurNumberCheckDigit(ourNumber);
-    return `${ourNumber}-${dac}`;
+  isSupportedWallet(walletCode: string): boolean {
+    return ['109', '112', '115', '180'].includes(walletCode);
   }
 
-  calculateOurNumberCheckDigit(value: string): string {
-    // Itaú-specific modulo 10
-    const sequence = '21212121';
-    let sum = 0;
-
-    for (let i = 0; i < value.length; i++) {
-      let digit = parseInt(value[i]) * parseInt(sequence[i]);
-      sum += digit > 9 ? Math.floor(digit / 10) + (digit % 10) : digit;
+  assertSupportedWallet(walletCode: string): void {
+    if (!this.isSupportedWallet(walletCode)) {
+      throw new Error(`Unsupported Itaú wallet code: ${walletCode}`);
     }
-
-    const remainder = sum % 10;
-    return remainder === 0 ? '0' : (10 - remainder).toString();
   }
 
-  validateOurNumber(value: string): boolean {
-    if (!/^\d{8}$/.test(value)) return false;
-    // Additional Itaú-specific validation
-    return true;
+  formatOurNumber(baseNumber: string): string {
+    // Uses Itau modulo 10 check digit helper
+    const checkDigit = this.calculateModulo10(baseNumber);
+    return `${baseNumber}${checkDigit}`;
   }
 
-  validateWallet(wallet: string): boolean {
-    return ['109', '112', '115', '180'].includes(wallet);
+  private calculateModulo10(value: string): number {
+    // Simplified snippet for documentation purposes.
+    return 0;
+  }
+
+  buildRemittanceDetailsFromContent(content: string) {
+    // Returns Itaú-enriched CNAB400 remittance details
+    return [];
+  }
+
+  buildReturnDetailsFromContent(content: string) {
+    // Returns Itaú-enriched CNAB400 return details
+    return [];
+  }
+
+  buildCnab240DetailsFromContent(content: string) {
+    // Returns Itaú-enriched CNAB240 details
+    return [];
   }
 
   // ... other methods
@@ -632,8 +615,8 @@ function validateGenericCnabStructure(file: CnabFile): ValidationResult {
 ### Bank-Specific Validation (Adapters)
 
 ```typescript
-// Executed when adapter is provided
-class ItauAdapter implements IBankAdapter {
+// Executed in a bank-specific validation layer
+class ItauValidationService {
   validate(file: CnabFile): ValidationResult {
     const errors: string[] = [];
     const warnings: string[] = [];
@@ -651,7 +634,7 @@ class ItauAdapter implements IBankAdapter {
       }
 
       // Wallet validation
-      if (!this.validateWallet(detail.wallet)) {
+      if (!this.isSupportedWallet(detail.wallet)) {
         errors.push(`Detail ${index}: invalid wallet code ${detail.wallet}`);
       }
 
@@ -675,6 +658,18 @@ class ItauAdapter implements IBankAdapter {
       errors,
       warnings
     };
+  }
+
+  private isSupportedWallet(wallet: string): boolean {
+    return ['109', '112', '115', '180'].includes(wallet);
+  }
+
+  private validateOurNumber(value: string): boolean {
+    return /^\d{8}$/.test(value);
+  }
+
+  private calculateOurNumberCheckDigit(value: string): string {
+    return '0';
   }
 }
 ```

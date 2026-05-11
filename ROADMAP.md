@@ -4,13 +4,13 @@
 
 **Development Flow**: BASE → CNAB400 → CNAB240
 
-**Last Updated**: 2026-05-09
+**Last Updated**: 2026-05-11
 
 ---
 
 ## Current Status 🚀
 
-**Active Phase**: ✅ Phase 4 - Release (100% Complete) | ✅ Phase 5 - Post-Release (5.1-5.2 Complete) | 📋 Phase 6 - v1.1.0 (Planning)
+**Active Phase**: ✅ Phase 4 - Release (100% Complete) | ✅ Phase 5 - Post-Release (5.1-5.2 Complete) | 🚧 Phase 6 - v1.1.0 (In Progress)
 
 **Completed Phases**:
 
@@ -33,7 +33,7 @@
 - **Code Coverage**: 95.69% statements
 - **Documentation**: ~2000+ lines (API-REFERENCE, GUIDES, CONTRIBUTING, TESTING)
 - **Production Ready**: CNAB400 + CNAB240 fully operational with real files
-- **Release Status**: v1.0.0 tagged, GitHub released, main branch merged | npm publish ready
+- **Release Status**: v1.0.0 tagged, GitHub released, main branch merged | npm package published
 
 **Recent Accomplishments (2026-05-09)**:
 
@@ -98,7 +98,7 @@
   - ✅ Created RELEASE-v1.0.0-SUMMARY.md with complete workflow summary
   - ✅ Created PUBLISH-INSTRUCTIONS.md with npm publication guide
 
-**Next Steps**: Phase 5 - Post-Release Operations (npm publish + verification)
+**Next Steps**: Phase 5.3 documentation/communication wrap-up + Phase 6 Itaú adapter consolidation
 
 ---
 
@@ -1152,7 +1152,7 @@ const email = generateBoletoEmail({
 
 **Duration**: ~1 week
 
-**Status**: ✅ **95% COMPLETE** (GitHub release + main merge complete; npm publish pending authentication)
+**Status**: ✅ **100% COMPLETE** (GitHub release + main merge + npm publication completed)
 
 ### 4.1 Pre-Release Checklist
 
@@ -1198,14 +1198,12 @@ const email = generateBoletoEmail({
 
 ### 4.4 npm Publishing
 
-- [ ] Publish to npm: `npm publish` ⏳ **PENDING USER AUTHENTICATION**
-  - See [PUBLISH-INSTRUCTIONS.md](./PUBLISH-INSTRUCTIONS.md) for authentication steps
-  - Requires npm token or npm login credentials
-  - Command ready: `npm publish --ignore-scripts`
-- [ ] Verify package on npm registry
+- [x] Publish to npm: `npm publish`
+  - Published as `@linkiez/boleto-sdk@1.0.0` (2026-05-09)
+- [x] Verify package on npm registry
   - `npm view @linkiez/boleto-sdk@1.0.0`
-- [ ] Test installation: `npm install @linkiez/boleto-sdk@1.0.0`
-- [ ] Verify package contents
+- [x] Test installation: `npm install @linkiez/boleto-sdk@1.0.0`
+- [x] Verify package contents
   - dist/, README.md, LICENSE included
   - src/, tests/, scripts/ excluded
 
@@ -1221,8 +1219,8 @@ const email = generateBoletoEmail({
 - [x] Package built and ready for publication
 - [x] GitHub release created with documentation
 - [x] Main branch integrated and pushed
-- [ ] Package published to npm (pending authentication)
-- [ ] Installation works correctly (will verify after npm publish)
+- [x] Package published to npm
+- [x] Installation works correctly
 
 ---
 
@@ -1251,16 +1249,16 @@ const email = generateBoletoEmail({
 
 ### 5.3 Documentation & Communication
 
-- [ ] Update README with npm installation badge
-- [ ] Create GitHub release announcement (if not already done)
-- [ ] Document any npm-specific usage
-- [ ] Add installation badges (npm, GitHub)
+- [x] Update README with npm installation badge
+- [x] Create GitHub release announcement (doc/RELEASE-ANNOUNCEMENT-1.0.0.md)
+- [x] Document any npm-specific usage
+- [x] Add installation badges (npm, GitHub)
 
 ### 5.4 Prepare for v1.1.0
 
 - [ ] Review community feedback
-- [ ] Prioritize bank adapter implementation
-- [ ] Plan Itaú adapter (v1.1.0)
+- [x] Prioritize bank adapter implementation
+- [x] Plan Itaú adapter (v1.1.0)
 
 
 
@@ -1270,7 +1268,7 @@ const email = generateBoletoEmail({
 
 ### Future Enhancements
 
-#### v1.1.0 - Bank-Specific Adapters (Itaú) ⏳ **PRIORITY 1**
+#### v1.1.0 - Bank-Specific Adapters (Itaú) 🚧 **PRIORITY 1**
 
 **Objective**: Add comprehensive Itaú bank support with complete validation and field interpretation.
 
@@ -1282,35 +1280,35 @@ const email = generateBoletoEmail({
 
 **Location**: `src/adapters/itau/`
 
-- [ ] `ItauAdapter.ts` - Main adapter class implementing `IBankAdapter` interface
-- [ ] `ItauOurNumberCalculator.ts` - Our number format and check digit (modulo 10)
-- [ ] `ItauWalletValidator.ts` - Wallet codes (109, 112, 115, 180) validation
-- [ ] `ItauOccurrenceMapper.ts` - Map Itaú-specific occurrence codes to generic types
-- [ ] `ItauInstructionMapper.ts` - Map Itaú-specific instruction codes
-- [ ] `ItauFieldParser.ts` - Parse Itaú-specific fields in "bank use" areas
-- [ ] `ItauValidator.ts` - Business rules specific to Itaú
+- [x] `ItauAdapter.ts` - Main adapter class implementing `IBankAdapter` interface
+- [x] `ItauOurNumberCalculator.ts` - Our number format and check digit (modulo 10)
+- [x] `ItauWalletValidator.ts` - Wallet codes (109, 112, 115, 180) validation
+- [x] `ItauOccurrenceMapper.ts` - Map Itaú-specific occurrence codes to generic types
+- [x] `ItauInstructionMapper.ts` - Map Itaú-specific instruction codes
+- [x] `ItauFieldParser.ts` - Parse Itaú-specific fields in "bank use" areas
+- [x] `ItauValidator.ts` - Business rules specific to Itaú
 
 **Types**: `src/types/adapters/itau/`
 
-- [ ] `ItauCnab400Detail.ts` - Itaú-specific CNAB400 detail record
-- [ ] `ItauCnab240Segment.ts` - Itaú-specific CNAB240 segments
-- [ ] `ItauWallet.ts` - Wallet configuration types
-- [ ] `ItauOccurrence.ts` - Occurrence code types
+- [x] `ItauCnab400RemittanceDetail.ts` + `ItauCnab400ReturnDetail.ts` - Itaú-specific CNAB400 detail records
+- [x] `ItauCnab240Segment.ts` - Itaú-specific CNAB240 segments
+- [x] `ItauWallet.ts` - Wallet configuration types
+- [x] `ItauOccurrence.ts` - Occurrence code types
 
-**Tests**: `tests/adapters/itau/`
+**Tests**: `tests/unit/adapters/itau/` and `tests/integration/`
 
-- [ ] Unit tests for check digit calculation (modulo 10)
-- [ ] Unit tests for wallet validation
-- [ ] Integration tests with real Itaú CNAB files
-- [ ] Round-trip tests with Itaú adapter
-- [ ] 50+ tests minimum
+- [x] Unit tests for check digit calculation (modulo 10)
+- [x] Unit tests for wallet validation
+- [x] Integration tests with real Itaú CNAB files
+- [x] Round-trip/enrichment tests with Itaú adapter
+- [x] 50+ tests minimum
 
 **Documentation**:
 
-- [ ] Update README with Itaú adapter usage
-- [ ] Create `docs/ADAPTERS.md` with adapter guide
-- [ ] Update `doc/BANK_DIFFERENCES.md` with Itaú details
-- [ ] Add Itaú-specific examples to `doc/EXAMPLES.md`
+- [x] Update README with Itaú adapter usage
+- [x] Create `doc/ADAPTERS.md` with adapter guide
+- [x] Update `doc/BANK_DIFFERENCES.md` with Itaú details
+- [x] Add Itaú-specific examples to `doc/EXAMPLES.md`
 
 **Acceptance Criteria**:
 
@@ -1328,8 +1326,8 @@ const email = generateBoletoEmail({
 import { createItauAdapter } from '@linkiez/boleto-sdk';
 
 const itau = createItauAdapter();
-const ourNumber = itau.calculateOurNumber('123456', { checkDigit: true });
-const validated = itau.validateWallet('109', boletoData);
+const ourNumber = itau.buildOurNumber('12345678');
+itau.assertSupportedWallet('109');
 ```
 
 #### v1.2.0 - Bank Adapters (Bradesco) ⏳ **PRIORITY 2**
@@ -1342,12 +1340,12 @@ const validated = itau.validateWallet('109', boletoData);
 
 **Location**: `src/adapters/bradesco/`
 
-- [ ] `BradescoAdapter.ts` - Main adapter
-- [ ] `BradescoOurNumberCalculator.ts` - 11 digits + check digit (modulo 11)
-- [ ] `BradescoWalletValidator.ts` - Wallets 09, 19, 26 with variations
-- [ ] `BradescoOccurrenceMapper.ts` - Bradesco occurrence codes
-- [ ] `BradescoFieldParser.ts` - Bank-specific field parsing
-- [ ] `BradescoValidator.ts` - Bradesco business rules
+- [x] `BradescoAdapter.ts` - Main adapter
+- [x] `BradescoOurNumberCalculator.ts` - 11 digits + check digit (modulo 11)
+- [x] `BradescoWalletValidator.ts` - Wallets 09, 19, 26 with variations
+- [x] `BradescoOccurrenceMapper.ts` - Bradesco occurrence codes
+- [x] `BradescoFieldParser.ts` - Bank-specific field parsing
+- [x] `BradescoValidator.ts` - Bradesco business rules
 
 **Key Features**:
 
@@ -1504,10 +1502,10 @@ const validated = itau.validateWallet('109', boletoData);
 | **Phase 2: CNAB240**               | 6 weeks      | ✅ Complete         | Complete CNAB240 parsing/generation (148+ tests)          |
 | **Phase 3: Testing & Docs**        | 2 weeks      | ✅ Complete         | ≥90% coverage, complete documentation                     |
 | **Phase 3.5: Boleto HTML/PDF**     | 3 weeks      | ✅ Complete         | HTML/PDF generation, barcode, PIX integration             |
-| **Phase 4: Release**               | 1 week       | ✅ 95% Complete     | v1.0.0 GitHub release + main merge (npm pending)          |
-| **Phase 5: Post-Release Ops**      | 1 day        | ⏳ Pending          | npm publish + verification                                |
-| **Phase 6: v1.1.0 (Itaú Adapter)** | 2-3 weeks    | 📋 Planned          | Comprehensive Itaú bank support                           |
-| **Total to v1.0**                  | **16 weeks** | **95% Complete**    | Production-ready SDK + GitHub release                     |
+| **Phase 4: Release**               | 1 week       | ✅ 100% Complete    | v1.0.0 GitHub release + main merge + npm publication      |
+| **Phase 5: Post-Release Ops**      | 1 day        | ✅ Complete         | npm publish + verification                                |
+| **Phase 6: v1.1.0 (Itaú Adapter)** | 2-3 weeks    | 🚧 In Progress      | Comprehensive Itaú bank support                           |
+| **Total to v1.0**                  | **16 weeks** | **100% Complete**   | Production-ready SDK + GitHub release + npm publication   |
 | **Total to v1.1**                  | **18-19 wks**| **In Pipeline**     | SDK with bank-specific adapters                           |
 
 ---
@@ -1546,7 +1544,7 @@ const validated = itau.validateWallet('109', boletoData);
 - ✅ Supports both file formats (CNAB400 and CNAB240)
 - ✅ Easy to integrate (simple API)
 - ✅ Well-documented for developers
-- ⏳ Published to npm registry (awaiting authentication)
+- ✅ Published to npm registry (@linkiez/boleto-sdk@1.0.0)
 
 ### Release Delivery
 
@@ -1554,10 +1552,10 @@ const validated = itau.validateWallet('109', boletoData);
 - ✅ Release notes comprehensive and accessible
 - ✅ Main branch updated and pushed
 - ✅ Package ready for npm publication
-- ⏳ npm publication (requires user npm credentials)
+- ✅ npm publication completed and verified
 
 ---
 
-**Last Updated**: 2026-05-09 (Post-Release)
+**Last Updated**: 2026-05-11 (Post-Release)
 **Version**: 2.1
-**Status**: Phase 4 95% Complete | Phase 5 Ready to Start
+**Status**: Phase 4 100% Complete | Phase 5 5.1-5.3 in progress | Phase 6 in progress (Itaú adapter)

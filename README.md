@@ -3,6 +3,7 @@
 Brazilian bank slip (boleto) & CNAB processing library with type safety, validation, and ready-to-render assets.
 
 [![npm version](https://badge.fury.io/js/@linkiez%2Fboleto-sdk.svg)](https://www.npmjs.com/package/@linkiez/boleto-sdk)
+[![GitHub release](https://img.shields.io/github/v/release/linkiez/BoletoSDK)](https://github.com/linkiez/BoletoSDK/releases)
 [![CI](https://github.com/linkiez/BoletoSDK/workflows/CI/badge.svg)](https://github.com/linkiez/BoletoSDK/actions)
 [![Coverage](https://img.shields.io/codecov/c/github/linkiez/BoletoSDK)](https://codecov.io/gh/linkiez/BoletoSDK)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -121,6 +122,21 @@ const pdf = await generateBoletoPdfBuffer({
 });
 ```
 
+## 🏦 Bank Adapters (Itaú)
+
+```typescript
+import { createItauAdapter } from '@linkiez/boleto-sdk';
+
+const adapter = createItauAdapter();
+
+adapter.assertSupportedWallet('109');
+
+const ourNumber = adapter.buildOurNumber('12345678');
+// { baseNumber: '12345678', checkDigit: 2, formatted: '123456782' }
+```
+
+For complete examples, see [Adapters Guide](doc/ADAPTERS.md).
+
 ## 📚 Documentation
 
 ### Core
@@ -129,6 +145,7 @@ const pdf = await generateBoletoPdfBuffer({
 - [CNAB240 Guide](doc/CNAB240_GUIDE.md)
 - [CNAB400 Usage Guide](doc/CNAB400-USAGE-GUIDE.md)
 - [Boleto Generation Guide](doc/BOLETO-GENERATION.md)
+- [Adapters Guide](doc/ADAPTERS.md)
 - [Examples](doc/EXAMPLES.md)
 
 ### Specs and Validation

@@ -19,6 +19,7 @@ Aggregates bank adapters exposed by the SDK.
 ```ts
 export * from './IBankAdapter';
 export * from './itau';
+export * from './bradesco';
 ```
 
 ## Main flow
@@ -26,7 +27,8 @@ export * from './itau';
 ```mermaid
 flowchart TD
   A[adapters/index.ts] --> B[itau]
-  A --> C[IBankAdapter]
+  A --> C[bradesco]
+  A --> D[IBankAdapter]
 ```
 
 ## Error handling and edge cases
@@ -36,9 +38,9 @@ flowchart TD
 ## Examples
 
 ```ts
-import { ItauAdapter } from '@linkiez/boleto-sdk';
+import { ItauAdapter, buildBradescoOurNumber } from '@linkiez/boleto-sdk';
 ```
 
 ## Dependencies and integrations
 
-- Depends on subfolder exports in `src/adapters/itau`.
+- Depends on subfolder exports in `src/adapters/itau` and `src/adapters/bradesco`.
