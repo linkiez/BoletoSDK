@@ -1,7 +1,4 @@
-import type {
-  BradescoOccurrenceCode,
-  BradescoOccurrenceMapping,
-} from '../../types/adapters';
+import type { BradescoOccurrenceCode, BradescoOccurrenceMapping } from '../../types/adapters';
 
 /**
  * Normalized mapping for Bradesco CNAB return occurrence codes.

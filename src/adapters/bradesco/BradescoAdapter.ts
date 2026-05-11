@@ -16,9 +16,15 @@ import type {
 import { parseCnab240 } from '../../parsers/cnab240';
 import { parseDetailRecord, parseReturnDetailRecord } from '../../parsers/cnab400';
 import { parseBradescoRemittanceFields, parseBradescoReturnFields } from './BradescoFieldParser';
-import { mapBradescoOccurrenceCode, isValidBradescoOccurrenceCode } from './BradescoOccurrenceMapper';
+import {
+  mapBradescoOccurrenceCode,
+  isValidBradescoOccurrenceCode,
+} from './BradescoOccurrenceMapper';
 import { buildBradescoOurNumber, formatBradescoOurNumber } from './BradescoOurNumberCalculator';
-import { validateBradescoRemittanceFields, validateBradescoReturnFields } from './BradescoValidator';
+import {
+  validateBradescoRemittanceFields,
+  validateBradescoReturnFields,
+} from './BradescoValidator';
 import {
   assertValidBradescoWallet,
   getBradescoWalletConfig,
@@ -204,7 +210,9 @@ export class BradescoAdapter implements IBankAdapter<
    * @returns Enriched remittance details for all record type 1 lines.
    */
   public buildRemittanceDetailsFromContent(content: string): BradescoCnab400RemittanceDetail[] {
-    return BradescoAdapter.extractDetailLines(content).map((line) => this.buildRemittanceDetail(line));
+    return BradescoAdapter.extractDetailLines(content).map((line) =>
+      this.buildRemittanceDetail(line),
+    );
   }
 
   /**

@@ -49,7 +49,9 @@ describe('BradescoAdapter', () => {
     expect(contract.isSupportedWallet('19')).toBe(true);
     expect(contract.buildRemittanceDetailsFromContent('')).toEqual([]);
     expect(contract.buildReturnDetailsFromContent('')).toEqual([]);
-    expect(contract.buildCnab240DetailsFromContent(createMinimalBradescoCnab240Content('09', '06'))).toHaveLength(1);
+    expect(
+      contract.buildCnab240DetailsFromContent(createMinimalBradescoCnab240Content('09', '06')),
+    ).toHaveLength(1);
   });
 
   it('should validate supported wallet code', () => {
@@ -125,7 +127,9 @@ describe('BradescoAdapter', () => {
   });
 
   it('should build enriched Bradesco CNAB240 detail payloads from content', () => {
-    const result = adapter.buildCnab240DetailsFromContent(createMinimalBradescoCnab240Content('09', '06'));
+    const result = adapter.buildCnab240DetailsFromContent(
+      createMinimalBradescoCnab240Content('09', '06'),
+    );
 
     expect(result).toHaveLength(1);
     expect(result[0].movementType).toBe('cnab240');
@@ -140,7 +144,9 @@ describe('BradescoAdapter', () => {
   });
 
   it('should mark unsupported CNAB240 wallet as invalid', () => {
-    const result = adapter.buildCnab240DetailsFromContent(createMinimalBradescoCnab240Content('77', '06'));
+    const result = adapter.buildCnab240DetailsFromContent(
+      createMinimalBradescoCnab240Content('77', '06'),
+    );
 
     expect(result).toHaveLength(1);
     expect(result[0].wallet).toBeUndefined();
@@ -158,12 +164,7 @@ describe('BradescoAdapter', () => {
     const firstDetail = replaceAt(
       replaceAt(
         replaceAt(
-          replaceAt(
-            replaceAt(baseDetailLine, 157, 158, '00'),
-            84,
-            86,
-            '019',
-          ),
+          replaceAt(replaceAt(baseDetailLine, 157, 158, '00'), 84, 86, '019'),
           108,
           108,
           'R',
@@ -179,12 +180,7 @@ describe('BradescoAdapter', () => {
     const secondDetail = replaceAt(
       replaceAt(
         replaceAt(
-          replaceAt(
-            replaceAt(baseDetailLine, 157, 158, '00'),
-            84,
-            86,
-            '026',
-          ),
+          replaceAt(replaceAt(baseDetailLine, 157, 158, '00'), 84, 86, '026'),
           108,
           108,
           'R',
@@ -223,33 +219,13 @@ describe('BradescoAdapter', () => {
     const trailerLine = lines.at(-1);
 
     const firstDetail = replaceAt(
-      replaceAt(
-        replaceAt(
-          replaceAt(baseDetailLine, 84, 86, '019'),
-          108,
-          108,
-          'R',
-        ),
-        109,
-        110,
-        '06',
-      ),
+      replaceAt(replaceAt(replaceAt(baseDetailLine, 84, 86, '019'), 108, 108, 'R'), 109, 110, '06'),
       71,
       71,
       ' ',
     );
     const secondDetail = replaceAt(
-      replaceAt(
-        replaceAt(
-          replaceAt(baseDetailLine, 84, 86, '026'),
-          108,
-          108,
-          'R',
-        ),
-        109,
-        110,
-        '03',
-      ),
+      replaceAt(replaceAt(replaceAt(baseDetailLine, 84, 86, '026'), 108, 108, 'R'), 109, 110, '03'),
       71,
       71,
       ' ',
@@ -279,6 +255,8 @@ describe('BradescoAdapter', () => {
   });
 
   it('should throw when asserting unsupported wallet code', () => {
-    expect(() => adapter.assertSupportedWallet('99')).toThrow('Unsupported Bradesco wallet code: 99');
+    expect(() => adapter.assertSupportedWallet('99')).toThrow(
+      'Unsupported Bradesco wallet code: 99',
+    );
   });
 });

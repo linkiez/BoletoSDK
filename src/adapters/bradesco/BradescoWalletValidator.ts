@@ -3,7 +3,11 @@ import type { BradescoWalletCode, BradescoWalletConfig } from '../../types/adapt
 /**
  * List of wallet codes supported by Bradesco adapter.
  */
-export const BRADESCO_SUPPORTED_WALLETS: readonly BradescoWalletCode[] = ['09', '19', '26'] as const;
+export const BRADESCO_SUPPORTED_WALLETS: readonly BradescoWalletCode[] = [
+  '09',
+  '19',
+  '26',
+] as const;
 
 /**
  * Wallet configuration metadata by canonical Bradesco wallet code.

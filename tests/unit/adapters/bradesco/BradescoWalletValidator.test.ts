@@ -57,8 +57,6 @@ describe('BradescoWalletValidator', () => {
   });
 
   it('should throw for invalid wallet code in assertion helper', () => {
-    expect(() => assertValidBradescoWallet('999')).toThrow(
-      'Unsupported Bradesco wallet code: 999',
-    );
+    expect(() => assertValidBradescoWallet('999')).toThrow('Unsupported Bradesco wallet code: 999');
   });
 });

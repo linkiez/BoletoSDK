@@ -35,7 +35,9 @@ function validateBradescoWalletAndOccurrence(fields: BradescoReturnFields, error
 
 function validateBradescoRawCheckDigits(fields: BradescoReturnFields, errors: string[]): void {
   if (!isValidBradescoCheckDigit(fields.ourNumberCheckDigit)) {
-    errors.push(`Invalid Bradesco our-number check digit: ${fields.ourNumberCheckDigit ?? ''}`.trim());
+    errors.push(
+      `Invalid Bradesco our-number check digit: ${fields.ourNumberCheckDigit ?? ''}`.trim(),
+    );
   }
 
   if (!isValidBradescoCheckDigit(fields.confirmedOurNumberCheckDigit)) {
@@ -49,7 +51,11 @@ function validateBradescoCalculatedCheckDigits(
   fields: BradescoReturnFields,
   errors: string[],
 ): void {
-  if (fields.ourNumber && fields.ourNumberCheckDigit && isValidBradescoCheckDigit(fields.ourNumberCheckDigit)) {
+  if (
+    fields.ourNumber &&
+    fields.ourNumberCheckDigit &&
+    isValidBradescoCheckDigit(fields.ourNumberCheckDigit)
+  ) {
     const expectedCheckDigit = calculateBradescoOurNumberCheckDigit(fields.ourNumber);
     if (fields.ourNumberCheckDigit !== expectedCheckDigit) {
       errors.push(
@@ -78,7 +84,11 @@ function validateBradescoOurNumberConsistency(
   fields: BradescoReturnFields,
   errors: string[],
 ): void {
-  if (fields.ourNumber && fields.confirmedOurNumber && fields.ourNumber !== fields.confirmedOurNumber) {
+  if (
+    fields.ourNumber &&
+    fields.confirmedOurNumber &&
+    fields.ourNumber !== fields.confirmedOurNumber
+  ) {
     errors.push('Our-number does not match confirmed our-number');
   }
 }
@@ -89,7 +99,9 @@ function validateBradescoOurNumberConsistency(
  * @param fields - Parsed Bradesco remittance fields.
  * @returns Validation result with collected errors.
  */
-export function validateBradescoRemittanceFields(fields: BradescoRemittanceFields): ValidationResult {
+export function validateBradescoRemittanceFields(
+  fields: BradescoRemittanceFields,
+): ValidationResult {
   const errors: string[] = [];
 
   if (!isTwoDigitCode(fields.instructionCode)) {

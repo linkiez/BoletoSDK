@@ -14,12 +14,7 @@ describe('BradescoFieldParser', () => {
   it('should parse remittance-specific Bradesco fields', () => {
     const line = replaceAt(
       replaceAt(
-        replaceAt(
-          replaceAt(replaceAt(baseLine, 157, 158, '00'), 84, 86, '019'),
-          108,
-          108,
-          'R',
-        ),
+        replaceAt(replaceAt(replaceAt(baseLine, 157, 158, '00'), 84, 86, '019'), 108, 108, 'R'),
         109,
         110,
         '01',
@@ -43,17 +38,7 @@ describe('BradescoFieldParser', () => {
       replaceAt(
         replaceAt(
           replaceAt(
-            replaceAt(
-              replaceAt(
-                replaceAt(baseLine, 84, 86, '019'),
-                108,
-                108,
-                'R',
-              ),
-              109,
-              110,
-              '06',
-            ),
+            replaceAt(replaceAt(replaceAt(baseLine, 84, 86, '019'), 108, 108, 'R'), 109, 110, '06'),
             63,
             70,
             '12345678',
