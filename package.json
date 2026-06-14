@@ -1,6 +1,6 @@
 {
   "name": "@linkiez/boleto-sdk",
-  "version": "1.1.4",
+  "version": "1.2.0",
   "description": "SDK for Brazilian banking boletos and CNAB files processing",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
