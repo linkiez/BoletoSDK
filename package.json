@@ -20,6 +20,7 @@
     "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
     "build": "npm run clean && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "benchmark:pdf-batch": "ts-node scripts/benchmark-pdf-batch.ts",
+    "preview:boleto": "ts-node scripts/preview-boleto.ts",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
