@@ -118,6 +118,8 @@ describe('renderBoletoToPdf - barcode rendering', () => {
 
     expect(imageSpy).toHaveBeenCalledWith(
       expect.any(Buffer),
+      expect.any(Number),
+      expect.any(Number),
       expect.objectContaining({ width: 200, height: 30 }),
     );
   });

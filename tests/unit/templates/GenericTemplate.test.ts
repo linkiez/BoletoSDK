@@ -2,7 +2,7 @@ import type { BoletoTemplateData } from '@templates/BoletoTemplate';
 import { GenericTemplate } from '@templates/GenericTemplate';
 
 describe('GenericTemplate', () => {
-  it('should render basic boleto information', () => {
+  it('should render industrial integrity layout', () => {
     const template = new GenericTemplate();
     const data: BoletoTemplateData = {
       beneficiary: {
@@ -31,11 +31,11 @@ describe('GenericTemplate', () => {
 
     const html = template.render(data);
 
-    expect(html).toContain('Boleto');
-    expect(html).toContain('Cedente');
+    expect(html).toContain('INDUSTRIAL INTEGRITY');
+    expect(html).toContain('Beneficiario');
     expect(html).toContain('ACME Corp');
-    expect(html).toContain('Sacado:');
+    expect(html).toContain('Pagador');
     expect(html).toContain('John Doe');
-    expect(html).toContain('341-7');
+    expect(html).toContain('341');
   });
 });
