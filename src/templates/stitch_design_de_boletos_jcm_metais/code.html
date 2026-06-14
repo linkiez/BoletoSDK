@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>JCM Metais - Ficha de Compensação</title>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary": "#ffffff",
+                    "inverse-on-surface": "#f0f1f2",
+                    "tertiary-container": "#27272d",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-dim": "#d9dadb",
+                    "error": "#ba1a1a",
+                    "on-tertiary-fixed-variant": "#46464d",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-container": "#fffbff",
+                    "primary-fixed-dim": "#c8c6c9",
+                    "on-primary-fixed-variant": "#47464a",
+                    "primary-fixed": "#e4e1e5",
+                    "tertiary-fixed": "#e3e1ea",
+                    "on-error": "#ffffff",
+                    "surface": "#f8f9fa",
+                    "tertiary-fixed-dim": "#c7c5ce",
+                    "secondary": "#bb0112",
+                    "tertiary": "#121218",
+                    "on-secondary-fixed-variant": "#93000b",
+                    "on-tertiary-container": "#8f8d96",
+                    "primary-container": "#27272a",
+                    "on-primary-fixed": "#1b1b1e",
+                    "on-primary-container": "#8f8e91",
+                    "surface-container-high": "#e7e8e9",
+                    "outline": "#77767b",
+                    "surface-alt": "#F4F4F5",
+                    "on-background": "#191c1d",
+                    "on-error-container": "#93000a",
+                    "outline-variant": "#c7c6cb",
+                    "surface-variant": "#e1e3e4",
+                    "on-surface": "#191c1d",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed": "#ffdad6",
+                    "surface-container": "#edeeef",
+                    "surface-container-low": "#f3f4f5",
+                    "background": "#f8f9fa",
+                    "surface-container-highest": "#e1e3e4",
+                    "on-surface-variant": "#46464b",
+                    "on-tertiary-fixed": "#1b1b21",
+                    "secondary-fixed-dim": "#ffb4ab",
+                    "iron-gray": "#3F3F46",
+                    "primary": "#121315",
+                    "surface-bright": "#f8f9fa",
+                    "on-secondary-fixed": "#410002",
+                    "industrial-red": "#DC2626",
+                    "surface-tint": "#5f5e61",
+                    "slate-steel": "#27272A",
+                    "inverse-surface": "#2e3132",
+                    "inverse-primary": "#c8c6c9",
+                    "secondary-container": "#e02928"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline-md": ["Hanken Grotesk"],
+                    "headline-lg-mobile": ["Hanken Grotesk"],
+                    "body-md": ["Inter"],
+                    "code-sm": ["JetBrains Mono"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "body-lg": ["Inter"],
+                    "label-caps": ["JetBrains Mono"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; margin: 0; padding: 0; }
+            .a4-page { 
+                box-shadow: none !important; 
+                margin: 0 !important; 
+                border: none !important;
+                width: 210mm !important;
+                height: 297mm !important;
+            }
+            .print-border-black { border-color: #000 !important; }
+            * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+        .a4-page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            margin: 2rem auto;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .boleto-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .boleto-table td, .boleto-table th {
+            border: 1px solid #77767b;
+            padding: 4px 8px;
+            vertical-align: top;
+        }
+        .label-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8px;
+            text-transform: uppercase;
+            color: #46464b;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .data-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: #121315;
+        }
+        .barcode-svg {
+            width: 100%;
+            height: 50px;
+        }
+    </style>
+</head>
+<body class="bg-surface-container-low font-body-md">
+<!-- Utility Bar (Web Only) -->
+<div class="no-print bg-slate-steel text-white py-3 px-4 sticky top-0 z-50 flex justify-between items-center shadow-lg">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined">print</span>
+<span class="font-semibold">Visualização de Impressão</span>
+</div>
+<div class="flex gap-4">
+<button class="bg-industrial-red hover:bg-secondary-container px-6 py-2 rounded-lg font-bold flex items-center gap-2 transition-all" onclick="window.print()">
+<span class="material-symbols-outlined">print</span> IMPRIMIR BOLETO
+            </button>
+<button class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-sm border border-white/20 transition-all" onclick="copyCode()">
+                Copiar Linha Digitável
+            </button>
+</div>
+</div>
+<!-- A4 Paper Container -->
+<div class="a4-page relative flex flex-col">
+<!-- Top Receipt (Recibo do Pagador) -->
+<header class="flex justify-between items-end mb-4 border-b-2 border-dashed border-outline-variant pb-6">
+<div class="flex flex-col">
+<h2 class="font-headline-md text-primary text-2xl tracking-tighter">JCM METAIS</h2>
+<span class="font-label-caps text-[10px] text-on-surface-variant">SOLUÇÕES INDUSTRIAIS</span>
+</div>
+<div class="text-right">
+<p class="font-label-caps text-on-surface-variant text-xs">RECIBO DO PAGADOR</p>
+<div class="flex items-center gap-2 mt-1">
+<div class="bg-slate-steel text-white px-2 py-1 font-bold rounded">341-7</div>
+<span class="font-body-md font-bold">Itaú Unibanco</span>
+</div>
+</div>
+</header>
+<!-- Receipt Grid -->
+<div class="grid grid-cols-4 border border-outline mb-12">
+<div class="col-span-3 border-r border-outline p-2">
+<span class="label-text">Beneficiário</span>
+<span class="data-text">JCM Metais LTDA - CNPJ: 12.345.678/0001-90</span>
+</div>
+<div class="p-2">
+<span class="label-text">Vencimento</span>
+<span class="data-text">25/10/2023</span>
+</div>
+<div class="col-span-2 border-t border-r border-outline p-2">
+<span class="label-text">Pagador</span>
+<span class="data-text">Metalúrgica Avançada S.A.</span>
+</div>
+<div class="border-t border-r border-outline p-2">
+<span class="label-text">Agência/Código Beneficiário</span>
+<span class="data-text">0900 / 45151-1</span>
+</div>
+<div class="border-t border-outline p-2">
+<span class="label-text">Valor do Documento</span>
+<span class="data-text">R$ 4.250,00</span>
+</div>
+</div>
+<div class="border-b-2 border-dashed border-outline-variant mb-12 relative">
+<span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-white px-4 font-label-caps text-[10px] text-outline">Corte na linha pontilhada</span>
+</div>
+<!-- Main Ticket (Ficha de Compensação) -->
+<div class="flex items-center mb-0">
+<div class="w-24 h-12 flex items-center justify-center border-r-2 border-black mr-4">
+<span class="font-bold text-2xl">341-7</span>
+</div>
+<div class="flex-1 flex items-center justify-between px-4 border-b-2 border-black h-12">
+<span class="font-bold text-xl tracking-tight" id="digitavel">34191.09008 04515.110007 00000.000000 1 95140000425000</span>
+</div>
+</div>
+<table class="boleto-table mb-8 border-t-0">
+<tbody>
+<tr>
+<td class="w-3/4" colspan="4">
+<span class="label-text">Local de Pagamento</span>
+<span class="data-text">Pagável em qualquer banco até o vencimento.</span>
+</td>
+<td>
+<span class="label-text">Vencimento</span>
+<span class="data-text">25/10/2023</span>
+</td>
+</tr>
+<tr>
+<td colspan="4">
+<span class="label-text">Beneficiário</span>
+<span class="data-text">JCM Metais LTDA - CNPJ: 12.345.678/0001-90</span>
+</td>
+<td>
+<span class="label-text">Agência / Código Beneficiário</span>
+<span class="data-text">0900 / 45151-1</span>
+</td>
+</tr>
+<tr>
+<td class="w-1/6">
+<span class="label-text">Data do Doc.</span>
+<span class="data-text">10/10/2023</span>
+</td>
+<td class="w-1/6">
+<span class="label-text">Nº do Documento</span>
+<span class="data-text">JCM-4458</span>
+</td>
+<td class="w-1/6">
+<span class="label-text">Espécie Doc.</span>
+<span class="data-text">DM</span>
+</td>
+<td class="w-1/6">
+<span class="label-text">Aceite</span>
+<span class="data-text">N</span>
+</td>
+<td>
+<span class="label-text">Data Processamento</span>
+<span class="data-text">10/10/2023</span>
+</td>
+</tr>
+<tr>
+<td class="w-1/6">
+<span class="label-text">Uso do Banco</span>
+<span class="data-text"></span>
+</td>
+<td class="w-1/6">
+<span class="label-text">Carteira</span>
+<span class="data-text">109</span>
+</td>
+<td class="w-1/6">
+<span class="label-text">Espécie</span>
+<span class="data-text">R$</span>
+</td>
+<td class="w-1/6">
+<span class="label-text">Quantidade</span>
+<span class="data-text"></span>
+</td>
+<td>
+<span class="label-text">(=) Valor do Documento</span>
+<span class="data-text">4.250,00</span>
+</td>
+</tr>
+<tr>
+<td colspan="4" rowspan="5">
+<span class="label-text">Instruções (Texto de responsabilidade do beneficiário)</span>
+<div class="mt-2 flex flex-col gap-2">
+<p class="font-body-md text-sm">Após o vencimento, cobrar multa de 2% e juros de 1% ao mês.</p>
+<p class="font-body-md text-sm">Não receber após 30 dias de atraso.</p>
+<p class="font-body-md text-sm">Referente à fatura de insumos industriais nº 9928-A.</p>
+</div>
+</td>
+<td>
+<span class="label-text">(-) Descontos / Abatimento</span>
+<span class="data-text"></span>
+</td>
+</tr>
+<tr>
+<td>
+<span class="label-text">(-) Outras Deduções</span>
+<span class="data-text"></span>
+</td>
+</tr>
+<tr>
+<td>
+<span class="label-text">(+) Mora / Multa</span>
+<span class="data-text"></span>
+</td>
+</tr>
+<tr>
+<td>
+<span class="label-text">(+) Outros Acréscimos</span>
+<span class="data-text"></span>
+</td>
+</tr>
+<tr>
+<td>
+<span class="label-text">(=) Valor Cobrado</span>
+<span class="data-text"></span>
+</td>
+</tr>
+<tr>
+<td colspan="5">
+<div class="flex flex-col">
+<span class="label-text">Pagador</span>
+<span class="data-text">Metalúrgica Avançada S.A. - CPF/CNPJ: 98.765.432/0001-21</span>
+<span class="data-text font-normal text-xs">Av. Industrial, 1500 - Jardim Industrial - São Paulo, SP - CEP: 05400-000</span>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Barcode Footer -->
+<div class="mt-auto pt-8">
+<div class="flex justify-between items-end mb-4">
+<div class="flex-1">
+<!-- Modernized Barcode Mockup -->
+<div class="h-20 bg-black flex items-end gap-[1px] p-[2px] bg-white border border-outline">
+<!-- Simplified repeating pattern to mimic barcode -->
+<div class="w-1 h-full bg-black"></div><div class="w-[2px] h-full bg-black"></div><div class="w-4 h-full bg-white"></div><div class="w-[1px] h-full bg-black"></div><div class="w-3 h-full bg-black"></div><div class="w-2 h-full bg-white"></div><div class="w-1 h-full bg-black"></div><div class="w-[3px] h-full bg-black"></div><div class="w-1 h-full bg-white"></div><div class="w-2 h-full bg-black"></div><div class="w-1 h-full bg-black"></div><div class="w-3 h-full bg-white"></div><div class="w-[2px] h-full bg-black"></div><div class="w-4 h-full bg-black"></div><div class="w-1 h-full bg-white"></div><div class="w-1 h-full bg-black"></div><div class="w-[3px] h-full bg-black"></div><div class="w-1 h-full bg-white"></div><div class="w-[2px] h-full bg-black"></div><div class="w-2 h-full bg-black"></div><div class="w-4 h-full bg-white"></div><div class="w-1 h-full bg-black"></div><div class="w-3 h-full bg-black"></div><div class="w-1 h-full bg-white"></div><div class="w-2 h-full bg-black"></div><div class="w-1 h-full bg-black"></div><div class="w-3 h-full bg-white"></div><div class="w-[2px] h-full bg-black"></div><div class="w-1 h-full bg-black"></div><div class="w-4 h-full bg-white"></div><div class="w-[1px] h-full bg-black"></div><div class="w-3 h-full bg-black"></div><div class="w-2 h-full bg-white"></div><div class="w-1 h-full bg-black"></div><div class="w-[3px] h-full bg-black"></div><div class="w-1 h-full bg-white"></div><div class="w-2 h-full bg-black"></div><div class="w-1 h-full bg-black"></div><div class="w-3 h-full bg-white"></div><div class="w-[2px] h-full bg-black"></div><div class="w-4 h-full bg-black"></div><div class="w-1 h-full bg-white"></div><div class="w-1 h-full bg-black"></div><div class="w-[3px] h-full bg-black"></div><div class="w-1 h-full bg-white"></div><div class="w-[2px] h-full bg-black"></div><div class="w-2 h-full bg-black"></div><div class="w-4 h-full bg-white"></div><div class="w-1 h-full bg-black"></div><div class="w-3 h-full bg-black"></div><div class="w-1 h-full bg-white"></div><div class="w-2 h-full bg-black"></div><div class="w-1 h-full bg-black"></div><div class="w-3 h-full bg-white"></div><div class="w-1 h-full bg-black"></div>
+</div>
+</div>
+<div class="pl-8 flex flex-col items-end">
+<span class="font-label-caps text-[8px] text-outline-variant">AUTENTICAÇÃO MECÂNICA - FICHA DE COMPENSAÇÃO</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Toast for copying -->
+<div class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-slate-steel text-white px-6 py-3 rounded-full font-body-md shadow-lg transform translate-y-32 opacity-0 transition-all duration-300" id="toast">
+        Código copiado para a área de transferência!
+    </div>
+<script>
+        function copyCode() {
+            const codeText = document.getElementById('digitavel').innerText;
+            navigator.clipboard.writeText(codeText).then(() => {
+                const toast = document.getElementById('toast');
+                toast.classList.remove('translate-y-32', 'opacity-0');
+                toast.classList.add('translate-y-0', 'opacity-100');
+                
+                setTimeout(() => {
+                    toast.classList.add('translate-y-32', 'opacity-0');
+                    toast.classList.remove('translate-y-0', 'opacity-100');
+                }, 3000);
+            });
+        }
+    </script>
+</body></html>

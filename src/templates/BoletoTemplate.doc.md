@@ -52,4 +52,4 @@ const html = template.render(data);
 ## Dependencies and integrations
 
 - Used by `TemplateRenderer`
-- Implemented by `GenericTemplate`
+- Implemented by `IndustrialIntegrityTemplate`

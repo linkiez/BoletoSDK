@@ -1,12 +1,11 @@
 /* eslint-disable no-console */
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 import 'tsconfig-paths/register';
 import { generateBarcode } from '../src/generators/barcode/BarcodeGenerator';
-import { generateBoletoPdfBuffer } from '../src/generators/pdf/BoletoPdfGenerator';
 import { generatePixPayload } from '../src/generators/qrcode/PixPayloadGenerator';
 import { renderPixQrCodeSvg } from '../src/generators/qrcode/QRCodeRenderer';
-import { buildBoletoHtml } from '../src/templates/HtmlTemplateBuilder';
+import { IndustrialIntegrityTemplate } from '../src/templates/IndustrialIntegrityTemplate';
 
 async function main(): Promise<void> {
   const { barcode, digitableLine } = generateBarcode({
@@ -25,7 +24,7 @@ async function main(): Promise<void> {
     description: 'Pagamento de boleto',
   });
 
-  const pixQrCodeSvg = await renderPixQrCodeSvg(pixPayload, { width: 140 });
+  const pixQrCodeSvg = await renderPixQrCodeSvg(pixPayload, { width: 220 });
 
   const data = {
     beneficiary: {
@@ -61,12 +60,7 @@ async function main(): Promise<void> {
     },
   };
 
-  const html = buildBoletoHtml(data, { layout: 'detailed' });
-  const pdf = await generateBoletoPdfBuffer(data, {
-    includePixQr: true,
-    layout: 'detailed',
-  });
-
+  const html = new IndustrialIntegrityTemplate().render(data);
   const outputDir = path.resolve(__dirname, '../preview');
   fs.mkdirSync(outputDir, { recursive: true });
 
@@ -74,10 +68,29 @@ async function main(): Promise<void> {
   const pdfPath = path.join(outputDir, 'boleto.pdf');
 
   fs.writeFileSync(htmlPath, html, 'utf8');
-  fs.writeFileSync(pdfPath, pdf);
+  await renderHtmlFileToPdf(htmlPath, pdfPath);
 
   console.log(`HTML preview written to ${htmlPath}`);
   console.log(`PDF preview written to ${pdfPath}`);
+}
+
+async function renderHtmlFileToPdf(htmlPath: string, pdfPath: string): Promise<void> {
+  // Dynamic import keeps runtime optional for non-preview SDK usage.
+  const playwright = await import('playwright');
+  const browser = await playwright.chromium.launch({ headless: true });
+
+  try {
+    const page = await browser.newPage();
+    await page.goto(`file://${htmlPath}`, { waitUntil: 'networkidle' });
+    await page.pdf({
+      path: pdfPath,
+      format: 'A4',
+      printBackground: true,
+      margin: { top: '0', right: '0', bottom: '0', left: '0' },
+    });
+  } finally {
+    await browser.close();
+  }
 }
 
 main().catch((error) => {

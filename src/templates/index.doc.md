@@ -17,11 +17,8 @@ Exports boleto template interfaces and implementations.
 
 ```ts
 export * from './BoletoTemplate';
-export * from './BBTemplate';
-export * from './BradescoTemplate';
-export * from './GenericTemplate';
 export * from './HtmlTemplateBuilder';
-export * from './ItauTemplate';
+export * from './IndustrialIntegrityTemplate';
 export * from './TemplateRenderer';
 ```
 
@@ -30,12 +27,9 @@ export * from './TemplateRenderer';
 ```mermaid
 flowchart TD
   A[templates/index.ts] --> B[BoletoTemplate]
-  A --> C[BBTemplate]
-  A --> D[BradescoTemplate]
-  A --> E[GenericTemplate]
-  A --> F[HtmlTemplateBuilder]
-  A --> G[ItauTemplate]
-  A --> H[TemplateRenderer]
+  A --> C[HtmlTemplateBuilder]
+  A --> D[IndustrialIntegrityTemplate]
+  A --> E[TemplateRenderer]
 ```
 
 ## Error handling and edge cases
@@ -45,7 +39,7 @@ flowchart TD
 ## Examples
 
 ```ts
-import { BBTemplate, BradescoTemplate, GenericTemplate, ItauTemplate, TemplateRenderer } from '@linkiez/boleto-sdk';
+import { IndustrialIntegrityTemplate, TemplateRenderer } from '@linkiez/boleto-sdk';
 ```
 
 ## Dependencies and integrations

@@ -1,14 +1,8 @@
 import type { BoletoTemplate, BoletoTemplateData } from './BoletoTemplate';
-import { buildBoletoHtml } from './HtmlTemplateBuilder';
+import { IndustrialIntegrityTemplate } from './IndustrialIntegrityTemplate';
 
 export class GenericTemplate implements BoletoTemplate {
   public render(data: BoletoTemplateData): string {
-    return buildBoletoHtml(data, {
-      title: 'Boleto',
-      heading: 'Boleto',
-      bankLabel: 'Banco',
-      bankCodeLabel: 'Banco',
-      showBankName: false,
-    });
+    return new IndustrialIntegrityTemplate().render(data);
   }
 }

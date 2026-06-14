@@ -53,7 +53,12 @@ flowchart TD
 ## Examples
 
 ```ts
-import { parseCnab, generateCnab, GenericTemplate, ItauAdapter } from '@linkiez/boleto-sdk';
+import {
+  parseCnab,
+  generateCnab,
+  IndustrialIntegrityTemplate,
+  ItauAdapter,
+} from '@linkiez/boleto-sdk';
 ```
 
 ## Dependencies and integrations

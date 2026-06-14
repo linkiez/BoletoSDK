@@ -83,4 +83,4 @@ const htmlWithPix = await buildBoletoHtmlWithPixQrCode(data);
 - `formatMoney` from `src/utils/formatters`
 - `renderPixQrCodeSvg` from `src/generators/qrcode/QRCodeRenderer`
 - `validatePixPayload` from `src/generators/qrcode/PixPayloadValidator`
-- Used by `GenericTemplate`, `ItauTemplate`, `BradescoTemplate`, and `BBTemplate`
+- Used by `IndustrialIntegrityTemplate`
