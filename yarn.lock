@@ -827,11 +827,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@linkiez/boleto-sdk@npm:^1.0.0, @linkiez/boleto-sdk@workspace:.":
+"@linkiez/boleto-sdk@npm:^1.2.1, @linkiez/boleto-sdk@workspace:.":
   version: 0.0.0-use.local
   resolution: "@linkiez/boleto-sdk@workspace:."
   dependencies:
-    "@linkiez/boleto-sdk": "npm:^1.0.0"
+    "@linkiez/boleto-sdk": "npm:^1.2.1"
     "@semantic-release/git": "npm:^10.0.1"
     "@types/jest": "npm:^29.5.11"
     "@types/node": "npm:^20.11.0"
