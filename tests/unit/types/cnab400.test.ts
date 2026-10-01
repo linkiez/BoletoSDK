@@ -201,17 +201,21 @@ describe('CNAB400 Types', () => {
       expect(message.message1).toBe('PAYMENT FOR SERVICES');
     });
 
-    it('should accept all four message lines', () => {
+    it('should accept all three message lines and positional metadata', () => {
       const message: MessageFrontRecord = {
         recordType: '7',
+        flashCode: 'F01',
+        lineNumber1: 1,
         message1: 'LINE 1',
+        lineNumber2: 2,
         message2: 'LINE 2',
+        lineNumber3: 3,
         message3: 'LINE 3',
-        message4: 'LINE 4',
+        destinationCode: '1',
         sequentialNumber: 4,
       };
 
-      expect(message.message4).toBe('LINE 4');
+      expect(message.destinationCode).toBe('1');
     });
   });
 

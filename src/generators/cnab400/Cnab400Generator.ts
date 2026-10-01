@@ -12,6 +12,7 @@ import type { Cnab400File } from '../../types/cnab400';
 import { generateDetailRecord, generateDetailRecordRemessa } from './DetailRecordGenerator';
 import { generateFileHeader } from './FileHeaderGenerator';
 import { generateFileTrailer } from './FileTrailerGenerator';
+import { generateMessageFrontRecord } from './MessageFrontRecordGenerator';
 import { generatePenaltyRecord } from './PenaltyRecordGenerator';
 
 /**
@@ -57,6 +58,22 @@ import { generatePenaltyRecord } from './PenaltyRecordGenerator';
  * ```
  */
 export function generateCnab400(file: Cnab400File): string {
+  validateFileStructure(file);
+
+  const isRemessa = file.header.operationType === '1';
+  const lines = [
+    generateFileHeader(file.header),
+    ...generateDetailRecords(file, isRemessa),
+    ...generateOptionalRecords(file, isRemessa),
+    generateFileTrailer(file.trailer),
+  ];
+
+  validateLineLengths(lines);
+
+  return lines.join('\n');
+}
+
+function validateFileStructure(file: Cnab400File): void {
   if (!file.header) {
     throw new GenerationError('File header is required');
   }
@@ -68,33 +85,26 @@ export function generateCnab400(file: Cnab400File): string {
   if (!Array.isArray(file.details)) {
     throw new GenerationError('File details must be an array');
   }
+}
 
-  const lines: string[] = [];
-  const isRemessa = file.header.operationType === '1';
+function generateDetailRecords(file: Cnab400File, isRemessa: boolean): string[] {
+  return file.details.map((detail) =>
+    isRemessa ? generateDetailRecordRemessa(detail) : generateDetailRecord(detail),
+  );
+}
 
-  // Generate header
-  lines.push(generateFileHeader(file.header));
-
-  // Generate all detail records
-  for (const detail of file.details) {
-    if (isRemessa) {
-      lines.push(generateDetailRecordRemessa(detail));
-    } else {
-      lines.push(generateDetailRecord(detail));
-    }
+function generateOptionalRecords(file: Cnab400File, isRemessa: boolean): string[] {
+  if (!isRemessa) {
+    return [];
   }
 
-  // Generate penalty records (REMESSA only)
-  if (isRemessa && file.penaltyRecords && file.penaltyRecords.length > 0) {
-    for (const penalty of file.penaltyRecords) {
-      lines.push(generatePenaltyRecord(penalty));
-    }
-  }
+  return [
+    ...(file.penaltyRecords ?? []).map(generatePenaltyRecord),
+    ...(file.messageFrontRecords ?? []).map(generateMessageFrontRecord),
+  ];
+}
 
-  // Generate trailer
-  lines.push(generateFileTrailer(file.trailer));
-
-  // Validate all lines are exactly 400 characters
+function validateLineLengths(lines: readonly string[]): void {
   for (let i = 0; i < lines.length; i++) {
     if (lines[i].length !== LINE_LENGTH) {
       throw new GenerationError(
@@ -103,6 +113,4 @@ export function generateCnab400(file: Cnab400File): string {
       );
     }
   }
-
-  return lines.join('\n');
 }

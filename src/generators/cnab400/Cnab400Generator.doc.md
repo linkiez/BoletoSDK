@@ -2,13 +2,15 @@
 
 ## Overview
 
-Generates a CNAB400 file from a `Cnab400File` structure, including header, detail records, optional penalty records, and trailer.
+Generates a CNAB400 file from a `Cnab400File` structure, including header, detail records, optional penalty and front-message records, and trailer.
 
 ## Responsibilities
 
 - Validate required file sections
-- Generate header, details, optional penalty records, and trailer
+- Generate header, details, optional penalty and front-message records, and trailer
 - Enforce 400-character line length
+
+Itaú type 7 records use a three-character flash code, three message lines of 128, 128, and 127 characters, a two-digit print-line number before each message, a destination code, and a six-digit sequence number.
 
 ## Inputs and outputs
 
@@ -18,7 +20,7 @@ Generates a CNAB400 file from a `Cnab400File` structure, including header, detai
 ## API / Signature
 
 ```ts
-export function generateCnab400(file: Cnab400File): string
+export function generateCnab400(file: Cnab400File): string;
 ```
 
 ## Main flow
@@ -31,9 +33,10 @@ flowchart TD
   D --> E{Remessa with penalties?}
   E -->|Yes| F[Generate penalty records]
   E -->|No| G[Skip penalties]
-  F --> H[Generate trailer]
+  F --> H[Generate front-message records]
   G --> H
-  H --> I[Validate 400-char line length]
+  H --> I[Generate trailer]
+  I --> J[Validate 400-char line length]
 ```
 
 ## Error handling and edge cases
@@ -56,4 +59,5 @@ const content = generateCnab400(file);
 - `generateDetailRecord` and `generateDetailRecordRemessa`
 - `generatePenaltyRecord`
 - `generateFileTrailer`
+- `generateMessageFrontRecord`
 - `GenerationError`

@@ -27,10 +27,14 @@ export function parseMessageFrontRecord(line: string): MessageFrontRecord {
 
   return {
     recordType: '7',
-    message1: line.substring(1, 81).trim() || undefined,
-    message2: line.substring(81, 161).trim() || undefined,
-    message3: line.substring(161, 241).trim() || undefined,
-    message4: line.substring(241, 321).trim() || undefined,
+    flashCode: line.substring(1, 4).trimEnd() || undefined,
+    lineNumber1: parseNumber(line.substring(4, 6)),
+    message1: line.substring(6, 134).trimEnd() || undefined,
+    lineNumber2: parseNumber(line.substring(134, 136)),
+    message2: line.substring(136, 264).trimEnd() || undefined,
+    lineNumber3: parseNumber(line.substring(264, 266)),
+    message3: line.substring(266, 393).trimEnd() || undefined,
+    destinationCode: line.substring(393, 394).trimEnd() || undefined,
     sequentialNumber: parseNumber(line.substring(LINE_LENGTH - 6, LINE_LENGTH).trim()),
   };
 }

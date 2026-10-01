@@ -7,9 +7,13 @@ import { RecordSequenceSchema, RecordTypeMessageFrontSchema } from './shared';
 
 export const MessageFrontRecordSchema = z.object({
   recordType: RecordTypeMessageFrontSchema,
-  message1: z.string().optional(),
-  message2: z.string().optional(),
-  message3: z.string().optional(),
-  message4: z.string().optional(),
+  flashCode: z.string().max(3).optional(),
+  lineNumber1: z.number().int().min(0).max(99).optional(),
+  message1: z.string().max(128).optional(),
+  lineNumber2: z.number().int().min(0).max(99).optional(),
+  message2: z.string().max(128).optional(),
+  lineNumber3: z.number().int().min(0).max(99).optional(),
+  message3: z.string().max(127).optional(),
+  destinationCode: z.string().max(1).optional(),
   sequentialNumber: RecordSequenceSchema,
 });

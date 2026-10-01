@@ -11,4 +11,5 @@ export { generateCnab400 } from './Cnab400Generator';
 export { generateDetailRecord, generateDetailRecordRemessa } from './DetailRecordGenerator';
 export { generateFileHeader } from './FileHeaderGenerator';
 export { generateFileTrailer } from './FileTrailerGenerator';
+export { generateMessageFrontRecord } from './MessageFrontRecordGenerator';
 export { generatePenaltyRecord } from './PenaltyRecordGenerator';

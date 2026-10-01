@@ -107,6 +107,35 @@ describe('Cnab400Generator', () => {
     expect(lines[3].startsWith('9')).toBe(true);
   });
 
+  it('should include front message records before the trailer', () => {
+    const file: Cnab400File = {
+      header: baseHeader,
+      details: [baseDetail],
+      messageFrontRecords: [
+        {
+          recordType: '7',
+          message1: 'PAYMENT FOR SERVICES',
+          sequentialNumber: 3,
+        },
+      ],
+      trailer: {
+        ...baseTrailer,
+        totalRecords: 4,
+        sequentialNumber: 4,
+      },
+    };
+
+    const lines = generateCnab400(file).split('\n');
+
+    expect(lines.map((line) => line.charAt(0))).toEqual(['0', '1', '7', '9']);
+    expect(lines[2]).toHaveLength(400);
+    expect(lines[2].slice(6, 134)).toBe('PAYMENT FOR SERVICES'.padEnd(128));
+    expect(lines[2].slice(134, 136)).toBe('00');
+    expect(lines[2].slice(264, 266)).toBe('00');
+    expect(lines[2][393]).toBe(' ');
+    expect(lines[2].slice(394)).toBe('000003');
+  });
+
   it('should ignore penalty records for retorno files', () => {
     const file: Cnab400File = {
       header: {
