@@ -1,33 +1,36 @@
 # DetailRecordSchema (CNAB400)
 
-## Overview
+## Visão geral
 
-Zod schema for CNAB400 detail records (type 1).
+Schema Zod para validar os registros detalhe tipo 1 do CNAB400.
 
-## Responsibilities
+## Responsabilidades
 
-- Validate core payment and payer fields.
-- Enforce record type `1`.
+- Validar os campos essenciais do beneficiário, pagador e título.
+- Validar o tipo de registro, instrução de cancelamento, tipo de carteira e sequência.
 
-## Inputs and outputs
+## Entradas e saídas
 
-- Inputs: detail record object.
-- Outputs: validated detail record data.
+- Entrada: objeto de detalhe CNAB400.
+- Saída: objeto validado ou erro Zod.
 
-## Main flow
+## Fluxo principal
 
 ```mermaid
 flowchart TD
-  A[DetailRecordSchema] --> B[Field validation]
-  B --> C[Parsed detail record]
+  A[Objeto detalhe] --> B[DetailRecordSchema]
+  B --> C[Validação dos campos]
+  C --> D[Detalhe CNAB400 validado]
 ```
 
-## Error handling and edge cases
+## Tratamento de erros e casos-limite
 
-- Rejects missing required payer name, amount, or due date.
-- Validates tax ID length and zip code format when provided.
+- Rejeita nome do pagador, valor, vencimento e campos obrigatórios ausentes.
+- A instrução de cancelamento, quando informada, deve conter quatro dígitos.
+- O tipo de carteira, quando informado, deve conter no máximo um caractere.
+- CPF/CNPJ e CEP são validados quando informados.
 
-## Examples
+## Exemplos
 
 ```ts
 import { DetailRecordSchema } from '@/schemas/cnab400';
@@ -47,6 +50,6 @@ DetailRecordSchema.parse({
 });
 ```
 
-## Dependencies and integrations
+## Dependências e integrações
 
-- Uses shared CNAB400 schemas.
+- Usa schemas compartilhados do CNAB400.

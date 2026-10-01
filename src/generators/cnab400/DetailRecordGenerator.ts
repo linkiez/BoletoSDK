@@ -253,8 +253,11 @@ export function generateDetailRecordRemessa(detail: DetailRecord): string {
   // Position 029-029: Account digit
   line += padLeft(detail.accountDigit || '0', 1, '0');
 
-  // Position 030-037: Blanks (8 positions)
-  line += '        ';
+  // Position 030-033: Blanks (4 positions)
+  line += '    ';
+
+  // Position 034-037: Instruction cancellation code
+  line += padRight(detail.instructionCancellationCode ?? '', 4, ' ');
 
   // Position 038-062: Use of company (company control) - 25 positions
   line += padRight(detail.companyControl || '', 25, ' ');
@@ -271,8 +274,8 @@ export function generateDetailRecordRemessa(detail: DetailRecord): string {
   // Position 087-107: Use of bank / blanks (21 positions)
   line += '                     ';
 
-  // Position 108-108: Portfolio code (1 position)
-  line += padRight(detail.portfolioCode ? detail.portfolioCode.charAt(0) : '', 1, ' ');
+  // Position 108-108: Bank-specific portfolio type
+  line += padRight(detail.portfolioType ?? '', 1, ' ');
 
   // Position 109-110: Occurrence code (2 positions)
   line += '01'; // Default: entry request
@@ -335,10 +338,10 @@ export function generateDetailRecordRemessa(detail: DetailRecord): string {
   line += padLeft('0', 13, '0');
 
   // Position 219-220: Payer registration type (01=CPF, 02=CNPJ)
-  line += '01';
+  line += padLeft(detail.payerRegistrationType || '01', 2, '0');
 
   // Position 221-234: Payer registration number (14 positions)
-  line += padLeft('', 14, '0');
+  line += padLeft(detail.payerRegistrationNumber || '', 14, '0');
 
   // Position 235-264: Payer name (30 positions)
   line += padRight(detail.payerName || '', 30, ' ');

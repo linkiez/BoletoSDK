@@ -58,6 +58,9 @@ export interface DetailRecord {
   /** Account check digit - 1 digit (Position 029-029) */
   accountDigit: string;
 
+  /** Instruction cancellation code (Position 034-037) */
+  instructionCancellationCode?: string;
+
   /** Company internal control - Optional (Position 030-054) */
   companyControl?: string;
 
@@ -72,6 +75,9 @@ export interface DetailRecord {
 
   /** Portfolio code - Collection type (Position 083-085) */
   portfolioCode?: string;
+
+  /** Bank-specific portfolio type (Position 108-108) */
+  portfolioType?: string;
 
   /** Registration instruction - '00' for normal (Position 086-087) */
   registrationInstruction?: string;

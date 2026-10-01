@@ -23,11 +23,16 @@ export const DetailRecordSchema = z.object({
   zeros: z.string().optional(),
   account: AccountSchema,
   accountDigit: AccountDigitSchema,
+  instructionCancellationCode: z
+    .string()
+    .regex(/^\d{4}$/, 'Instruction cancellation code must be 4 digits')
+    .optional(),
   companyControl: z.string().optional(),
   ourNumber: z.string().min(1, 'Our number is required'),
   discountAmount: z.number().nonnegative().optional(),
   iofPercentage: z.number().nonnegative().optional(),
   portfolioCode: z.string().optional(),
+  portfolioType: z.string().max(1).optional(),
   registrationInstruction: z.string().optional(),
   documentNumber: z.string().optional(),
   dueDate: z.date(),
