@@ -220,6 +220,11 @@ describe('CNAB400 Field Positions', () => {
     it('should have bank code at positions 77-79', () => {
       expect(FILE_HEADER_POSITIONS.BANK_CODE).toEqual({ start: 77, end: 79 });
     });
+
+    it('should reserve remittance positions 101-394 and sequence the header at 395-400', () => {
+      expect(FILE_HEADER_POSITIONS.RESERVED_2).toEqual({ start: 101, end: 394 });
+      expect(FILE_HEADER_POSITIONS.SEQUENTIAL_NUMBER).toEqual({ start: 395, end: 400 });
+    });
   });
 
   describe('File Header RETORNO Positions', () => {
@@ -230,6 +235,12 @@ describe('CNAB400 Field Positions', () => {
 
     it('should have creation date field', () => {
       expect(FILE_HEADER_RETORNO_POSITIONS.CREATION_DATE).toEqual({ start: 114, end: 119 });
+    });
+
+    it('should keep return-specific fields separate from the remittance complement', () => {
+      expect(FILE_HEADER_RETORNO_POSITIONS.SEQUENCE_NUMBER).toEqual({ start: 109, end: 113 });
+      expect(FILE_HEADER_RETORNO_POSITIONS.RESERVED_2).toEqual({ start: 120, end: 394 });
+      expect(validatePositions(FILE_HEADER_RETORNO_POSITIONS)).toBe(true);
     });
   });
 

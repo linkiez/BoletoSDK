@@ -34,7 +34,7 @@ describe('CNAB400 record generators', () => {
     accountDigit: '6',
     companyName: 'ACME CORP',
     bankCode: '341',
-    bankName: 'BANCO ITAU S.A.',
+    bankName: 'BANCO ITAU SA',
     generationDate: new Date('2026-02-01'),
     sequenceNumber: 1,
   };
@@ -76,16 +76,47 @@ describe('CNAB400 record generators', () => {
     sequentialNumber: 3,
   };
 
-  it('should generate file header with creation date when provided', () => {
+  it('should leave the remittance complement blank and sequence the header record', () => {
     const header = {
       ...baseHeader,
+      sequenceNumber: 8,
+    };
+
+    const line = generateFileHeader(header);
+
+    expect(line.slice(100, 394)).toBe(' '.repeat(294));
+    expect(line.slice(394, 400)).toBe('000001');
+  });
+
+  it('should use Itaú’s layout name when the header bank name is empty', () => {
+    const line = generateFileHeader({
+      ...baseHeader,
+      bankName: '',
+    });
+
+    expect(line.slice(79, 94)).toBe('BANCO ITAU SA  ');
+  });
+
+  it('should generate return-only header fields at their Itaú positions', () => {
+    const header = {
+      ...baseHeader,
+      operationType: '2' as const,
+      densityCode: '12345',
+      densityUnit: 'BPI',
+      sequenceNumber: 3,
       creationDate: new Date('2026-02-10'),
+      sequential: '000004',
     };
 
     const line = generateFileHeader(header);
 
     expect(line).toHaveLength(400);
-    expect(line.slice(115, 121)).toBe(formatDateShort(header.creationDate));
+    expect(line.slice(100, 105)).toBe('12345');
+    expect(line.slice(105, 108)).toBe('BPI');
+    expect(line.slice(108, 113)).toBe('00003');
+    expect(line.slice(113, 119)).toBe(formatDateShort(header.creationDate));
+    expect(line.slice(119, 394)).toBe(' '.repeat(275));
+    expect(line.slice(394, 400)).toBe('000004');
   });
 
   it('should throw when header bank code is missing', () => {

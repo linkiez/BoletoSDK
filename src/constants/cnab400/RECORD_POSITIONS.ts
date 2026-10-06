@@ -12,7 +12,7 @@
  * File Header (Record Type 0) field positions
  * Total: 400 characters
  */
-export const FILE_HEADER_POSITIONS = {
+const FILE_HEADER_COMMON_POSITIONS = {
   RECORD_TYPE: { start: 1, end: 1 },
   OPERATION_TYPE: { start: 2, end: 2 },
   OPERATION_LITERAL: { start: 3, end: 9 },
@@ -27,19 +27,26 @@ export const FILE_HEADER_POSITIONS = {
   BANK_CODE: { start: 77, end: 79 },
   BANK_NAME: { start: 80, end: 94 },
   GENERATION_DATE: { start: 95, end: 100 },
-  RESERVED_2: { start: 101, end: 110 },
-  SEQUENCE_NUMBER: { start: 111, end: 115 },
-  RESERVED_3: { start: 116, end: 394 },
+} as const;
+
+export const FILE_HEADER_POSITIONS = {
+  ...FILE_HEADER_COMMON_POSITIONS,
+  RESERVED_2: { start: 101, end: 394 },
   SEQUENTIAL_NUMBER: { start: 395, end: 400 },
 } as const;
 
 /**
  * File Header - RETORNO specific positions
- * Additional fields only present in RETORNO files
+ * Return-only fields occupy positions reserved in remittance files.
  */
 export const FILE_HEADER_RETORNO_POSITIONS = {
-  ...FILE_HEADER_POSITIONS,
+  ...FILE_HEADER_COMMON_POSITIONS,
+  DENSITY: { start: 101, end: 105 },
+  DENSITY_UNIT: { start: 106, end: 108 },
+  SEQUENCE_NUMBER: { start: 109, end: 113 },
   CREATION_DATE: { start: 114, end: 119 },
+  RESERVED_2: { start: 120, end: 394 },
+  SEQUENTIAL_NUMBER: { start: 395, end: 400 },
 } as const;
 
 /**

@@ -73,24 +73,24 @@ export interface FileHeader {
   /** File generation date - DDMMYY format (Position 095-100) */
   generationDate: Date;
 
-  /** Density code - Spaces (Position 101-107) */
+  /** Return-only density code (Position 101-105) */
   densityCode?: string;
 
-  /** Density unit - Spaces (Position 108-110) */
+  /** Return-only density unit (Position 106-108) */
   densityUnit?: string;
 
-  /** Sequential file number - Incremental (Position 111-115) */
+  /** Return-only file sequence number (Position 109-113) */
   sequenceNumber: number;
 
-  /** File creation date - DDMMYYYY format (Position 116-123) */
+  /** Return-only credit date - DDMMYY format (Position 114-119) */
   creationDate?: Date;
 
   /** Layout version - '400' (Position 124-126) */
   layoutVersion?: string;
 
-  /** Blanks - Complement (Position 127-394) */
+  /** Blanks - Return complement (Position 120-394) */
   blanks?: string;
 
-  /** Sequential - Record sequence '000001' (Position 395-400) */
+  /** Header record sequence - six digits (Position 395-400; defaults to 000001) */
   sequential?: string;
 }

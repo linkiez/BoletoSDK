@@ -115,14 +115,24 @@ export const FILE_HEADER_SIZES = {
   /** Generation date (6 digits: DDMMYY) */
   GENERATION_DATE: 6,
 
-  /** File sequence number (5 digits) */
+  /** Return file sequence number (5 digits) */
   SEQUENCE_NUMBER: 5,
 
-  /** Creation date - RETORNO only (6 digits: DDMMYY) */
+  /** Return file density (5 digits) */
+  DENSITY_CODE: 5,
+
+  /** Return file density unit (3 characters) */
+  DENSITY_UNIT: 3,
+
+  /** Return credit date (6 digits: DDMMYY) */
   CREATION_DATE: 6,
+
+  /** Header record sequence number (6 digits) */
+  SEQUENTIAL_NUMBER: 6,
 
   /** Reserved/blank space (various sizes) */
   RESERVED_8: 8,
+  RESERVED_275: 275,
   RESERVED_16: 16,
   RESERVED_294: 294,
 } as const;

@@ -48,6 +48,7 @@ flowchart TD
 - A remittance penalty must reference exactly one detail by `detailCompanyControl` or a valid `detailIndex`; for a single-detail file, the link may be omitted.
 - A detail may have at most one penalty record. Linked type 2 records are emitted immediately after their type 1 detail and are included in the caller-provided trailer totals/sequences.
 - Supports REMESSA vs RETORNO detail record generation
+- Remittance headers keep positions 101-394 blank and write the header record sequence at 395-400; return-only density, file sequence, and credit-date fields occupy positions 101-119.
 
 ## Examples
 

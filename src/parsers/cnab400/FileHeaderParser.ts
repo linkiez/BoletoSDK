@@ -43,12 +43,18 @@ export function parseFileHeader(line: string): FileHeader {
     BANK_CODE,
     BANK_NAME,
     GENERATION_DATE,
-    SEQUENCE_NUMBER,
+    SEQUENTIAL_NUMBER,
   } = FILE_HEADER_POSITIONS;
-  const { CREATION_DATE } = FILE_HEADER_RETORNO_POSITIONS;
+  const {
+    DENSITY,
+    DENSITY_UNIT,
+    SEQUENCE_NUMBER: RETURN_SEQUENCE_NUMBER,
+    CREATION_DATE,
+  } = FILE_HEADER_RETORNO_POSITIONS;
 
   const operationType = line.substring(OPERATION_TYPE.start - 1, OPERATION_TYPE.end) as '1' | '2';
   const isRetorno = operationType === FILE_TYPE_RETORNO;
+  const sequential = line.substring(SEQUENTIAL_NUMBER.start - 1, SEQUENTIAL_NUMBER.end).trim();
 
   return {
     recordType: '0',
@@ -65,12 +71,21 @@ export function parseFileHeader(line: string): FileHeader {
     bankName: line.substring(BANK_NAME.start - 1, BANK_NAME.end).trim(),
     generationDate: parseDateShort(line.substring(GENERATION_DATE.start - 1, GENERATION_DATE.end)),
     sequenceNumber: parseNumber(
-      line.substring(SEQUENCE_NUMBER.start - 1, SEQUENCE_NUMBER.end).trim(),
+      line
+        .substring(
+          (isRetorno ? RETURN_SEQUENCE_NUMBER : SEQUENTIAL_NUMBER).start - 1,
+          (isRetorno ? RETURN_SEQUENCE_NUMBER : SEQUENTIAL_NUMBER).end,
+        )
+        .trim(),
     ),
-    // creationDate only exists in RETORNO files
     creationDate:
       isRetorno && line.substring(CREATION_DATE.start - 1, CREATION_DATE.end).trim()
         ? parseDateShort(line.substring(CREATION_DATE.start - 1, CREATION_DATE.end).trim())
         : undefined,
+    densityCode: isRetorno ? line.substring(DENSITY.start - 1, DENSITY.end).trim() : undefined,
+    densityUnit: isRetorno
+      ? line.substring(DENSITY_UNIT.start - 1, DENSITY_UNIT.end).trim()
+      : undefined,
+    sequential,
   };
 }

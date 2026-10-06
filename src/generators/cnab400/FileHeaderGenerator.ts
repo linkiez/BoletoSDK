@@ -41,7 +41,7 @@ import { padLeft, padRight } from '../../utils/generators';
  *   accountDigit: '0',
  *   companyName: 'ACME Corp',
  *   bankCode: '341',
- *   bankName: 'BANCO ITAU S.A.',
+ *   bankName: 'BANCO ITAU SA',
  *   generationDate: new Date('2026-02-01'),
  *   sequenceNumber: 1
  * };
@@ -102,29 +102,31 @@ export function generateFileHeader(header: FileHeader): string {
   line += padLeft(header.bankCode, COMMON_FIELD_SIZES.BANK_CODE, '0');
 
   // Position 080-094: Bank name
-  line += padRight(header.bankName || 'BANCO ITAU S.A.', FILE_HEADER_SIZES.BANK_NAME, ' ');
+  line += padRight(header.bankName || 'BANCO ITAU SA', FILE_HEADER_SIZES.BANK_NAME, ' ');
 
   // Position 095-100: Generation date (DDMMYY)
   line += formatDateShort(header.generationDate);
 
-  // Position 101-108: Density (blank for electronic)
-  line += '        ';
+  if (header.operationType === '2') {
+    // Positions 101-105 and 106-108: Return-only density fields
+    line += padLeft(header.densityCode || '0', FILE_HEADER_SIZES.DENSITY_CODE, '0');
+    line += padRight(header.densityUnit || '', FILE_HEADER_SIZES.DENSITY_UNIT, ' ');
 
-  // Position 109-110: Density unit (blank)
-  line += '  ';
+    // Positions 109-113 and 114-119: Return file sequence and credit date
+    line += padLeft(header.sequenceNumber || 1, FILE_HEADER_SIZES.SEQUENCE_NUMBER, '0');
+    line += header.creationDate
+      ? formatDateShort(header.creationDate)
+      : ' '.repeat(FILE_HEADER_SIZES.CREATION_DATE);
 
-  // Position 111-115: Sequential number
-  line += padLeft(header.sequenceNumber || 1, 5, '0');
-
-  // Position 116-120: Creation date (DDMMYY) - optional
-  if (header.creationDate) {
-    line += formatDateShort(header.creationDate);
+    // Positions 120-394: Return record complement
+    line += ' '.repeat(FILE_HEADER_SIZES.RESERVED_275);
   } else {
-    line += '      ';
+    // Positions 101-394 are blank in remittance headers
+    line += ' '.repeat(FILE_HEADER_SIZES.RESERVED_294);
   }
 
-  // Position 121-400: Fill with spaces to complete 400 characters
-  line = padRight(line, LINE_LENGTH, ' ');
+  // Positions 395-400: Header record sequence number
+  line += padLeft(header.sequential || 1, FILE_HEADER_SIZES.SEQUENTIAL_NUMBER, '0');
 
-  return line;
+  return padRight(line, LINE_LENGTH, ' ');
 }

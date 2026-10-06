@@ -20,6 +20,7 @@ describe('CNAB400 FileHeaderParser', () => {
     expect(header.operationType).not.toBe(FILE_TYPE_RETORNO);
     expect(header.companyName.length).toBeGreaterThan(0);
     expect(header.bankCode.length).toBe(3);
+    expect(header.sequential).toBe(line.slice(394, 400));
     expect(header.creationDate).toBeUndefined();
   });
 
@@ -30,6 +31,8 @@ describe('CNAB400 FileHeaderParser', () => {
 
     expect(header.recordType).toBe('0');
     expect(header.operationType).toBe(FILE_TYPE_RETORNO);
+    expect(header.sequenceNumber).toBe(Number(line.slice(108, 113)));
+    expect(header.sequential).toBe(line.slice(394, 400));
     expect(header.creationDate).toBeInstanceOf(Date);
   });
 
