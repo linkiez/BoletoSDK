@@ -11,7 +11,7 @@ Gera um arquivo CNAB400 a partir de `Cnab400File`, incluindo cabeçalho, detalhe
 - Aplicar o formato do trailer conforme o tipo de operação: posições 002–394 em branco na remessa Itaú e totais preservados no retorno.
 - Garantir linhas de 400 caracteres, separadas e terminadas por CRLF.
 
-Registros Itaú tipo 7 usam código flash, linhas de mensagem, número de linha, código de destino e número sequencial.
+Registros Itaú tipo 7 usam código Flash, linhas de mensagem, número de linha, código de destino e número sequencial. Um número de linha explícito é mantido mesmo quando seu texto está vazio; o destino padrão é `0` (entrega pelo meio habitual).
 
 ## Entradas e saídas
 

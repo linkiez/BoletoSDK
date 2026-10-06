@@ -253,8 +253,40 @@ describe('Cnab400Generator', () => {
     expect(lines[2].slice(6, 134)).toBe('PAYMENT FOR SERVICES'.padEnd(128));
     expect(lines[2].slice(134, 136)).toBe('00');
     expect(lines[2].slice(264, 266)).toBe('00');
-    expect(lines[2][393]).toBe(' ');
+    expect(lines[2][393]).toBe('0');
     expect(lines[2].slice(394)).toBe('000003');
+  });
+
+  it('should preserve explicit line numbers when message text is empty', () => {
+    const file: Cnab400File = {
+      header: baseHeader,
+      details: [baseDetail],
+      messageFrontRecords: [
+        {
+          recordType: '7',
+          flashCode: 'F01',
+          lineNumber1: 1,
+          message1: 'PAYMENT FOR SERVICES',
+          lineNumber2: 2,
+          lineNumber3: 3,
+          sequentialNumber: 3,
+        },
+      ],
+      trailer: {
+        ...baseTrailer,
+        totalRecords: 4,
+        sequentialNumber: 4,
+      },
+    };
+
+    const messageRecord = generateCnab400(file).split('\r\n')[2];
+
+    expect(messageRecord.slice(1, 4)).toBe('F01');
+    expect(messageRecord.slice(134, 136)).toBe('02');
+    expect(messageRecord.slice(136, 264)).toBe(' '.repeat(128));
+    expect(messageRecord.slice(264, 266)).toBe('03');
+    expect(messageRecord.slice(266, 393)).toBe(' '.repeat(127));
+    expect(messageRecord[393]).toBe('0');
   });
 
   it('should ignore penalty records for retorno files', () => {

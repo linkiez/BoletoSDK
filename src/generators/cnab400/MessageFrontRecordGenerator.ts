@@ -13,7 +13,9 @@ export function generateMessageFrontRecord(record: MessageFrontRecord): string {
     lineNumber: number | undefined,
     width: number,
   ): string => {
-    const formattedLineNumber = String(message?.trim() ? (lineNumber ?? 1) : 0).padStart(2, '0');
+    const formattedLineNumber = String(
+      lineNumber ?? (message?.trim() ? 1 : 0),
+    ).padStart(2, '0');
 
     return `${formattedLineNumber}${padRight(message ?? '', width, ' ')}`;
   };
@@ -22,7 +24,7 @@ export function generateMessageFrontRecord(record: MessageFrontRecord): string {
   const firstLine = formatMessageLine(record.message1, record.lineNumber1, 128);
   const secondLine = formatMessageLine(record.message2, record.lineNumber2, 128);
   const thirdLine = formatMessageLine(record.message3, record.lineNumber3, 127);
-  const destinationCode = padRight(record.destinationCode ?? '', 1, ' ');
+  const destinationCode = padRight(record.destinationCode ?? '0', 1, ' ');
   const sequentialNumber = String(record.sequentialNumber).padStart(6, '0');
 
   return `7${flashCode}${firstLine}${secondLine}${thirdLine}${destinationCode}${sequentialNumber}`;
