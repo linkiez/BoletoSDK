@@ -13,9 +13,7 @@ export function generateMessageFrontRecord(record: MessageFrontRecord): string {
     lineNumber: number | undefined,
     width: number,
   ): string => {
-    const formattedLineNumber = String(
-      lineNumber ?? (message?.trim() ? 1 : 0),
-    ).padStart(2, '0');
+    const formattedLineNumber = String(lineNumber ?? (message?.trim() ? 1 : 0)).padStart(2, '0');
 
     return `${formattedLineNumber}${padRight(message ?? '', width, ' ')}`;
   };
