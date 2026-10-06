@@ -8,7 +8,7 @@ Serializa registros detalhe tipo 1 para os layouts CNAB400 de remessa e retorno.
 
 - Gerar linhas de 400 caracteres com campos nas posições definidas pelo layout.
 - Serializar dados comuns de beneficiário, pagador, título e instruções.
-- Na remessa, serializar o código de cancelamento e o tipo Itaú de carteira quando fornecidos.
+- Na remessa Itaú, serializar juros diários, limite e valor de desconto, dias de protesto, código de cancelamento e tipo de carteira quando fornecidos.
 
 ## Entradas e saídas
 

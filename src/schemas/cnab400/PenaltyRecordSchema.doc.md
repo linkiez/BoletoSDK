@@ -6,7 +6,7 @@ Zod schema for CNAB400 penalty records (type 2).
 
 ## Responsibilities
 
-- Validate penalty code and optional penalty fields.
+- Validate the detail association metadata, Itaú penalty codes (`0` = no penalty, `1` = fixed amount, `2` = percentage), and optional penalty fields.
 - Enforce record type `2`.
 
 ## Inputs and outputs
@@ -25,7 +25,9 @@ flowchart TD
 ## Error handling and edge cases
 
 - Requires valid `penaltyCode`.
+- Rejects codes outside the Itaú values `0`, `1`, and `2`.
 - Allows optional penalty date/value.
+- Validates optional `detailCompanyControl` and a nonnegative integer `detailIndex`; both are parser/generator metadata and are not serialized.
 
 ## Examples
 

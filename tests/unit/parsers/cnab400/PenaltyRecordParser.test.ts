@@ -9,10 +9,10 @@ const setField = (line: string[], value: string, start: number, end: number): vo
   }
 };
 
-const createPenaltyLine = (): string => {
+const createPenaltyLine = (penaltyCode = '1'): string => {
   const line = new Array(LINE_LENGTH).fill(' ');
   line[0] = '2';
-  setField(line, '1', 2, 2);
+  setField(line, penaltyCode, 2, 2);
   setField(line, '01012026', 3, 10);
   setField(line, '0000000001500', 11, 23);
   setField(line, '000001', LINE_LENGTH - 5, LINE_LENGTH);
@@ -36,6 +36,16 @@ describe('CNAB400 PenaltyRecordParser', () => {
     expect(record.penaltyDate).toBeInstanceOf(Date);
     expect(record.penaltyValue).toBe(15);
     expect(record.sequentialNumber).toBe(1);
+  });
+
+  it('should parse Itaú penalty code zero', () => {
+    const record = parsePenaltyRecord(createPenaltyLine('0'));
+
+    expect(record.penaltyCode).toBe('0');
+  });
+
+  it('should reject unsupported Itaú penalty codes', () => {
+    expect(() => parsePenaltyRecord(createPenaltyLine('3'))).toThrow(ParseError);
   });
 
   it('should allow missing optional fields', () => {

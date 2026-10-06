@@ -19,6 +19,16 @@ describe('Cnab400Parser', () => {
     expect(parsed.trailer).toBeDefined();
   });
 
+  it('should associate penalty records with the preceding detail index', () => {
+    const content = getFixture('itau-remessa-sample1.ret');
+
+    const parsed = parseCnab400(content);
+
+    expect(parsed.penaltyRecords?.map((record) => record.detailIndex)).toEqual(
+      parsed.details.map((_, index) => index),
+    );
+  });
+
   it('should parse valid return file', () => {
     const content = getFixture('itau-retorno-sample1.ret');
 

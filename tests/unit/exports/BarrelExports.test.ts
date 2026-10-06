@@ -180,7 +180,7 @@ describe('Barrel exports', () => {
     expect(penaltyLine).toHaveLength(400);
 
     const generatedCnab400 = generateCnab400(parsedCnab400);
-    expect(generatedCnab400.split('\n')[0]).toHaveLength(400);
+    expect(generatedCnab400.split(/\r?\n/)[0]).toHaveLength(400);
 
     const validation = validateCnab240File(createMinimalCnab240File(true));
     expect(validation.isValid).toBe(true);

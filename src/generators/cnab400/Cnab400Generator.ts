@@ -8,7 +8,7 @@
 
 import { LINE_LENGTH } from '../../constants/cnab400';
 import { GenerationError } from '../../errors';
-import type { Cnab400File } from '../../types/cnab400';
+import type { Cnab400File, PenaltyRecord } from '../../types/cnab400';
 import { generateDetailRecord, generateDetailRecordRemessa } from './DetailRecordGenerator';
 import { generateFileHeader } from './FileHeaderGenerator';
 import { generateFileTrailer } from './FileTrailerGenerator';
@@ -21,7 +21,7 @@ import { generatePenaltyRecord } from './PenaltyRecordGenerator';
  * Orchestrates the generation of all record types and assembles the complete file.
  *
  * @param file - Complete CNAB400 file data structure
- * @returns CNAB400 file content as string (lines separated by \n)
+ * @returns CNAB400 file content with CRLF-separated, CRLF-terminated records
  * @throws GenerationError if file structure is invalid
  *
  * @example
@@ -70,7 +70,7 @@ export function generateCnab400(file: Cnab400File): string {
 
   validateLineLengths(lines);
 
-  return lines.join('\n');
+  return `${lines.join('\r\n')}\r\n`;
 }
 
 function validateFileStructure(file: Cnab400File): void {
@@ -88,9 +88,59 @@ function validateFileStructure(file: Cnab400File): void {
 }
 
 function generateDetailRecords(file: Cnab400File, isRemessa: boolean): string[] {
-  return file.details.map((detail) =>
-    isRemessa ? generateDetailRecordRemessa(detail) : generateDetailRecord(detail),
-  );
+  if (!isRemessa) {
+    return file.details.map(generateDetailRecord);
+  }
+
+  const detailIndexesByControl = new Map<string, number[]>();
+  for (const [index, detail] of file.details.entries()) {
+    if (detail.companyControl) {
+      const indexes = detailIndexesByControl.get(detail.companyControl) ?? [];
+      indexes.push(index);
+      detailIndexesByControl.set(detail.companyControl, indexes);
+    }
+  }
+
+  const penaltiesByDetailIndex = new Map<number, PenaltyRecord>();
+  for (const penalty of file.penaltyRecords ?? []) {
+    let detailIndexes: number[];
+    if (penalty.detailIndex !== undefined) {
+      const detail = file.details[penalty.detailIndex];
+      detailIndexes =
+        Number.isInteger(penalty.detailIndex) &&
+        penalty.detailIndex >= 0 &&
+        detail !== undefined &&
+        (penalty.detailCompanyControl === undefined ||
+          detail.companyControl === penalty.detailCompanyControl)
+          ? [penalty.detailIndex]
+          : [];
+    } else if (penalty.detailCompanyControl === undefined) {
+      detailIndexes = file.details.length === 1 ? [0] : [];
+    } else {
+      detailIndexes = detailIndexesByControl.get(penalty.detailCompanyControl) ?? [];
+    }
+
+    if (detailIndexes.length !== 1) {
+      throw new GenerationError('Penalty record must reference exactly one detail');
+    }
+
+    const [detailIndex] = detailIndexes;
+    if (penaltiesByDetailIndex.has(detailIndex)) {
+      throw new GenerationError('A detail cannot have multiple penalty records');
+    }
+    penaltiesByDetailIndex.set(detailIndex, penalty);
+  }
+
+  const lines: string[] = [];
+  for (const [index, detail] of file.details.entries()) {
+    lines.push(generateDetailRecordRemessa(detail));
+    const penalty = penaltiesByDetailIndex.get(index);
+    if (penalty) {
+      lines.push(generatePenaltyRecord(penalty));
+    }
+  }
+
+  return lines;
 }
 
 function generateOptionalRecords(file: Cnab400File, isRemessa: boolean): string[] {
@@ -98,10 +148,7 @@ function generateOptionalRecords(file: Cnab400File, isRemessa: boolean): string[
     return [];
   }
 
-  return [
-    ...(file.penaltyRecords ?? []).map(generatePenaltyRecord),
-    ...(file.messageFrontRecords ?? []).map(generateMessageFrontRecord),
-  ];
+  return [...(file.messageFrontRecords ?? []).map(generateMessageFrontRecord)];
 }
 
 function validateLineLengths(lines: readonly string[]): void {

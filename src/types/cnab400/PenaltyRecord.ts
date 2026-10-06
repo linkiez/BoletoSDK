@@ -28,8 +28,14 @@ export interface PenaltyRecord {
   /** Record type identifier - Always '2' for penalty (Position 001-001) */
   recordType: '2';
 
-  /** Penalty code - '1'=None, '2'=Percentage, '3'=Fixed value (Position 002-002) */
-  penaltyCode: '1' | '2' | '3';
+  /** Company control of the type 1 detail this record follows; not serialized */
+  detailCompanyControl?: string;
+
+  /** Zero-based index of the associated detail; inferred by the parser and not serialized */
+  detailIndex?: number;
+
+  /** Itaú penalty code - '0'=no penalty, '1'=fixed amount, '2'=percentage (Position 002-002) */
+  penaltyCode: '0' | '1' | '2';
 
   /** Penalty date - Date when penalty starts (Position 003-010, DDMMYYYY) */
   penaltyDate?: Date;

@@ -122,6 +122,14 @@ describe('CNAB400 record generators', () => {
     expect(line.slice(10, 23)).toBe(formatDecimal(basePenalty.penaltyValue!, 13, 2));
   });
 
+  it('should serialize Itaú penalty codes for none, fixed amount, and percentage', () => {
+    const lines = (['0', '1', '2'] as const).map((penaltyCode) =>
+      generatePenaltyRecord({ ...basePenalty, penaltyCode }),
+    );
+
+    expect(lines.map((line) => line.slice(1, 2))).toEqual(['0', '1', '2']);
+  });
+
   it('should generate penalty record with zero date/value when omitted', () => {
     const line = generatePenaltyRecord({
       ...basePenalty,

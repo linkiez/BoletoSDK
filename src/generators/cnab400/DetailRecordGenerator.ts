@@ -323,13 +323,13 @@ export function generateDetailRecordRemessa(detail: DetailRecord): string {
   line += padRight(detail.instructionCode2 || '', 2, ' ');
 
   // Position 161-173: Daily interest (13 positions: 11 integer + 2 decimal)
-  line += padLeft('0', 13, '0');
+  line += formatDecimal(detail.dailyInterestAmount ?? 0, 13, 2);
 
   // Position 174-179: Discount until date (DDMMYY)
-  line += '000000';
+  line += detail.discountLimitDate ? formatDateShort(detail.discountLimitDate) : '000000';
 
   // Position 180-192: Discount amount (13 positions: 11 integer + 2 decimal)
-  line += padLeft('0', 13, '0');
+  line += formatDecimal(detail.discountValue ?? 0, 13, 2);
 
   // Position 193-205: IOF value (13 positions: 11 integer + 2 decimal)
   line += padLeft('0', 13, '0');
@@ -374,7 +374,7 @@ export function generateDetailRecordRemessa(detail: DetailRecord): string {
   line += '000000';
 
   // Position 392-393: Days for automatic protest (2 positions)
-  line += '00';
+  line += padLeft(String(detail.protestDays ?? 0), 2, '0');
 
   // Position 394-394: Blank (1 position)
   line += ' ';

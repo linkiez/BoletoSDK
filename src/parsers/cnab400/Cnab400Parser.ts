@@ -27,6 +27,7 @@ import { parseReturnDetailRecord } from './ReturnDetailRecordParser';
  * Main CNAB400 Parser
  *
  * Parses complete CNAB400 files (remittance or return).
+ * Associates remittance penalty records with the immediately preceding detail.
  *
  * @param content - Complete file content
  * @returns Parsed Cnab400File or Cnab400ReturnFile
@@ -88,19 +89,36 @@ export function parseCnab400(content: string): Cnab400File | Cnab400ReturnFile {
   const messageBackRecords: MessageBackRecord[] = [];
 
   const isReturn = header.operationType === FILE_TYPE_RETORNO;
+  let previousDetailIndex: number | undefined;
 
   for (let i = 1; i < lines.length - 1; i++) {
     const line = lines[i];
     const recordType = line[0];
 
+    if (recordType !== '1' && recordType !== '2') {
+      previousDetailIndex = undefined;
+    }
+
     try {
       switch (recordType) {
-        case '1':
-          details.push(isReturn ? parseReturnDetailRecord(line) : parseDetailRecord(line));
+        case '1': {
+          const detail = isReturn ? parseReturnDetailRecord(line) : parseDetailRecord(line);
+          details.push(detail);
+          previousDetailIndex = details.length - 1;
           break;
-        case '2':
-          penaltyRecords.push(parsePenaltyRecord(line));
+        }
+        case '2': {
+          const penalty = parsePenaltyRecord(line);
+          if (!isReturn && previousDetailIndex !== undefined) {
+            penalty.detailIndex = previousDetailIndex;
+            const detailCompanyControl = details[previousDetailIndex].companyControl;
+            if (detailCompanyControl !== undefined) {
+              penalty.detailCompanyControl = detailCompanyControl;
+            }
+          }
+          penaltyRecords.push(penalty);
           break;
+        }
         case '5':
           guarantorRecords.push(parseGuarantorRecord(line));
           break;

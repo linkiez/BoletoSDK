@@ -28,7 +28,7 @@ describe('CNAB Cross-Format - Integration', () => {
     const parsed = parseCnab(content);
     const regenerated = generateCnab(parsed);
 
-    const lines = regenerated.split('\n').filter((line) => line.length > 0);
+    const lines = regenerated.split(/\r?\n/).filter(Boolean);
     lines.forEach((line) => expect(line).toHaveLength(400));
     expect(lines[0][0]).toBe('0');
     expect(lines.at(-1)?.[0]).toBe('9');

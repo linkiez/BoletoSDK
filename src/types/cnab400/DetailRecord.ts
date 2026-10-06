@@ -115,13 +115,13 @@ export interface DetailRecord {
   /** Instruction code 2 - Second instruction (Position 139-140) */
   instructionCode2?: string;
 
-  /** Daily interest amount - 13 digits (Position 141-153) */
+  /** Daily interest amount - 13 digits (Itaú REMESSA positions 161-173) */
   dailyInterestAmount?: number;
 
-  /** Discount limit date - DDMMYY format (Position 154-159) */
+  /** Discount limit date - DDMMYY format (Itaú REMESSA positions 174-179) */
   discountLimitDate?: Date;
 
-  /** Discount amount - 13 digits (Position 160-172) */
+  /** Discount amount - 13 digits (Itaú REMESSA positions 180-192) */
   discountValue?: number;
 
   /** IOF amount - 13 digits (Position 173-185) */
@@ -171,6 +171,9 @@ export interface DetailRecord {
 
   /** Currency code - '09' for Real (Position 383-384) */
   currencyCode?: string;
+
+  /** Days until automatic protest (Itaú REMESSA positions 392-393) */
+  protestDays?: number;
 
   /** Sequential number - Record sequence in file (Position 395-400) */
   sequentialNumber: number;

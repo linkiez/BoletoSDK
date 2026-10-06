@@ -33,6 +33,7 @@ describe('Cnab400Generator', () => {
     account: '56789',
     accountDigit: '0',
     ourNumber: '12345678',
+    companyControl: 'TITLE-1',
     documentNumber: 'DOC123',
     dueDate: new Date('2026-03-15'),
     amount: 150.25,
@@ -98,13 +99,103 @@ describe('Cnab400Generator', () => {
       penaltyRecords: [basePenalty],
     };
 
-    const lines = generateCnab400(file).split('\n');
+    const lines = generateCnab400(file).split('\r\n').slice(0, -1);
 
     expect(lines).toHaveLength(4);
     expect(lines[0].startsWith('0')).toBe(true);
     expect(lines[1].startsWith('1')).toBe(true);
     expect(lines[2].startsWith('2')).toBe(true);
     expect(lines[3].startsWith('9')).toBe(true);
+  });
+
+  it('should delimit records with CRLF and terminate the trailer', () => {
+    const file: Cnab400File = {
+      header: baseHeader,
+      details: [baseDetail],
+      trailer: baseTrailer,
+    };
+
+    const records = generateCnab400(file).split('\r\n');
+
+    expect(records).toHaveLength(4);
+    expect(records.at(-1)).toBe('');
+    expect(records.slice(0, -1).map((record) => record.length)).toEqual(Array(3).fill(400));
+  });
+
+  it('should place a linked penalty immediately after its detail record', () => {
+    const secondDetail = {
+      ...baseDetail,
+      companyControl: 'TITLE-2',
+      documentNumber: 'DOC-2',
+      sequentialNumber: 3,
+    };
+    const penalty = {
+      ...basePenalty,
+      detailCompanyControl: 'TITLE-1',
+      sequentialNumber: 4,
+    };
+    const file: Cnab400File = {
+      header: baseHeader,
+      details: [baseDetail, secondDetail],
+      penaltyRecords: [penalty],
+      trailer: {
+        ...baseTrailer,
+        totalRecords: 5,
+        sequentialNumber: 5,
+      },
+    };
+
+    const lines = generateCnab400(file).split('\r\n').slice(0, -1);
+
+    expect(lines.map((line) => line.charAt(0))).toEqual(['0', '1', '2', '1', '9']);
+  });
+
+  it('should place a parsed penalty by detail index without company controls', () => {
+    const file: Cnab400File = {
+      header: baseHeader,
+      details: [
+        { ...baseDetail, companyControl: undefined },
+        {
+          ...baseDetail,
+          companyControl: undefined,
+          documentNumber: 'DOC-2',
+          sequentialNumber: 3,
+        },
+      ],
+      penaltyRecords: [{ ...basePenalty, detailIndex: 1, sequentialNumber: 4 }],
+      trailer: {
+        ...baseTrailer,
+        totalRecords: 5,
+        sequentialNumber: 5,
+      },
+    };
+
+    const lines = generateCnab400(file).split('\r\n').slice(0, -1);
+
+    expect(lines.map((line) => line.charAt(0))).toEqual(['0', '1', '1', '2', '9']);
+  });
+
+  it('should reject an unlinked penalty when multiple details exist', () => {
+    const file: Cnab400File = {
+      header: baseHeader,
+      details: [
+        baseDetail,
+        {
+          ...baseDetail,
+          companyControl: 'TITLE-2',
+          documentNumber: 'DOC-2',
+          sequentialNumber: 3,
+        },
+      ],
+      penaltyRecords: [basePenalty],
+      trailer: {
+        ...baseTrailer,
+        totalRecords: 5,
+        sequentialNumber: 5,
+      },
+    };
+
+    expect(() => generateCnab400(file)).toThrow('Penalty record must reference exactly one detail');
   });
 
   it('should include front message records before the trailer', () => {
@@ -125,7 +216,7 @@ describe('Cnab400Generator', () => {
       },
     };
 
-    const lines = generateCnab400(file).split('\n');
+    const lines = generateCnab400(file).split('\r\n').slice(0, -1);
 
     expect(lines.map((line) => line.charAt(0))).toEqual(['0', '1', '7', '9']);
     expect(lines[2]).toHaveLength(400);
@@ -152,7 +243,7 @@ describe('Cnab400Generator', () => {
       penaltyRecords: [basePenalty],
     };
 
-    const lines = generateCnab400(file).split('\n');
+    const lines = generateCnab400(file).split('\r\n').slice(0, -1);
 
     expect(lines).toHaveLength(3);
     expect(lines.some((line) => line.startsWith('2'))).toBe(false);

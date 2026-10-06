@@ -10,7 +10,7 @@ import type { PenaltyRecord } from '../../types/cnab400';
 import { parseDecimal, parseNumber } from '../../utils/parsers';
 
 /**
- * Parses penalty record (Type 2) - Optional penalty information
+ * Parses penalty record (Type 2) using the Itaú penalty codes 0, 1, and 2.
  *
  * @param line - 400-character penalty line
  * @returns Parsed PenaltyRecord object
@@ -25,9 +25,14 @@ export function parsePenaltyRecord(line: string): PenaltyRecord {
     throw new ParseError(`Invalid record type for penalty: ${line.charAt(0)}`);
   }
 
+  const penaltyCode = line.substring(1, 2);
+  if (penaltyCode !== '0' && penaltyCode !== '1' && penaltyCode !== '2') {
+    throw new ParseError(`Invalid Itaú penalty code: ${penaltyCode}`);
+  }
+
   const record: PenaltyRecord = {
     recordType: '2',
-    penaltyCode: line.substring(1, 2) as '1' | '2' | '3',
+    penaltyCode,
     sequentialNumber: parseNumber(line.substring(LINE_LENGTH - 6, LINE_LENGTH).trim()),
   };
 

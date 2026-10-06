@@ -135,7 +135,7 @@ describe('CNAB400 REMESSA - Integration Tests', () => {
   describe('Round-Trip Conversion (REMESSA)', () => {
     it('should generate valid 400-character lines', () => {
       const generated = generateCnab400(parsedRemessa);
-      const generatedLines = generated.split('\n').filter((line) => line.length > 0);
+      const generatedLines = generated.split(/\r?\n/).filter(Boolean);
 
       generatedLines.forEach((line) => {
         expect(line.length).toBe(400);
@@ -145,27 +145,27 @@ describe('CNAB400 REMESSA - Integration Tests', () => {
     it('should generate same number of lines as original', () => {
       const originalLines = remessaContent.split('\n').filter((line) => line.length > 0);
       const generated = generateCnab400(parsedRemessa);
-      const generatedLines = generated.split('\n').filter((line) => line.length > 0);
+      const generatedLines = generated.split(/\r?\n/).filter(Boolean);
 
       expect(generatedLines.length).toBe(originalLines.length);
     });
 
     it('should generate header with type 0', () => {
       const generated = generateCnab400(parsedRemessa);
-      const firstLine = generated.split('\n')[0];
+      const firstLine = generated.split(/\r?\n/)[0];
       expect(firstLine.charAt(0)).toBe('0');
     });
 
     it('should generate trailer with type 9', () => {
       const generated = generateCnab400(parsedRemessa);
-      const lines = generated.split('\n').filter((line) => line.length > 0);
+      const lines = generated.split(/\r?\n/).filter(Boolean);
       const lastLine = lines.at(-1)!;
       expect(lastLine.charAt(0)).toBe('9');
     });
 
     it('should generate detail records with type 1', () => {
       const generated = generateCnab400(parsedRemessa);
-      const lines = generated.split('\n').filter((line) => line.length > 0);
+      const lines = generated.split(/\r?\n/).filter(Boolean);
       const detailLines = lines.filter((line) => line.startsWith('1'));
       expect(detailLines.length).toBe(parsedRemessa.details.length);
     });

@@ -39,7 +39,7 @@ export function generatePenaltyRecord(penalty: PenaltyRecord): string {
   // Position 001-001: Record type
   line += '2';
 
-  // Position 002-002: Penalty code (1=None, 2=Percentage, 3=Fixed value)
+  // Position 002-002: Itaú penalty code (0=None, 1=Fixed amount, 2=Percentage)
   line += penalty.penaltyCode;
 
   // Position 003-010: Penalty date (DDMMYYYY)

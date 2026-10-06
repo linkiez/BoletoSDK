@@ -118,6 +118,19 @@ describe('CNAB400 Schemas', () => {
     trailer: createFileTrailer(),
   });
 
+  it('should preserve parsed penalty detail indexes', () => {
+    const penalty = {
+      ...createPenaltyRecord(),
+      detailCompanyControl: 'TITLE-1',
+      detailIndex: 1,
+    };
+    const parsed = PenaltyRecordSchema.parse(penalty);
+
+    expect(parsed.detailCompanyControl).toBe('TITLE-1');
+    expect(parsed.detailIndex).toBe(1);
+    expect(PenaltyRecordSchema.safeParse({ ...penalty, detailIndex: -1 }).success).toBe(false);
+  });
+
   it('should validate file header schema', () => {
     expect(FileHeaderSchema.safeParse(createFileHeader()).success).toBe(true);
   });
@@ -142,6 +155,24 @@ describe('CNAB400 Schemas', () => {
 
   it('should validate penalty record schema', () => {
     expect(PenaltyRecordSchema.safeParse(createPenaltyRecord()).success).toBe(true);
+  });
+
+  it('should accept only the Itaú penalty codes', () => {
+    for (const penaltyCode of ['0', '1', '2'] as const) {
+      expect(
+        PenaltyRecordSchema.safeParse({
+          ...createPenaltyRecord(),
+          penaltyCode,
+        }).success,
+      ).toBe(true);
+    }
+
+    expect(
+      PenaltyRecordSchema.safeParse({
+        ...createPenaltyRecord(),
+        penaltyCode: '3',
+      }).success,
+    ).toBe(false);
   });
 
   it('should validate guarantor record schema', () => {

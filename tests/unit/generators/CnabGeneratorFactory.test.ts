@@ -22,7 +22,7 @@ describe('CnabGeneratorFactory', () => {
     const parsed = parseCnab400(readFileSync(fixturePath, 'utf-8'));
 
     const content = generateCnab(parsed);
-    const lines = content.split('\n');
+    const lines = content.split(/\r?\n/).filter(Boolean);
 
     expect(lines[0]).toHaveLength(400);
     expect(lines.at(-1)![0]).toBe('9');
