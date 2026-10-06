@@ -142,6 +142,9 @@ export interface DetailRecord {
   /** Payer address - Up to 40 characters (Position 245-284) */
   payerAddress?: string;
 
+  /** Payer neighborhood - Up to 12 characters (Itaú REMESSA positions 315-326) */
+  payerNeighborhood?: string;
+
   /** First message line - Optional (Position 285-314) */
   firstMessage?: string;
 

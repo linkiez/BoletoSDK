@@ -8,6 +8,7 @@ Schema Zod para validar os registros detalhe tipo 1 do CNAB400.
 
 - Validar os campos essenciais do beneficiário, pagador e título.
 - Validar o tipo de registro, instrução de cancelamento, tipo de carteira e sequência.
+- Validar o bairro do pagador com limite de 12 caracteres.
 
 ## Entradas e saídas
 
@@ -28,6 +29,7 @@ flowchart TD
 - Rejeita nome do pagador, valor, vencimento e campos obrigatórios ausentes.
 - A instrução de cancelamento, quando informada, deve conter quatro dígitos.
 - O tipo de carteira, quando informado, deve conter no máximo um caractere.
+- O bairro do pagador é opcional; quando informado, deve conter no máximo 12 caracteres.
 - CPF/CNPJ e CEP são validados quando informados.
 
 ## Exemplos

@@ -108,6 +108,36 @@ describe('Cnab400Generator', () => {
     expect(lines[3].startsWith('9')).toBe(true);
   });
 
+  it('should leave Itaú remittance trailer positions 002-394 blank', () => {
+    const file: Cnab400File = {
+      header: baseHeader,
+      details: [baseDetail],
+      trailer: baseTrailer,
+    };
+
+    const trailer = generateCnab400(file).split('\r\n').at(-2)!;
+
+    expect(trailer.slice(1, 394)).toBe(' '.repeat(393));
+    expect(trailer.slice(394, 400)).toBe('000003');
+  });
+
+  it('should retain the existing trailer totals for return files', () => {
+    const file: Cnab400File = {
+      header: {
+        ...baseHeader,
+        operationType: '2',
+        operationLiteral: 'RETORNO',
+      },
+      details: [baseDetail],
+      trailer: baseTrailer,
+    };
+
+    const trailer = generateCnab400(file).split('\r\n').at(-2)!;
+
+    expect(trailer.slice(1, 7)).toBe('000003');
+    expect(trailer.slice(7, 20)).toBe('0000000015025');
+  });
+
   it('should delimit records with CRLF and terminate the trailer', () => {
     const file: Cnab400File = {
       header: baseHeader,

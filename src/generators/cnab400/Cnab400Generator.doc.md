@@ -1,56 +1,52 @@
 # Cnab400Generator
 
-## Overview
+## Visão geral
 
-Generates a CNAB400 file from a `Cnab400File` structure, including header, detail records, optional linked penalty and front-message records, and trailer.
+Gera um arquivo CNAB400 a partir de `Cnab400File`, incluindo cabeçalho, detalhes, multas vinculadas opcionais, mensagens de frente e trailer.
 
-## Responsibilities
+## Responsabilidades
 
-- Validate required file sections
-- Generate the header, each detail with its optional linked penalty record, optional front-message records, and trailer
-- Enforce 400-character line length
-- Separate records with CRLF and terminate the trailer with CRLF
+- Validar as seções obrigatórias do arquivo.
+- Gerar cabeçalho, detalhes e registros opcionais vinculados.
+- Aplicar o formato do trailer conforme o tipo de operação: posições 002–394 em branco na remessa Itaú e totais preservados no retorno.
+- Garantir linhas de 400 caracteres, separadas e terminadas por CRLF.
 
-Itaú type 7 records use a three-character flash code, three message lines of 128, 128, and 127 characters, a two-digit print-line number before each message, a destination code, and a six-digit sequence number.
+Registros Itaú tipo 7 usam código flash, linhas de mensagem, número de linha, código de destino e número sequencial.
 
-## Inputs and outputs
+## Entradas e saídas
 
-- Input: `Cnab400File`
-- Output: CNAB400 file content string with each 400-character record terminated by CRLF
+- Entrada: `Cnab400File`.
+- Saída: conteúdo CNAB400 com cada registro de 400 caracteres terminado por CRLF.
 
-## API / Signature
+## API / Assinatura
 
 ```ts
 export function generateCnab400(file: Cnab400File): string;
 ```
 
-## Main flow
+## Fluxo principal
 
 ```mermaid
 flowchart TD
-  A[Cnab400File] --> B[Validate header/trailer/details]
-  B --> C[Generate header]
-  C --> D[Generate each remessa detail]
-  D --> E{Detail has linked penalty?}
-  E -->|Yes| F[Append type 2 immediately after detail]
-  E -->|No| G[Continue to next detail]
-  F --> H[Generate front-message records]
-  G --> H
-  H --> I[Generate trailer]
-  I --> J[Validate 400-char line length]
-  J --> K[Join records with CRLF and terminate file]
+  A[Cnab400File] --> B[Validar cabeçalho, detalhes e trailer]
+  B --> C[Gerar cabeçalho e detalhes]
+  C --> D{Há multa vinculada?}
+  D -->|Sim| E[Adicionar registro tipo 2 após o detalhe]
+  D -->|Não| F[Continuar]
+  E --> G[Gerar registros opcionais e trailer]
+  F --> G
+  G --> H[Validar linhas e juntar com CRLF]
 ```
 
-## Error handling and edge cases
+## Tratamento de erros e casos-limite
 
-- Throws `GenerationError` when file structure is invalid
-- Throws when any generated line is not 400 characters
-- A remittance penalty must reference exactly one detail by `detailCompanyControl` or a valid `detailIndex`; for a single-detail file, the link may be omitted.
-- A detail may have at most one penalty record. Linked type 2 records are emitted immediately after their type 1 detail and are included in the caller-provided trailer totals/sequences.
-- Supports REMESSA vs RETORNO detail record generation
-- Remittance headers keep positions 101-394 blank and write the header record sequence at 395-400; return-only density, file sequence, and credit-date fields occupy positions 101-119.
+- Lança `GenerationError` quando a estrutura do arquivo ou o comprimento de uma linha é inválido.
+- Cada multa deve apontar para exatamente um detalhe e cada detalhe pode ter no máximo uma multa.
+- Registros tipo 2 são emitidos após o detalhe correspondente.
+- O tipo de operação do cabeçalho escolhe a geração de detalhe e trailer para REMESSA ou RETORNO.
+- O cabeçalho de remessa mantém as posições 101–394 em branco; campos exclusivos do retorno ocupam posições 101–119.
 
-## Examples
+## Exemplos
 
 ```ts
 import { generateCnab400 } from '@linkiez/boleto-sdk';
@@ -58,11 +54,10 @@ import { generateCnab400 } from '@linkiez/boleto-sdk';
 const content = generateCnab400(file);
 ```
 
-## Dependencies and integrations
+## Dependências e integrações
 
 - `generateFileHeader`
-- `generateDetailRecord` and `generateDetailRecordRemessa`
-- `generatePenaltyRecord`
+- `generateDetailRecord` e `generateDetailRecordRemessa`
+- `generatePenaltyRecord` e `generateMessageFrontRecord`
 - `generateFileTrailer`
-- `generateMessageFrontRecord`
 - `GenerationError`

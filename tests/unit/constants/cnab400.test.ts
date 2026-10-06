@@ -322,11 +322,11 @@ describe('CNAB400 Field Positions', () => {
       expect(PENALTY_RECORD_POSITIONS.RECORD_TYPE).toEqual({ start: 1, end: 1 });
     });
 
-    it('should have message lines of 80 characters each', () => {
-      expect(PENALTY_RECORD_POSITIONS.MESSAGE_LINE_1).toEqual({ start: 2, end: 81 });
-      expect(PENALTY_RECORD_POSITIONS.MESSAGE_LINE_2).toEqual({ start: 82, end: 161 });
-      expect(PENALTY_RECORD_POSITIONS.MESSAGE_LINE_3).toEqual({ start: 162, end: 241 });
-      expect(PENALTY_RECORD_POSITIONS.MESSAGE_LINE_4).toEqual({ start: 242, end: 321 });
+    it('should have Itaú penalty fields at their CNAB positions', () => {
+      expect(PENALTY_RECORD_POSITIONS.PENALTY_CODE).toEqual({ start: 2, end: 2 });
+      expect(PENALTY_RECORD_POSITIONS.PENALTY_DATE).toEqual({ start: 3, end: 10 });
+      expect(PENALTY_RECORD_POSITIONS.PENALTY_VALUE).toEqual({ start: 11, end: 23 });
+      expect(PENALTY_RECORD_POSITIONS.RESERVED).toEqual({ start: 24, end: 394 });
     });
   });
 

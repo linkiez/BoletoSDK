@@ -8,7 +8,7 @@ Define os dados de um registro detalhe tipo 1 dos arquivos CNAB400.
 
 - Descrever campos de beneficiário, pagador, documento, valores, datas e instruções.
 - Tipar os campos opcionais usados por diferentes layouts bancários.
-- Expor juros diários, data limite de desconto, valor de desconto e dias de protesto nas posições Itaú da remessa.
+- Expor espécie, instruções, quantidade de moeda variável, bairro, juros diários, desconto e protesto nas posições Itaú da remessa.
 - Fornecer posições CNAB para interpretação e geração do registro.
 
 ## Entradas e saídas
@@ -27,6 +27,7 @@ classDiagram
     +instructionCancellationCode: string
     +portfolioType: string
     +payerName: string
+    +payerNeighborhood: string
     +sequentialNumber: number
   }
   DetailRecord --> DetailRecordSchema : validated by
@@ -37,6 +38,8 @@ classDiagram
 
 - `instructionCancellationCode` é opcional e, quando presente, deve ter quatro dígitos.
 - `portfolioType` é opcional e ocupa um caractere no campo específico do banco.
+- `payerNeighborhood` é opcional e possui limite de 12 caracteres nas posições 315–326 da remessa Itaú.
+- A quantidade de moeda variável é zerada na remessa Itaú quando o título é em Real.
 - `dailyInterestAmount`, `discountLimitDate`, `discountValue` e `protestDays` são opcionais e serializados somente nos campos da remessa Itaú.
 - Campos obrigatórios e limites são aplicados por `DetailRecordSchema`.
 
@@ -57,6 +60,7 @@ const detail: DetailRecord = {
   dueDate: new Date('2026-10-14'),
   amount: 150,
   payerName: 'PAGADOR TESTE',
+  payerNeighborhood: 'CENTRO',
   sequentialNumber: 2,
 };
 ```

@@ -17,6 +17,7 @@ import { padLeft } from '../../utils/generators';
  * Creates the 400-character trailer line containing file totals and record count.
  *
  * @param trailer - FileTrailer data object
+ * @param operationType - '1' for Itaú remittance, '2' for return (default)
  * @returns 400-character trailer line
  *
  * @example
@@ -32,7 +33,13 @@ import { padLeft } from '../../utils/generators';
  * // Returns: 400-character string starting with '9000152...'
  * ```
  */
-export function generateFileTrailer(trailer: FileTrailer): string {
+export function generateFileTrailer(trailer: FileTrailer, operationType: '1' | '2' = '2'): string {
+  const sequentialNumber = padLeft(trailer.sequentialNumber || trailer.totalRecords, 6, '0');
+
+  if (operationType === '1') {
+    return `9${' '.repeat(393)}${sequentialNumber}`;
+  }
+
   let line = '';
 
   // Position 001-001: Record type
@@ -55,7 +62,7 @@ export function generateFileTrailer(trailer: FileTrailer): string {
   line += ' '.repeat(367);
 
   // Position 395-400: Sequential number
-  line += padLeft(trailer.sequentialNumber || trailer.totalRecords, 6, '0');
+  line += sequentialNumber;
 
   return line;
 }

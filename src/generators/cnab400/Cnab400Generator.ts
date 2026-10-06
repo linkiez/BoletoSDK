@@ -65,7 +65,7 @@ export function generateCnab400(file: Cnab400File): string {
     generateFileHeader(file.header),
     ...generateDetailRecords(file, isRemessa),
     ...generateOptionalRecords(file, isRemessa),
-    generateFileTrailer(file.trailer),
+    generateFileTrailer(file.trailer, file.header.operationType),
   ];
 
   validateLineLengths(lines);

@@ -54,6 +54,7 @@ export const DetailRecordSchema = z.object({
   payerRegistrationNumber: DocumentNumberSchema.optional(),
   payerName: z.string().min(1, 'Payer name is required'),
   payerAddress: z.string().optional(),
+  payerNeighborhood: z.string().max(12).optional(),
   firstMessage: z.string().optional(),
   payerZipCode: z
     .string()

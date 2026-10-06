@@ -265,8 +265,8 @@ export function generateDetailRecordRemessa(detail: DetailRecord): string {
   // Position 063-070: Our number (8 positions)
   line += padLeft(detail.ourNumber || '', 8, ' ');
 
-  // Position 071-083: Blanks/Quantity variable currency (13 positions)
-  line += '             ';
+  // Position 071-083: Variable currency quantity (zero for Brazilian real)
+  line += '0'.repeat(13);
 
   // Position 084-086: Portfolio code (3 positions)
   line += padLeft(detail.portfolioCode || '', 3, '0');
@@ -353,7 +353,7 @@ export function generateDetailRecordRemessa(detail: DetailRecord): string {
   line += padRight(detail.payerAddress || '', 40, ' ');
 
   // Position 315-326: Payer neighborhood (12 positions)
-  line += padRight('', 12, ' ');
+  line += padRight(detail.payerNeighborhood || '', 12, ' ');
 
   // Position 327-334: Payer ZIP code (8 positions)
   line += padLeft(detail.payerZipCode || '', 8, '0');

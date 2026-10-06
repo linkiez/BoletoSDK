@@ -152,11 +152,10 @@ export const DETAIL_RECORD_RETORNO_POSITIONS = {
  */
 export const PENALTY_RECORD_POSITIONS = {
   RECORD_TYPE: { start: 1, end: 1 },
-  MESSAGE_LINE_1: { start: 2, end: 81 },
-  MESSAGE_LINE_2: { start: 82, end: 161 },
-  MESSAGE_LINE_3: { start: 162, end: 241 },
-  MESSAGE_LINE_4: { start: 242, end: 321 },
-  RESERVED: { start: 322, end: 394 },
+  PENALTY_CODE: { start: 2, end: 2 },
+  PENALTY_DATE: { start: 3, end: 10 },
+  PENALTY_VALUE: { start: 11, end: 23 },
+  RESERVED: { start: 24, end: 394 },
   SEQUENTIAL_NUMBER: { start: 395, end: 400 },
 } as const;
 

@@ -5,6 +5,7 @@ import {
   generateFileTrailer,
   generatePenaltyRecord,
 } from '../../../../src/generators/cnab400';
+import { PENALTY_RECORD_POSITIONS } from '../../../../src/constants/cnab400/RECORD_POSITIONS';
 import type {
   DetailRecord,
   FileHeader,
@@ -151,6 +152,20 @@ describe('CNAB400 record generators', () => {
     expect(line).toHaveLength(400);
     expect(line.slice(2, 10)).toBe(formatDateLong(basePenalty.penaltyDate!));
     expect(line.slice(10, 23)).toBe(formatDecimal(basePenalty.penaltyValue!, 13, 2));
+    expect(line.slice(23, 394)).toBe(' '.repeat(371));
+  });
+
+  it('should map Itaú penalty record fields to their CNAB positions', () => {
+    expect(PENALTY_RECORD_POSITIONS).toEqual(
+      expect.objectContaining({
+        RECORD_TYPE: { start: 1, end: 1 },
+        PENALTY_CODE: { start: 2, end: 2 },
+        PENALTY_DATE: { start: 3, end: 10 },
+        PENALTY_VALUE: { start: 11, end: 23 },
+        RESERVED: { start: 24, end: 394 },
+        SEQUENTIAL_NUMBER: { start: 395, end: 400 },
+      }),
+    );
   });
 
   it('should serialize Itaú penalty codes for none, fixed amount, and percentage', () => {
@@ -200,6 +215,21 @@ describe('CNAB400 record generators', () => {
     expect(line.slice(120, 126)).toBe(formatDateShort(baseDetail.dueDate));
     expect(line.slice(126, 139)).toBe(formatDecimal(baseDetail.amount, 13, 2));
     expect(line.slice(150, 156)).toBe(formatDateShort(baseDetail.issueDate!));
+  });
+
+  it('should serialize Itaú remittance currency, title instructions, and payer neighborhood', () => {
+    const line = generateDetailRecordRemessa({
+      ...baseDetail,
+      speciesCode: '01',
+      instructionCode1: '98',
+      instructionCode2: '00',
+      payerNeighborhood: 'CENTRO',
+    });
+
+    expect(line.slice(70, 83)).toBe('0'.repeat(13));
+    expect(line.slice(147, 149)).toBe('01');
+    expect(line.slice(156, 160)).toBe('9800');
+    expect(line.slice(314, 326)).toBe('CENTRO      ');
   });
 
   it('should generate detail record with zeroed fields when remessa dates are missing', () => {

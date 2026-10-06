@@ -145,6 +145,21 @@ describe('CNAB400 Schemas', () => {
     expect(DetailRecordSchema.safeParse(createDetailRecord()).success).toBe(true);
   });
 
+  it('should accept a payer neighborhood within the Itaú CNAB400 field width', () => {
+    expect(
+      DetailRecordSchema.safeParse({
+        ...createDetailRecord(),
+        payerNeighborhood: 'CENTRO',
+      }).success,
+    ).toBe(true);
+    expect(
+      DetailRecordSchema.safeParse({
+        ...createDetailRecord(),
+        payerNeighborhood: 'N'.repeat(13),
+      }).success,
+    ).toBe(false);
+  });
+
   it('should validate return detail record schema', () => {
     expect(ReturnDetailRecordSchema.safeParse(createReturnDetailRecord()).success).toBe(true);
   });
