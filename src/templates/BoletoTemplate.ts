@@ -1,4 +1,8 @@
 export interface BoletoTemplateData {
+  company?: {
+    name: string;
+    logo?: Buffer;
+  };
   beneficiary: {
     name: string;
     document: string;
