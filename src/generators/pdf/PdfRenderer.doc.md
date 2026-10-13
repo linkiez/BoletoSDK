@@ -22,6 +22,8 @@ open two-column receipt, a prominent payment summary and a compact bank grid.
   in the receipt summary. Keep smaller type and fine gray rules in the bank form.
 - Align the bank form's right-hand fields to a shared column; extend adjustment
   rows to the full notes-panel height when instructions need extra room.
+- Measure and reduce the digit line's monospaced font when necessary to keep it
+  on one line inside the available bank-form width.
 - Keep barcode bytes, payment identifiers and amounts unchanged.
 - Keep PIX optional: a validated QR code in the header and selectable copy/paste
   payload in an unboxed footer, without browser controls or external assets.
@@ -81,6 +83,8 @@ sequenceDiagram
   and extra metadata use continuation rows.
 - A single cell/block larger than the printable page fails explicitly instead
   of clipping financial data. Very narrow columns also fail explicitly.
+- A digit line that cannot fit at the minimum readable size fails explicitly
+  instead of wrapping or clipping.
 - Normal A4 samples with five instructions, metadata and PIX fit one page.
   Large content can require additional pages.
 - Bank code/name are supplied data, not a hard-coded bank logo or fabricated

@@ -11,6 +11,8 @@ section ordering belong to [PdfRenderer](./PdfRenderer.ts).
 - Use sans-serif labels and details, reserving monospaced type for identifiers
   explicitly styled by the renderer.
 - Measure wrapped text before drawing grid cells.
+- Measure unwrapped text widths with the same registered font family used for
+  rendering.
 - Support borderless receipt fields and shaded payment summaries.
 - Keep rows within page margins and move complete rows to continuation pages.
 - Draw the detachable receipt's dashed separator.
@@ -22,7 +24,7 @@ Cells specify a label, value, optional detail text, proportional width and
 optional text style (including line spacing), shading and borderless rendering.
 Right-aligned values also align their labels to the right.
 Methods render into the document and update its cursor;
-measurement methods return heights in PDF points.
+measurement methods return widths and heights in PDF points.
 
 ## Main flow
 
@@ -42,9 +44,7 @@ the renderer for already-measured side-by-side notes and amount panels.
 ## Example
 
 ```ts
-canvas.row([
-  { label: 'PAGADOR', value: data.payer.name, detail: data.payer.address, fraction: 1 },
-]);
+canvas.row([{ label: 'PAGADOR', value: data.payer.name, detail: data.payer.address, fraction: 1 }]);
 ```
 
 ## Dependencies and integrations

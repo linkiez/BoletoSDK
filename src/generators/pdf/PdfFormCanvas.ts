@@ -55,6 +55,12 @@ export class PdfFormCanvas {
     return this.document.heightOfString(value, { width, lineGap: style.lineGap ?? 1 });
   }
 
+  /** Measures the unwrapped width using the selected font and size. */
+  public textWidth(value: string, style: TextStyle = {}): number {
+    this.selectFont(style);
+    return this.document.widthOfString(value);
+  }
+
   /** Draws selectable text; callers reserve the measured height before drawing. */
   public text(value: string, x: number, y: number, width: number, style: TextStyle = {}): void {
     this.selectFont(style);

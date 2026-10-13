@@ -260,10 +260,15 @@ function renderCompensationForm(canvas: PdfFormCanvas, data: BoletoTemplateData)
   const bankWidth = width * 0.26;
   const bankHeight = canvas.textHeight(data.bank.name, bankWidth - 50, { size: 8, font: 'bold' });
   const lineWidth = width - bankWidth - 12;
-  const lineHeight = canvas.textHeight(data.payment.digitableLine, lineWidth, {
-    size: 8.5,
-    font: 'mono',
-  });
+  const lineStyle = { size: 8.5, font: 'mono' as const };
+  const lineTextWidth = canvas.textWidth(data.payment.digitableLine, lineStyle);
+  const fittedLineSize =
+    lineTextWidth > lineWidth ? (lineStyle.size * (lineWidth - 1)) / lineTextWidth : lineStyle.size;
+  if (fittedLineSize < 6) {
+    throw new Error('Digitable line exceeds the available PDF form width');
+  }
+  const fittedLineStyle = { ...lineStyle, size: fittedLineSize };
+  const lineHeight = canvas.textHeight(data.payment.digitableLine, lineWidth, fittedLineStyle);
   const height = Math.max(36, Math.max(bankHeight, lineHeight) + 16);
   const y = canvas.reserve(height);
   document.roundedRect(left, y + 3, 34, 24, 3).fill(colors.ink);
@@ -278,8 +283,7 @@ function renderCompensationForm(canvas: PdfFormCanvas, data: BoletoTemplateData)
     .roundedRect(left + bankWidth, y + 3, width - bankWidth, height - 10, 3)
     .fill(colors.surface);
   canvas.text(data.payment.digitableLine, left + bankWidth + 6, y + 10, lineWidth, {
-    size: 8.5,
-    font: 'mono',
+    ...fittedLineStyle,
     align: 'right',
   });
   document.y = y + height;

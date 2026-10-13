@@ -283,6 +283,36 @@ describe('renderBoletoToPdf - barcode rendering', () => {
     textSpy.mockRestore();
   });
 
+  it('should reduce the digitable line font so it fits the available width', async () => {
+    const document = new PDFDocument({ size: 'A4', margin: 40 });
+    const textSpy = jest.spyOn(PdfFormCanvas.prototype, 'text');
+    const data = createData();
+    data.payment.digitableLine = '1'.repeat(80);
+
+    await renderAndCollect(document, data, resolvePdfTemplateOptions());
+
+    const lineCall = textSpy.mock.calls.find(([text]) => text === data.payment.digitableLine);
+    expect(lineCall).toBeDefined();
+    expect(lineCall?.[4]).toMatchObject({ font: 'mono', align: 'right' });
+    expect(lineCall?.[4]?.size).toBeLessThan(8.5);
+
+    const measuringDocument = new PDFDocument({ size: 'A4', margin: 40 });
+    measuringDocument.resume();
+    const measuringCanvas = new PdfFormCanvas(measuringDocument, {
+      regular: 'Helvetica',
+      bold: 'Helvetica-Bold',
+      mono: 'Courier',
+    });
+    expect(
+      measuringCanvas.textWidth(data.payment.digitableLine, {
+        font: 'mono',
+        size: lineCall?.[4]?.size,
+      }),
+    ).toBeLessThanOrEqual(lineCall?.[3] ?? 0);
+    measuringDocument.end();
+    textSpy.mockRestore();
+  });
+
   it('should wrap long party data inside measured cells without crossing page margins', async () => {
     const document = new PDFDocument({ size: 'A4', margin: 40 });
     const textSpy = jest.spyOn(document, 'text');
