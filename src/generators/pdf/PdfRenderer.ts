@@ -255,6 +255,9 @@ function renderReceipt(canvas: PdfFormCanvas, data: BoletoTemplateData): void {
   document.y = cutY + 36;
 }
 
+const MIN_DIGITABLE_LINE_FONT_SIZE = 6;
+const MAX_DIGITABLE_LINE_FONT_SIZE = 13;
+
 function renderCompensationForm(canvas: PdfFormCanvas, data: BoletoTemplateData): void {
   const { document, left, width, colors } = canvas;
   const bankWidth = width * 0.26;
@@ -263,8 +266,10 @@ function renderCompensationForm(canvas: PdfFormCanvas, data: BoletoTemplateData)
   const lineStyle = { size: 8.5, font: 'mono' as const };
   const lineTextWidth = canvas.textWidth(data.payment.digitableLine, lineStyle);
   const fittedLineSize =
-    lineTextWidth > lineWidth ? (lineStyle.size * (lineWidth - 1)) / lineTextWidth : lineStyle.size;
-  if (fittedLineSize < 6) {
+    lineTextWidth > 0
+      ? Math.min(MAX_DIGITABLE_LINE_FONT_SIZE, (lineStyle.size * (lineWidth - 1)) / lineTextWidth)
+      : lineStyle.size;
+  if (fittedLineSize < MIN_DIGITABLE_LINE_FONT_SIZE) {
     throw new Error('Digitable line exceeds the available PDF form width');
   }
   const fittedLineStyle = { ...lineStyle, size: fittedLineSize };

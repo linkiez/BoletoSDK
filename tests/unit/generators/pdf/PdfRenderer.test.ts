@@ -313,6 +313,36 @@ describe('renderBoletoToPdf - barcode rendering', () => {
     textSpy.mockRestore();
   });
 
+  it('should expand a standard digitable line to fill the available width', async () => {
+    const document = new PDFDocument({ size: 'A4', margin: 40 });
+    const textSpy = jest.spyOn(PdfFormCanvas.prototype, 'text');
+    const data = createData();
+
+    await renderAndCollect(document, data, resolvePdfTemplateOptions());
+
+    const lineCall = textSpy.mock.calls.find(([text]) => text === data.payment.digitableLine);
+    expect(lineCall).toBeDefined();
+
+    const measuringDocument = new PDFDocument({ size: 'A4', margin: 40 });
+    measuringDocument.resume();
+    const measuringCanvas = new PdfFormCanvas(measuringDocument, {
+      regular: 'Helvetica',
+      bold: 'Helvetica-Bold',
+      mono: 'Courier',
+    });
+    const availableWidth = lineCall?.[3] ?? 0;
+    const renderedWidth = measuringCanvas.textWidth(data.payment.digitableLine, {
+      font: 'mono',
+      size: lineCall?.[4]?.size,
+    });
+    measuringDocument.end();
+    textSpy.mockRestore();
+
+    expect(lineCall?.[4]?.size).toBeGreaterThan(8.5);
+    expect(renderedWidth).toBeLessThanOrEqual(availableWidth);
+    expect(renderedWidth).toBeGreaterThanOrEqual(availableWidth * 0.98);
+  });
+
   it('should wrap long party data inside measured cells without crossing page margins', async () => {
     const document = new PDFDocument({ size: 'A4', margin: 40 });
     const textSpy = jest.spyOn(document, 'text');
