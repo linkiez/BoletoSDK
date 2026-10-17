@@ -42,8 +42,13 @@ open two-column receipt, a prominent payment summary and a compact bank grid.
   accepted for the backend's existing payload. Values already shown in the
   form are not repeated in the notes panel.
 - Missing dates, agency information, species and acceptance are shown as `-`.
-  Adjustment and charged-value fields remain blank: this renderer does not
-  calculate charges, invent amounts, or assert bank/CIP registration.
+- Optional preformatted `additionalInfo.penaltyAmount`, `interestAmount` and
+  `chargedAmount` populate Mora / Multa, Outros Acréscimos and Valor Cobrado
+  in every PDF layout. They are form fields, not repeated in the notes metadata.
+  Without these keys, the corresponding cells remain blank. Zero values supplied
+  by the caller are printed as supplied.
+- The receipt and document amount remain nominal. This renderer does not calculate
+  charges, modify barcode/payment data, or assert bank/CIP registration.
 
 ## API / Signature
 

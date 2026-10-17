@@ -365,6 +365,12 @@ function renderNotes(
   options: ResolvedPdfTemplateOptions,
 ): void {
   const { document, left, width } = canvas;
+  const {
+    penaltyAmount = '',
+    interestAmount = '',
+    chargedAmount = '',
+    ...metadata
+  } = data.additionalInfo ?? {};
   const flags = derivePdfLayoutFlags(options.layout);
   const notes = flags.showInstructions ? (data.instructions ?? []) : [];
   const formFields = new Set([
@@ -379,7 +385,7 @@ function renderNotes(
     'localPagamento',
   ]);
   const additionalInfo = flags.showAdditionalInfo
-    ? Object.entries(data.additionalInfo ?? {})
+    ? Object.entries(metadata)
         .filter(([key]) => !formFields.has(key))
         .map(([key, value]) => `${key}: ${value}`)
     : [];
@@ -393,12 +399,12 @@ function renderNotes(
     style: { size: 7.5, lineGap: 3 },
   };
   const amountCells = [
-    '(-) DESCONTO / ABATIMENTO',
-    '(-) OUTRAS DEDUÇÕES',
-    '(+) MORA / MULTA',
-    '(+) OUTROS ACRÉSCIMOS',
-    '(=) VALOR COBRADO',
-  ].map((label) => [{ label, value: '', fraction: 1, shaded: label.startsWith('(=)') }]);
+    ['(-) DESCONTO / ABATIMENTO', ''],
+    ['(-) OUTRAS DEDUÇÕES', ''],
+    ['(+) MORA / MULTA', penaltyAmount],
+    ['(+) OUTROS ACRÉSCIMOS', interestAmount],
+    ['(=) VALOR COBRADO', chargedAmount],
+  ].map(([label, value]) => [{ label, value, fraction: 1, shaded: label.startsWith('(=)') }]);
   const amountsHeight = amountCells.reduce(
     (sum, cells) => sum + canvas.rowHeight(cells, width * 0.33, 26),
     0,
